@@ -109,7 +109,7 @@ public class MidiGenerator {
 		int channel = 0;
 		int basePitch = song.key.getBaseMidiPitch();
 		int velocity = 100;
-		
+
 		int chordTick = 0;
 		int melodyTick = 0;
 		
@@ -132,7 +132,7 @@ public class MidiGenerator {
 				int pitch = basePitch + root + themeNotes.get(melodyNote) + 12;
 				noteTrack.insertNote(channel + 1, pitch, velocity + 20, timeStart, qtrNote);
 			}*/
-			
+
 			themeNotes = progression.getMelody().get(ndx); //song.melody.get(ndx);
 			for (int melodyNote = 0; melodyNote < themeNotes.size(); melodyNote++)
 			{
