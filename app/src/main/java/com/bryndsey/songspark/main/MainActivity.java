@@ -2,6 +2,8 @@ package com.bryndsey.songspark.main;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.bryndsey.songspark.R;
@@ -14,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 	TextView infoView;
 
+	Button newSongButton;
+
 	@Presenter
 	MainPresenter presenter;
 
@@ -22,6 +26,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
 		super.onCreate(savedInstanceState);
 
 		infoView = (TextView)findViewById(R.id.info);
+		newSongButton = (Button)findViewById(R.id.new_song_button);
+
+		newSongButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				presenter.generateNewSong();
+			}
+		});
 	}
 
 	@Override

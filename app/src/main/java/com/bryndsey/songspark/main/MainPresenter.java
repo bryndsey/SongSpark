@@ -22,6 +22,11 @@ public class MainPresenter extends AbstractPresenter<MainView> {
 		updateDisplay();
 	}
 
+	void generateNewSong() {
+		song = songWriter.writeNewSong();
+		updateDisplay();
+	}
+
 	private void updateDisplay() {
 		if (isViewAttached()) {
 			String displayString = "";
