@@ -64,7 +64,6 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 			displayString += "\nScale: " + song.key.toString() + " " + song.scaleType;
 			displayString += "\nVerse: " + song.verseProgression.getChords();
 			displayString += "\nChorus: " + song.chorusProgression.getChords();
-			displayString += "\nBridge: " + song.bridgeProgression.getChords();
 
 			getView().displaySong(displayString);
 		}
