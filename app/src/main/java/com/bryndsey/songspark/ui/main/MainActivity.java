@@ -54,4 +54,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
 	public void displaySong(String song) {
 		infoView.setText(song);
 	}
+
+	@Override
+	public void displayPlayState() {
+		playPauseButton.setText("PLAY");
+	}
+
+	@Override
+	public void displayPauseState() {
+		playPauseButton.setText("PAUSE");
+	}
 }
