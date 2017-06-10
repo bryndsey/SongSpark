@@ -28,16 +28,16 @@ public class MainPresenter extends AbstractPresenter<MainView> {
 	@Override
 	public void onViewAttached(MainView view) {
 		super.onViewAttached(view);
-		updateDisplay();
+		updateSongDisplay();
 	}
 
 	void generateNewSong() {
 		makeSong();
 
-		updateDisplay();
+		updateSongDisplay();
 	}
 
-	private void updateDisplay() {
+	private void updateSongDisplay() {
 		if (isViewAttached()) {
 			Song song = midiSong.song;
 
