@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 		playPauseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				presenter.playSong();
+				presenter.playPauseSong();
 			}
 		});
 	}
