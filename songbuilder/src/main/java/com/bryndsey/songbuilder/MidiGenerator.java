@@ -1,7 +1,6 @@
 package com.bryndsey.songbuilder;
 
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
-import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.ScaleType;
 import com.bryndsey.songbuilder.songstructure.Note;
 import com.bryndsey.songbuilder.songstructure.Song;
@@ -22,6 +21,8 @@ public class MidiGenerator {
 	protected static final int chordChannel = 0;
 	protected static final int melodyChannel = 1;
 	
+	protected static final int drumChannel = 9;
+	
 	protected Song song;
 	
 	public MidiGenerator()
@@ -30,7 +31,7 @@ public class MidiGenerator {
 	}
 	
 	public MidiFile generateChordMidi(Song newSong) {
-
+		
 		if (newSong == null)
 		{
 			return null;
@@ -109,7 +110,7 @@ public class MidiGenerator {
 		int channel = 0;
 		int basePitch = song.key.getBaseMidiPitch();
 		int velocity = 100;
-
+		
 		int chordTick = 0;
 		int melodyTick = 0;
 		
@@ -119,7 +120,7 @@ public class MidiGenerator {
 		for (int ndx = 0; ndx < chords.size(); ndx++)
 		{
 			int root = chords.get(ndx);
-			int[] triad = MusicStructure.generateTriad(root, song.scaleType);
+			int[] triad = song.scaleType.generateTriad(root);
 			
 			for (int interval = 0; interval < triad.length; interval++)
 			{
@@ -132,12 +133,12 @@ public class MidiGenerator {
 				int pitch = basePitch + root + themeNotes.get(melodyNote) + 12;
 				noteTrack.insertNote(channel + 1, pitch, velocity + 20, timeStart, qtrNote);
 			}*/
-
+			
 			themeNotes = progression.getMelody().get(ndx); //song.melody.get(ndx);
 			for (int melodyNote = 0; melodyNote < themeNotes.size(); melodyNote++)
 			{
 				//int timeStart = (ndx * qtrNote * song.timeSigNum) + (qtrNote * melodyNote);
-				int pitch = basePitch + MusicStructure.getScaleIntervals(song.scaleType)[(root + themeNotes.get(melodyNote)) % 7];// + 12;
+				int pitch = basePitch + song.scaleType.getAbsIntervals()[(root + themeNotes.get(melodyNote)) % 7];// + 12;
 				melodyTrack.insertNote(channel + 1, pitch, velocity + 20, melodyTick/*timeStart*/, qtrNote);
 				melodyTick += qtrNote;
 			}
@@ -161,7 +162,7 @@ public class MidiGenerator {
 		for (int ndx = 0; ndx < chords.size(); ndx++)
 		{
 			int root = chords.get(ndx);
-			int[] triad = MusicStructure.generateTriad(root, song.scaleType);
+			int[] triad = song.scaleType.generateTriad(root);
 			
 			for (int interval = 0; interval < triad.length; interval++)
 			{
@@ -184,7 +185,7 @@ public class MidiGenerator {
 				}
 				// numBeats is actually in halfBeats
 				int duration = numHalfBeats * qtrNote / 2;
-				int pitch = basePitch + MusicStructure.getScaleIntervals(song.scaleType)[(root + note.pitch) % 7];// + 12;
+				int pitch = basePitch + song.scaleType.getAbsIntervals()[(root + note.pitch) % 7];// + 12;
 				melodyTrack.insertNote(channel + 1, pitch, noteVelocity, melodyTick, duration);
 				melodyTick += duration;
 			}
@@ -196,7 +197,7 @@ public class MidiGenerator {
 	public int addChordProgressionV3(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm)
 	{
 		int basePitch = song.key.getBaseMidiPitch();
-		int velocity = 80;
+		int velocity = 70;
 		
 		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
 		ArrayList<Integer> chords = progression.getChords();
@@ -204,7 +205,7 @@ public class MidiGenerator {
 		for (int ndx = 0; ndx < chords.size(); ndx++)
 		{
 			int root = chords.get(ndx);
-			int[] triad = MusicStructure.generateTriad(root, song.scaleType);
+			int[] triad = song.scaleType.generateTriad(root);
 			
 			int chordTick = tick;
 			for (Integer duration: rhythm)
@@ -223,7 +224,7 @@ public class MidiGenerator {
 				}
 				// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER, AND ESTABLISH CHORD BETTER
 				// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
-				track.insertNote(chordChannel, basePitch + triad[0] - 24, velocity, chordTick, length);
+				track.insertNote(chordChannel, basePitch + triad[0] - 24, velocity + 25, chordTick, length);
 				
 				chordTick += length;
 			}
@@ -281,8 +282,8 @@ public class MidiGenerator {
 				if (note.pitch < 0)
 					pitch = 0;
 				else
-					pitch = basePitch + MusicStructure.getInterval(song.scaleType, 1, root) 
-						+ MusicStructure.getChordInterval(song.scaleType, root, note.pitch);
+					pitch = basePitch + song.scaleType.getInterval(1, root) 
+						+ song.scaleType.getChordInterval(root, note.pitch);
 
 				track.insertNote(melodyChannel, pitch, noteVelocity, tick, duration);
 				tick += duration;

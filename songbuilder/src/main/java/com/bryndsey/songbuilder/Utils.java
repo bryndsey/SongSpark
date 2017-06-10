@@ -9,6 +9,24 @@ public class Utils {
 	private static Random randGen = new Random();
 	
 	/*
+	 * Returns a new array filled with values starting at startVal and increasing by
+	 * 1 up to endVal (i.e. {startVal, startVal+1, startVal+2,...endVal-1,endVal})
+	 */
+	public static int[] createRangeArray(int startVal, int endVal)
+	{
+		if (startVal >= endVal)
+			return null;
+		
+		int[] retVal = new int[endVal - startVal + 1];
+		for (int ndx = 0; ndx + startVal <= endVal; ndx++)
+		{
+			retVal[ndx] = ndx + startVal;
+		}
+		
+		return retVal;
+	}
+	
+	/*
 	 * Returns a new array with the probabilities in the array normalized.
 	 * The result is a new array in which the elements sum to 1.
 	 */
@@ -92,21 +110,27 @@ public class Utils {
 		return sum;
 	}
 	
-	public static double[] combineProbs(double[] probs1, double[] probs2)
+	// note: factor must be between 0.0001 and 0.9999. Otherwise, it is automatically set to the closer of those two values.
+	public static double[] combineProbs(double[] probs1, double[] probs2, double factor)
 	{
+		if (factor < 0.0001)
+			factor = 0.0001;
+		else if (factor > 0.9999)
+			factor = 0.9999;
+			
 		int minNumProbs = Math.min(probs1.length, probs2.length);
 		int maxNumProbs = Math.max(probs1.length, probs2.length);
 		if (maxNumProbs < 1)
 			return new double[maxNumProbs];
 		
 		double[] combinedProbs = new double[maxNumProbs];
-		double[] normProbs1 = normalizeProbs(probs1);
-		double[] normProbs2 = normalizeProbs(probs2);
+		//double[] normProbs1 = normalizeProbs(probs1);
+		//double[] normProbs2 = normalizeProbs(probs2);
 		
 		for (int ndx = 0; ndx < maxNumProbs; ndx++)
 		{
 			if (ndx < minNumProbs)
-				combinedProbs[ndx] = normProbs1[ndx] * normProbs2[ndx];
+				combinedProbs[ndx] = (probs1[ndx] * factor) * (probs2[ndx] * (1 - factor));
 			else
 				combinedProbs[ndx] = 0;
 		}

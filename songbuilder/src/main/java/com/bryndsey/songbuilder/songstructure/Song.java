@@ -3,7 +3,7 @@ package com.bryndsey.songbuilder.songstructure;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.Pitch;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.ScaleType;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.SongPart;
-import com.pdrogfer.mididroid.event.ProgramChange;
+import com.bryndsey.songbuilder.songstructure.MusicStructure.MidiInstrument;
 
 import java.util.ArrayList;
 
@@ -16,8 +16,8 @@ public class Song
 	public ScaleType scaleType;
 	public Pitch key;
 	
-	public ProgramChange.MidiProgram chordInstrument;
-	public ProgramChange.MidiProgram melodyInstrument;
+	public MidiInstrument chordInstrument;
+	public MidiInstrument melodyInstrument;
 	
 	public ArrayList<SongPart> structure;
 	
@@ -36,11 +36,13 @@ public class Song
 		timeSigNum = 0;
 		timeSigDenom = 0;
 		
+		tempo = 120;
+		
 		scaleType = ScaleType.MAJOR;
 		key = Pitch.C;
 		
-		chordInstrument = ProgramChange.MidiProgram.ACOUSTIC_GRAND_PIANO;
-		melodyInstrument = ProgramChange.MidiProgram.ACOUSTIC_GRAND_PIANO;
+		chordInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
+		melodyInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
 		
 		structure = null;
 		
