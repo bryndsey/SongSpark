@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 	Button newSongButton;
 
-	Button playButton;
+	Button playPauseButton;
 
 	@Inject
 	@Presenter
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 		infoView = (TextView)findViewById(R.id.info);
 		newSongButton = (Button)findViewById(R.id.new_song_button);
-		playButton = (Button)findViewById(R.id.play_button);
+		playPauseButton = (Button)findViewById(R.id.play_pause_button);
 
 		newSongButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 				presenter.generateNewSong();
 			}
 		});
-		playButton.setOnClickListener(new View.OnClickListener() {
+		playPauseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				presenter.playSong();
