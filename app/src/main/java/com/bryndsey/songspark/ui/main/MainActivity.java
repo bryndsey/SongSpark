@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 				presenter.generateNewSong();
 			}
 		});
-		newSongButton.setOnClickListener(new View.OnClickListener() {
+		playButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				presenter.playSong();
