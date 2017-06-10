@@ -13,39 +13,65 @@ import javax.inject.Inject;
 
 public class MidiPlayer {
 
-	private static final String TEMP_MIDI_FILE_PATH = "/temp/play.mid";
+	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
 
-	private Context context;
-
-	private final String filePath;
+	private File tempMidiFile;
 
 	private MediaPlayer mediaPlayer;
+
+	private boolean isReadyToPlay;
 
 	@Inject
 	public MidiPlayer(Context context) {
 		ComponentHolder.getApplicationComponent().inject(this);
 
-		this.context = context;
-
 		mediaPlayer = new MediaPlayer();
 
-		filePath = context.getFilesDir() + TEMP_MIDI_FILE_PATH;
+		tempMidiFile = new File(context.getCacheDir(), TEMP_MIDI_FILE_NAME);
+
+		if(!tempMidiFile.exists())
+		{
+			try {
+				tempMidiFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void preparePlayer(MidiFile midiFile) throws MidiPlayerPrepareException {
-		File playableMidiFile = new File(filePath);
-		try {
-			midiFile.writeToFile(playableMidiFile);
 
-			mediaPlayer.setDataSource(filePath);
+		resetPlayerState();
+
+		try {
+			midiFile.writeToFile(tempMidiFile);
+
+			mediaPlayer.setDataSource(tempMidiFile.getPath());
 			mediaPlayer.prepare();
+
+			isReadyToPlay = true;
 		} catch (IOException e) {
+			e.printStackTrace();
+			isReadyToPlay = false;
 			throw new MidiPlayerPrepareException();
 		}
 	}
 
+	private void resetPlayerState() {
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.stop();
+		}
+		if (isReadyToPlay) {
+			mediaPlayer.reset();
+		}
+
+		isReadyToPlay = false;
+	}
+
 	public void startPlaying() {
-		mediaPlayer.start();
+		if (isReadyToPlay) {
+			mediaPlayer.start();
+		}
 	}
 
 	public void stopPlaying() {
