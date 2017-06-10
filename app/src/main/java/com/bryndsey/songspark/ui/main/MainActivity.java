@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.bryndsey.songspark.R;
+import com.bryndsey.songspark.dagger.ComponentHolder;
+
+import javax.inject.Inject;
 
 import easymvp.annotation.ActivityView;
 import easymvp.annotation.Presenter;
@@ -18,20 +21,31 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 	Button newSongButton;
 
+	Button playButton;
+
+	@Inject
 	@Presenter
 	MainPresenter presenter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		ComponentHolder.getApplicationComponent().inject(this);
 		super.onCreate(savedInstanceState);
 
 		infoView = (TextView)findViewById(R.id.info);
 		newSongButton = (Button)findViewById(R.id.new_song_button);
+		playButton = (Button)findViewById(R.id.play_button);
 
 		newSongButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				presenter.generateNewSong();
+			}
+		});
+		newSongButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				presenter.playSong();
 			}
 		});
 	}

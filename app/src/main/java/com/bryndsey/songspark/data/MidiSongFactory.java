@@ -6,11 +6,14 @@ import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.pdrogfer.mididroid.MidiFile;
 
+import javax.inject.Inject;
+
 public class MidiSongFactory {
 
 	private SongWriter songWriter;
 	private MidiGenerator midiGenerator;
 
+	@Inject
 	public MidiSongFactory() {
 		songWriter = new SongWriter();
 		midiGenerator = new MidiGenerator();

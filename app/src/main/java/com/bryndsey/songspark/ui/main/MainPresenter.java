@@ -3,6 +3,10 @@ package com.bryndsey.songspark.ui.main;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
+import com.bryndsey.songspark.data.player.MidiPlayer;
+import com.bryndsey.songspark.data.player.MidiPlayerPrepareException;
+
+import javax.inject.Inject;
 
 import easymvp.AbstractPresenter;
 
@@ -11,10 +15,14 @@ public class MainPresenter extends AbstractPresenter<MainView> {
 
 	private MidiSongFactory midiSongFactory;
 	private MidiSong midiSong;
+	private MidiPlayer midiPlayer;
 
-	MainPresenter() {
-		midiSongFactory = new MidiSongFactory();
-		midiSong = midiSongFactory.newSong();
+	@Inject
+	MainPresenter(MidiSongFactory midiSongFactory, MidiPlayer midiPlayer) {
+		this.midiSongFactory = midiSongFactory;
+		this.midiPlayer = midiPlayer;
+
+		makeSong();
 	}
 
 	@Override
@@ -24,7 +32,7 @@ public class MainPresenter extends AbstractPresenter<MainView> {
 	}
 
 	void generateNewSong() {
-		midiSong = midiSongFactory.newSong();
+		makeSong();
 
 		updateDisplay();
 	}
@@ -46,5 +54,18 @@ public class MainPresenter extends AbstractPresenter<MainView> {
 
 			getView().displaySong(displayString);
 		}
+	}
+
+	private void makeSong() {
+		midiSong = midiSongFactory.newSong();
+		try {
+			midiPlayer.preparePlayer(midiSong.midiFile);
+		} catch (MidiPlayerPrepareException midiPlayerPrepareException) {
+			midiPlayerPrepareException.printStackTrace();
+		}
+	}
+
+	void playSong() {
+		midiPlayer.startPlaying();
 	}
 }

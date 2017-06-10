@@ -1,6 +1,7 @@
 package com.bryndsey.songspark.dagger;
 
 import com.bryndsey.songspark.data.player.MidiPlayer;
+import com.bryndsey.songspark.ui.main.MainActivity;
 
 import javax.inject.Singleton;
 
@@ -11,6 +12,8 @@ import dagger.Component;
 		AndroidModule.class
 })
 public interface ApplicationComponent {
-	
+
+	void inject(MainActivity mainActivity);
+
 	void inject(MidiPlayer midiPlayer);
 }
