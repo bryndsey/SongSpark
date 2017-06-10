@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-public class MidiPlayer {
+public class MidiPlayer implements MediaPlayer.OnCompletionListener{
 
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
 
@@ -19,13 +19,16 @@ public class MidiPlayer {
 
 	private MediaPlayer mediaPlayer;
 
-	private boolean isReadyToPlay;
+	private boolean isPrepared;
+
+	private PlaybackCompleteListener playbackCompleteListener;
 
 	@Inject
 	public MidiPlayer(Context context) {
 		ComponentHolder.getApplicationComponent().inject(this);
 
 		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setOnCompletionListener(this);
 
 		tempMidiFile = new File(context.getCacheDir(), TEMP_MIDI_FILE_NAME);
 
@@ -49,10 +52,10 @@ public class MidiPlayer {
 			mediaPlayer.setDataSource(tempMidiFile.getPath());
 			mediaPlayer.prepare();
 
-			isReadyToPlay = true;
+			isPrepared = true;
 		} catch (IOException e) {
 			e.printStackTrace();
-			isReadyToPlay = false;
+			isPrepared = false;
 			throw new MidiPlayerPrepareException();
 		}
 	}
@@ -61,20 +64,46 @@ public class MidiPlayer {
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.stop();
 		}
-		if (isReadyToPlay) {
+		if (isPrepared) {
 			mediaPlayer.reset();
 		}
 
-		isReadyToPlay = false;
+		isPrepared = false;
 	}
 
 	public void startPlaying() {
-		if (isReadyToPlay) {
+
+		//TODO: Implement audio focus
+
+		if (isPrepared) {
 			mediaPlayer.start();
+		}
+
+		//TODO: Show something to the user if not prepared?
+	}
+
+	public void pause() {
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.pause();
 		}
 	}
 
 	public void stopPlaying() {
 		mediaPlayer.stop();
+	}
+
+	public void setPlaybackCompleteListener(PlaybackCompleteListener playbackCompleteListener) {
+		this.playbackCompleteListener = playbackCompleteListener;
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mediaPlayer) {
+		if (playbackCompleteListener != null) {
+			playbackCompleteListener.onPlaybackComplete();
+		}
+	}
+
+	public interface PlaybackCompleteListener {
+		void onPlaybackComplete();
 	}
 }
