@@ -56,12 +56,19 @@ public class MainActivity extends AppCompatActivity implements MainView {
 	}
 
 	@Override
-	public void displayPlayState() {
-		playPauseButton.setText("PLAY");
+	public void displayPlayingState() {
+		playPauseButton.setText("PAUSE");
+		playPauseButton.setEnabled(true);
 	}
 
 	@Override
-	public void displayPauseState() {
-		playPauseButton.setText("PAUSE");
+	public void displayPausedState() {
+		playPauseButton.setText("PLAY");
+		playPauseButton.setEnabled(true);
+	}
+
+	@Override
+	public void disablePlayback() {
+		playPauseButton.setEnabled(false);
 	}
 }

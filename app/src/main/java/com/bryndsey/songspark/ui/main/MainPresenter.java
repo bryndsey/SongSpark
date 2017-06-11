@@ -4,44 +4,64 @@ import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.bryndsey.songspark.data.player.MidiPlayer;
-import com.bryndsey.songspark.data.player.MidiPlayerPrepareException;
 
 import javax.inject.Inject;
 
 import easymvp.AbstractPresenter;
 
-public class MainPresenter extends AbstractPresenter<MainView> implements MidiPlayer.PlaybackCompleteListener {
+public class MainPresenter extends AbstractPresenter<MainView> implements MidiPlayer.PlaybackStateListener {
 
 	private MidiSongFactory midiSongFactory;
 	private MidiSong midiSong;
 	private MidiPlayer midiPlayer;
 
-	// TODO: Not sure I like this. I am basically tracking the same state in 2 classes now...
-	private boolean isSongReady;
 	private boolean isPlaying;
+	private boolean isPlaybackDisabled;
+
+	private boolean isInitialAttach = true;
 
 	@Inject
 	MainPresenter(MidiSongFactory midiSongFactory, MidiPlayer midiPlayer) {
 		this.midiSongFactory = midiSongFactory;
 		this.midiPlayer = midiPlayer;
 
-		this.midiPlayer.setPlaybackCompleteListener(this);
-
-		makeSong();
+		this.midiPlayer.setPlaybackStateListener(this);
 	}
 
 	@Override
 	public void onViewAttached(MainView view) {
 		super.onViewAttached(view);
-		updateSongDisplay();
 
-		enterNotPlayingState();
+		if (isInitialAttach) {
+			enterNotPlayingState();
+
+			getView().disablePlayback();
+			isPlaybackDisabled = true;
+
+			generateNewSong();
+
+			isInitialAttach = false;
+		}
+
+		updateSongDisplay();
 	}
 
 	private void enterNotPlayingState() {
 		isPlaying = false;
 		if (isViewAttached()) {
-			getView().displayPlayState();
+			getView().displayPausedState();
+		}
+	}
+
+	private void syncPlayPauseButtonState() {
+		if (isViewAttached()) {
+			if (isPlaybackDisabled) {
+				getView().disablePlayback();
+			} else if (isPlaying) {
+				getView().displayPlayingState();
+			} else {
+				getView().displayPausedState();
+			}
 		}
 	}
 
@@ -98,7 +118,7 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 		midiPlayer.startPlaying();
 		isPlaying = true;
 		if (isViewAttached()) {
-			getView().displayPauseState();
+			getView().displayPlayingState();
 		}
 	}
 
