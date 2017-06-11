@@ -1,12 +1,13 @@
 package com.bryndsey.songspark.ui.base;
 
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.metova.slim.Slim;
 
 import butterknife.ButterKnife;
 
@@ -15,10 +16,9 @@ public abstract class BaseFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(getLayout(), container, false);
+		View view = Slim.createLayout(getActivity(), this, container);
 		ButterKnife.bind(this, view);
 		return view;
 	}
 
-	protected abstract @LayoutRes int getLayout();
 }
