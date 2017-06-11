@@ -12,16 +12,22 @@ import com.bryndsey.songspark.dagger.ComponentHolder;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import easymvp.annotation.ActivityView;
 import easymvp.annotation.Presenter;
 
 @ActivityView(layout = R.layout.activity_main, presenter = MainPresenter.class)
 public class MainActivity extends AppCompatActivity implements MainView {
 
+	@BindView(R.id.info)
 	TextView infoView;
 
+	@BindView(R.id.new_song_button)
 	ImageView newSongButton;
 
+	@BindView(R.id.play_pause_button)
 	ImageView playPauseButton;
 
 	@Inject
@@ -33,22 +39,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 		ComponentHolder.getApplicationComponent().inject(this);
 		super.onCreate(savedInstanceState);
 
-		infoView = (TextView) findViewById(R.id.info);
-		newSongButton = (ImageView) findViewById(R.id.new_song_button);
-		playPauseButton = (ImageView) findViewById(R.id.play_pause_button);
-
-		newSongButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.generateNewSong();
-			}
-		});
-		playPauseButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.playPauseSong();
-			}
-		});
+		ButterKnife.bind(this);
 	}
 
 	@Override
@@ -71,5 +62,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
 	@Override
 	public void disablePlayback() {
 		playPauseButton.setEnabled(false);
+	}
+
+	@OnClick(R.id.play_pause_button)
+	void onPlayPause() {
+		presenter.playPauseSong();
+	}
+
+	@OnClick(R.id.new_song_button)
+	void onGenerateNewSong() {
+		presenter.generateNewSong();
 	}
 }
