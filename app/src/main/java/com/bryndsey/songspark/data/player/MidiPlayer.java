@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-public class MidiPlayer implements MediaPlayer.OnCompletionListener{
+public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
 
@@ -32,8 +32,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener{
 
 		tempMidiFile = new File(context.getCacheDir(), TEMP_MIDI_FILE_NAME);
 
-		if(!tempMidiFile.exists())
-		{
+		if (!tempMidiFile.exists()) {
 			try {
 				tempMidiFile.createNewFile();
 			} catch (IOException e) {
