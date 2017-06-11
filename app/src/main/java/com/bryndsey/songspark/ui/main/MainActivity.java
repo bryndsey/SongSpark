@@ -3,7 +3,6 @@ package com.bryndsey.songspark.ui.main;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
@@ -18,9 +17,6 @@ import easymvp.annotation.Presenter;
 
 @ActivityView(layout = R.layout.activity_main, presenter = MainPresenter.class)
 public class MainActivity extends AppCompatActivity implements MainView {
-
-	@BindView(R.id.info)
-	TextView infoView;
 
 	@BindView(R.id.new_song_button)
 	ImageView newSongButton;
@@ -38,11 +34,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 		super.onCreate(savedInstanceState);
 
 		ButterKnife.bind(this);
-	}
-
-	@Override
-	public void displaySong(String song) {
-		infoView.setText(song);
 	}
 
 	@Override

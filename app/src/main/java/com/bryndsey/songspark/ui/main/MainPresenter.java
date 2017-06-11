@@ -1,6 +1,5 @@
 package com.bryndsey.songspark.ui.main;
 
-import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.bryndsey.songspark.data.player.MidiPlayer;
@@ -44,8 +43,6 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 		} else {
 			syncPlayPauseButtonState();
 		}
-
-		updateSongDisplay();
 	}
 
 	private void enterNotPlayingState() {
@@ -68,30 +65,6 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 	}
 
 	void generateNewSong() {
-		makeSong();
-
-		updateSongDisplay();
-	}
-
-	private void updateSongDisplay() {
-		if (isViewAttached()) {
-			Song song = midiSong.song;
-
-			String displayString = "";
-			displayString += "Time Signature: ";
-			displayString += song.timeSigNum + "/" + song.timeSigDenom;
-			displayString += "\nTempo: " + song.tempo + " BPM";
-			displayString += "\nChord instrument: " + song.chordInstrument;
-			displayString += "\nMelody instrument: " + song.melodyInstrument;
-			displayString += "\nScale: " + song.key.toString() + " " + song.scaleType;
-			displayString += "\nVerse: " + song.verseProgression.getChords();
-			displayString += "\nChorus: " + song.chorusProgression.getChords();
-
-			getView().displaySong(displayString);
-		}
-	}
-
-	private void makeSong() {
 		midiSong = midiSongFactory.newSong();
 		midiPlayer.preparePlayer(midiSong.midiFile);
 	}
