@@ -7,7 +7,9 @@ import com.bryndsey.songspark.data.model.MidiSong;
 import com.pdrogfer.mididroid.MidiFile;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MidiSongFactory {
 
 	private SongWriter songWriter;
