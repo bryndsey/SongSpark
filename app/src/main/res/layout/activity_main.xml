@@ -31,11 +31,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="8dp"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintBottom_toTopOf="@+id/play_button"
+        app:layout_constraintBottom_toTopOf="@+id/play_pause_button"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-        android:id="@+id/play_button"
+        android:id="@+id/play_pause_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

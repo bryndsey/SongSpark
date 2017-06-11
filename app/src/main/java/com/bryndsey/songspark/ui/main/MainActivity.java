@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 	Button newSongButton;
 
-	Button playButton;
+	Button playPauseButton;
 
 	@Inject
 	@Presenter
@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
 		ComponentHolder.getApplicationComponent().inject(this);
 		super.onCreate(savedInstanceState);
 
-		infoView = (TextView)findViewById(R.id.info);
-		newSongButton = (Button)findViewById(R.id.new_song_button);
-		playButton = (Button)findViewById(R.id.play_button);
+		infoView = (TextView) findViewById(R.id.info);
+		newSongButton = (Button) findViewById(R.id.new_song_button);
+		playPauseButton = (Button) findViewById(R.id.play_pause_button);
 
 		newSongButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -42,10 +42,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
 				presenter.generateNewSong();
 			}
 		});
-		playButton.setOnClickListener(new View.OnClickListener() {
+		playPauseButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				presenter.playSong();
+				presenter.playPauseSong();
 			}
 		});
 	}
@@ -53,5 +53,22 @@ public class MainActivity extends AppCompatActivity implements MainView {
 	@Override
 	public void displaySong(String song) {
 		infoView.setText(song);
+	}
+
+	@Override
+	public void displayPlayingState() {
+		playPauseButton.setText("PAUSE");
+		playPauseButton.setEnabled(true);
+	}
+
+	@Override
+	public void displayPausedState() {
+		playPauseButton.setText("PLAY");
+		playPauseButton.setEnabled(true);
+	}
+
+	@Override
+	public void disablePlayback() {
+		playPauseButton.setEnabled(false);
 	}
 }

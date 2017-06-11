@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-public class MidiPlayer {
+public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
 
@@ -19,18 +19,20 @@ public class MidiPlayer {
 
 	private MediaPlayer mediaPlayer;
 
-	private boolean isReadyToPlay;
+	private boolean isPrepared;
+
+	private PlaybackStateListener playbackStateListener;
 
 	@Inject
 	public MidiPlayer(Context context) {
 		ComponentHolder.getApplicationComponent().inject(this);
 
 		mediaPlayer = new MediaPlayer();
+		mediaPlayer.setOnCompletionListener(this);
 
 		tempMidiFile = new File(context.getCacheDir(), TEMP_MIDI_FILE_NAME);
 
-		if(!tempMidiFile.exists())
-		{
+		if (!tempMidiFile.exists()) {
 			try {
 				tempMidiFile.createNewFile();
 			} catch (IOException e) {
@@ -39,7 +41,7 @@ public class MidiPlayer {
 		}
 	}
 
-	public void preparePlayer(MidiFile midiFile) throws MidiPlayerPrepareException {
+	public void preparePlayer(MidiFile midiFile) {
 
 		resetPlayerState();
 
@@ -49,32 +51,70 @@ public class MidiPlayer {
 			mediaPlayer.setDataSource(tempMidiFile.getPath());
 			mediaPlayer.prepare();
 
-			isReadyToPlay = true;
+			isPrepared = true;
+
+			if (playbackStateListener != null) {
+				playbackStateListener.onPlaybackReady();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			isReadyToPlay = false;
-			throw new MidiPlayerPrepareException();
+			isPrepared = false;
+
+			if (playbackStateListener != null) {
+				playbackStateListener.onPlaybackNotReady();
+			}
 		}
 	}
 
 	private void resetPlayerState() {
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.stop();
+			onCompletion(mediaPlayer);
 		}
-		if (isReadyToPlay) {
+		if (isPrepared) {
 			mediaPlayer.reset();
 		}
 
-		isReadyToPlay = false;
+		isPrepared = false;
 	}
 
 	public void startPlaying() {
-		if (isReadyToPlay) {
+
+		//TODO: Implement audio focus
+
+		if (isPrepared) {
 			mediaPlayer.start();
+		}
+
+		//TODO: Show something to the user if not prepared?
+	}
+
+	public void pause() {
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.pause();
 		}
 	}
 
 	public void stopPlaying() {
 		mediaPlayer.stop();
+	}
+
+	public void setPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+		this.playbackStateListener = playbackStateListener;
+	}
+
+	@Override
+	public void onCompletion(MediaPlayer mediaPlayer) {
+		if (playbackStateListener != null) {
+			playbackStateListener.onPlaybackComplete();
+		}
+	}
+
+	public interface PlaybackStateListener {
+		void onPlaybackReady();
+
+		void onPlaybackNotReady();
+
+		void onPlaybackComplete();
 	}
 }

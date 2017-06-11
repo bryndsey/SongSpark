@@ -33,6 +33,4 @@ captures/
 
 .idea/
 
-app/app\.iml
-
-songbuilder/songbuilder\.iml
+*.iml

@@ -4,40 +4,76 @@ import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.bryndsey.songspark.data.player.MidiPlayer;
-import com.bryndsey.songspark.data.player.MidiPlayerPrepareException;
 
 import javax.inject.Inject;
 
 import easymvp.AbstractPresenter;
 
-
-public class MainPresenter extends AbstractPresenter<MainView> {
+public class MainPresenter extends AbstractPresenter<MainView> implements MidiPlayer.PlaybackStateListener {
 
 	private MidiSongFactory midiSongFactory;
 	private MidiSong midiSong;
 	private MidiPlayer midiPlayer;
+
+	private boolean isPlaying;
+	private boolean isPlaybackDisabled;
+
+	private boolean isInitialAttach = true;
 
 	@Inject
 	MainPresenter(MidiSongFactory midiSongFactory, MidiPlayer midiPlayer) {
 		this.midiSongFactory = midiSongFactory;
 		this.midiPlayer = midiPlayer;
 
-		makeSong();
+		this.midiPlayer.setPlaybackStateListener(this);
 	}
 
 	@Override
 	public void onViewAttached(MainView view) {
 		super.onViewAttached(view);
-		updateDisplay();
+
+		if (isInitialAttach) {
+			enterNotPlayingState();
+
+			getView().disablePlayback();
+			isPlaybackDisabled = true;
+
+			generateNewSong();
+
+			isInitialAttach = false;
+		} else {
+			syncPlayPauseButtonState();
+		}
+
+		updateSongDisplay();
+	}
+
+	private void enterNotPlayingState() {
+		isPlaying = false;
+		if (isViewAttached()) {
+			getView().displayPausedState();
+		}
+	}
+
+	private void syncPlayPauseButtonState() {
+		if (isViewAttached()) {
+			if (isPlaybackDisabled) {
+				getView().disablePlayback();
+			} else if (isPlaying) {
+				getView().displayPlayingState();
+			} else {
+				getView().displayPausedState();
+			}
+		}
 	}
 
 	void generateNewSong() {
 		makeSong();
 
-		updateDisplay();
+		updateSongDisplay();
 	}
 
-	private void updateDisplay() {
+	private void updateSongDisplay() {
 		if (isViewAttached()) {
 			Song song = midiSong.song;
 
@@ -50,7 +86,6 @@ public class MainPresenter extends AbstractPresenter<MainView> {
 			displayString += "\nScale: " + song.key.toString() + " " + song.scaleType;
 			displayString += "\nVerse: " + song.verseProgression.getChords();
 			displayString += "\nChorus: " + song.chorusProgression.getChords();
-			displayString += "\nBridge: " + song.bridgeProgression.getChords();
 
 			getView().displaySong(displayString);
 		}
@@ -58,14 +93,48 @@ public class MainPresenter extends AbstractPresenter<MainView> {
 
 	private void makeSong() {
 		midiSong = midiSongFactory.newSong();
-		try {
-			midiPlayer.preparePlayer(midiSong.midiFile);
-		} catch (MidiPlayerPrepareException midiPlayerPrepareException) {
-			midiPlayerPrepareException.printStackTrace();
+		midiPlayer.preparePlayer(midiSong.midiFile);
+	}
+
+	void playPauseSong() {
+		if (isPlaying) {
+			pause();
+		} else {
+			play();
 		}
 	}
 
-	void playSong() {
+	private void pause() {
+		midiPlayer.pause();
+		enterNotPlayingState();
+	}
+
+	private void play() {
 		midiPlayer.startPlaying();
+		isPlaying = true;
+		if (isViewAttached()) {
+			getView().displayPlayingState();
+		}
+	}
+
+	@Override
+	public void onPlaybackReady() {
+		isPlaybackDisabled = false;
+		if (isViewAttached()) {
+			getView().displayPausedState();
+		}
+	}
+
+	@Override
+	public void onPlaybackNotReady() {
+		isPlaybackDisabled = true;
+		if (isViewAttached()) {
+			getView().disablePlayback();
+		}
+	}
+
+	@Override
+	public void onPlaybackComplete() {
+		enterNotPlayingState();
 	}
 }
