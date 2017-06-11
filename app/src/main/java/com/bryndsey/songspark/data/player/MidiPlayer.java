@@ -21,7 +21,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 	private boolean isPrepared;
 
-	private PlaybackCompleteListener playbackCompleteListener;
+	private PlaybackStateListener playbackStateListener;
 
 	@Inject
 	public MidiPlayer(Context context) {
@@ -41,7 +41,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 		}
 	}
 
-	public void preparePlayer(MidiFile midiFile) throws MidiPlayerPrepareException {
+	public void preparePlayer(MidiFile midiFile) {
 
 		resetPlayerState();
 
@@ -52,16 +52,24 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 			mediaPlayer.prepare();
 
 			isPrepared = true;
+
+			if (playbackStateListener != null) {
+				playbackStateListener.onPlaybackReady();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			isPrepared = false;
-			throw new MidiPlayerPrepareException();
+
+			if (playbackStateListener != null) {
+				playbackStateListener.onPlaybackNotReady();
+			}
 		}
 	}
 
 	private void resetPlayerState() {
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.stop();
+			onCompletion(mediaPlayer);
 		}
 		if (isPrepared) {
 			mediaPlayer.reset();
@@ -91,18 +99,20 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 		mediaPlayer.stop();
 	}
 
-	public void setPlaybackCompleteListener(PlaybackCompleteListener playbackCompleteListener) {
-		this.playbackCompleteListener = playbackCompleteListener;
+	public void setPlaybackStateListener(PlaybackStateListener playbackStateListener) {
+		this.playbackStateListener = playbackStateListener;
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer mediaPlayer) {
-		if (playbackCompleteListener != null) {
-			playbackCompleteListener.onPlaybackComplete();
+		if (playbackStateListener != null) {
+			playbackStateListener.onPlaybackComplete();
 		}
 	}
 
-	public interface PlaybackCompleteListener {
+	public interface PlaybackStateListener {
+		void onPlaybackReady();
+		void onPlaybackNotReady();
 		void onPlaybackComplete();
 	}
 }

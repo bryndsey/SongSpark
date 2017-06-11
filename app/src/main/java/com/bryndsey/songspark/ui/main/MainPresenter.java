@@ -41,6 +41,8 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 			generateNewSong();
 
 			isInitialAttach = false;
+		} else {
+			syncPlayPauseButtonState();
 		}
 
 		updateSongDisplay();
@@ -91,20 +93,13 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 
 	private void makeSong() {
 		midiSong = midiSongFactory.newSong();
-		try {
-			midiPlayer.preparePlayer(midiSong.midiFile);
-
-			isSongReady = true;
-		} catch (MidiPlayerPrepareException midiPlayerPrepareException) {
-			midiPlayerPrepareException.printStackTrace();
-			isSongReady = false;
-		}
+		midiPlayer.preparePlayer(midiSong.midiFile);
 	}
 
 	void playPauseSong() {
 		if (isPlaying) {
 			pause();
-		} else if (isSongReady) {
+		} else {
 			play();
 		}
 	}
@@ -119,6 +114,22 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 		isPlaying = true;
 		if (isViewAttached()) {
 			getView().displayPlayingState();
+		}
+	}
+
+	@Override
+	public void onPlaybackReady() {
+		isPlaybackDisabled = false;
+		if (isViewAttached()) {
+			getView().displayPausedState();
+		}
+	}
+
+	@Override
+	public void onPlaybackNotReady() {
+		isPlaybackDisabled = true;
+		if (isViewAttached()) {
+			getView().disablePlayback();
 		}
 	}
 
