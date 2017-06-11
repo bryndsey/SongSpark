@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
