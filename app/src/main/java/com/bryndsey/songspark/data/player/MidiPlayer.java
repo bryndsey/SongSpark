@@ -112,7 +112,9 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 	public interface PlaybackStateListener {
 		void onPlaybackReady();
+
 		void onPlaybackNotReady();
+
 		void onPlaybackComplete();
 	}
 }

@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
 		ComponentHolder.getApplicationComponent().inject(this);
 		super.onCreate(savedInstanceState);
 
-		infoView = (TextView)findViewById(R.id.info);
-		newSongButton = (Button)findViewById(R.id.new_song_button);
-		playPauseButton = (Button)findViewById(R.id.play_pause_button);
+		infoView = (TextView) findViewById(R.id.info);
+		newSongButton = (Button) findViewById(R.id.new_song_button);
+		playPauseButton = (Button) findViewById(R.id.play_pause_button);
 
 		newSongButton.setOnClickListener(new View.OnClickListener() {
 			@Override
