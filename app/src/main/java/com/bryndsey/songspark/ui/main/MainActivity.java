@@ -2,8 +2,6 @@ package com.bryndsey.songspark.ui.main;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,13 +47,13 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
 	@Override
 	public void displayPlayingState() {
-		playPauseButton.setImageResource(R.drawable.pause);
+		playPauseButton.setImageResource(R.drawable.pause_icon);
 		playPauseButton.setEnabled(true);
 	}
 
 	@Override
 	public void displayPausedState() {
-		playPauseButton.setImageResource(R.drawable.play_arrow);
+		playPauseButton.setImageResource(R.drawable.play_icon);
 		playPauseButton.setEnabled(true);
 	}
 
