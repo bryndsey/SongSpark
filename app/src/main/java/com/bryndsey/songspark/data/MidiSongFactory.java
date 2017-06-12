@@ -39,7 +39,7 @@ public class MidiSongFactory {
 		return midiSong;
 	}
 
-	public Observable<MidiSong> nextSong() {
+	public Observable<MidiSong> latestSong() {
 		return midiSongRelay;
 	}
 }

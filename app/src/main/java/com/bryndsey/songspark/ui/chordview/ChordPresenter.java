@@ -20,7 +20,7 @@ class ChordPresenter extends RxPresenter<ChordView> {
 	public ChordPresenter(MidiSongFactory midiSongFactory) {
 		this.midiSongFactory = midiSongFactory;
 
-		Disposable subscription = midiSongFactory.nextSong()
+		Disposable subscription = midiSongFactory.latestSong()
 				.subscribeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {
 					@Override
