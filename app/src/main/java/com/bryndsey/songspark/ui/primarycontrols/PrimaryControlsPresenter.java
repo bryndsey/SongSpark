@@ -1,4 +1,4 @@
-package com.bryndsey.songspark.ui.main;
+package com.bryndsey.songspark.ui.primarycontrols;
 
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import easymvp.AbstractPresenter;
 
-public class MainPresenter extends AbstractPresenter<MainView> implements MidiPlayer.PlaybackStateListener {
+public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsView> implements MidiPlayer.PlaybackStateListener {
 
 	private MidiSongFactory midiSongFactory;
 	private MidiSong midiSong;
@@ -20,7 +20,7 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 	private boolean isInitialAttach = true;
 
 	@Inject
-	MainPresenter(MidiSongFactory midiSongFactory, MidiPlayer midiPlayer) {
+	PrimaryControlsPresenter(MidiSongFactory midiSongFactory, MidiPlayer midiPlayer) {
 		this.midiSongFactory = midiSongFactory;
 		this.midiPlayer = midiPlayer;
 
@@ -28,7 +28,7 @@ public class MainPresenter extends AbstractPresenter<MainView> implements MidiPl
 	}
 
 	@Override
-	public void onViewAttached(MainView view) {
+	public void onViewAttached(PrimaryControlsView view) {
 		super.onViewAttached(view);
 
 		if (isInitialAttach) {

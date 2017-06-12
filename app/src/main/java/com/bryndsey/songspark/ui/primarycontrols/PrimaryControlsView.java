@@ -1,6 +1,6 @@
-package com.bryndsey.songspark.ui.main;
+package com.bryndsey.songspark.ui.primarycontrols;
 
-interface MainView {
+interface PrimaryControlsView {
 	void displayPlayingState();
 
 	void displayPausedState();
