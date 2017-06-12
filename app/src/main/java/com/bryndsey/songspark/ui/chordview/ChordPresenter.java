@@ -6,11 +6,12 @@ import com.bryndsey.songspark.data.model.MidiSong;
 
 import javax.inject.Inject;
 
-import easymvp.AbstractPresenter;
+import easymvp.RxPresenter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-class ChordPresenter extends AbstractPresenter<ChordView> {
+class ChordPresenter extends RxPresenter<ChordView> {
 	private final MidiSongFactory midiSongFactory;
 
 	private Song song;
@@ -19,7 +20,7 @@ class ChordPresenter extends AbstractPresenter<ChordView> {
 	public ChordPresenter(MidiSongFactory midiSongFactory) {
 		this.midiSongFactory = midiSongFactory;
 
-		midiSongFactory.nextSong()
+		Disposable subscription = midiSongFactory.nextSong()
 				.subscribeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {
 					@Override
@@ -28,6 +29,8 @@ class ChordPresenter extends AbstractPresenter<ChordView> {
 						updateDisplay();
 					}
 				});
+
+		addSubscription(subscription);
 	}
 
 	@Override
