@@ -1,8 +1,12 @@
 package com.bryndsey.songspark.ui.chordview;
 
+import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -43,17 +47,33 @@ class ChordPresenter extends RxPresenter<ChordView> {
 
 	private void updateDisplay() {
 		if (isViewAttached() && song != null) {
-			String displayString = "";
-			displayString += "Time Signature: ";
-			displayString += song.timeSigNum + "/" + song.timeSigDenom;
-			displayString += "\nTempo: " + song.tempo + " BPM";
-			displayString += "\nChord instrument: " + song.chordInstrument;
-			displayString += "\nMelody instrument: " + song.melodyInstrument;
-			displayString += "\nScale: " + song.key.toString() + " " + song.scaleType;
-			displayString += "\nVerse: " + song.verseProgression.getChords();
-			displayString += "\nChorus: " + song.chorusProgression.getChords();
-
-			getView().displayChords(displayString);
+			List<ChordViewModel> chords = getViewModelsFromSong();
+			getView().displayChords(chords);
 		}
+	}
+
+	//TODO: Create a mapper class to handle this
+	private List<ChordViewModel> getViewModelsFromSong() {
+		List<Integer> rawChords = song.verseProgression.getChords();
+		rawChords.addAll(song.chorusProgression.getChords());
+
+		List<ChordViewModel> chords = new ArrayList<>(rawChords.size());
+
+		for ( Integer chordDegree : rawChords ) {
+			// Get absolute note of key (in semitones)
+			int key = song.key.ordinal();
+			// Get offset of chord degree from root of chord (in semitones)
+			int offset = song.scaleType.getAbsIntervals()[chordDegree - 1];
+			// Get absolute note value of chord root (in semitones)
+			int chordPitchNdx = (key + offset) % MusicStructure.NUMPITCHES;
+			MusicStructure.Pitch newPitch = MusicStructure.Pitch.values()[chordPitchNdx];
+
+			MusicStructure.ChordType chordType = song.scaleType.getTriadChordType(chordDegree);
+
+			ChordViewModel model = new ChordViewModel(newPitch + "" + chordType);
+			chords.add(model);
+		}
+
+		return chords;
 	}
 }
