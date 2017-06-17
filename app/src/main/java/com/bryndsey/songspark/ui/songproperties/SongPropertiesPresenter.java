@@ -17,7 +17,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	private Song song;
 
 	@Inject
-	public SongPropertiesPresenter(MidiSongFactory midiSongFactory) {
+	SongPropertiesPresenter(MidiSongFactory midiSongFactory) {
 		Disposable subscription = midiSongFactory.latestSong()
 				.subscribeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {

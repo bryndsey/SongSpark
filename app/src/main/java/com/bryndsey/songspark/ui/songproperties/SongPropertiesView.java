@@ -1,6 +1,6 @@
 package com.bryndsey.songspark.ui.songproperties;
 
-public interface SongPropertiesView {
+interface SongPropertiesView {
 
 	void setTimeSignature(String timeSignature);
 
