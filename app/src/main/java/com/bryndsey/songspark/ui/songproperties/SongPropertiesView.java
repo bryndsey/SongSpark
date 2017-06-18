@@ -4,7 +4,7 @@ interface SongPropertiesView {
 
 	void setTimeSignature(String timeSignature);
 
-	void setTempo(int tempo);
+	void setTempo(String tempo);
 
 	void setScale(String scale);
 

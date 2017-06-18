@@ -41,7 +41,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	private void updateDisplay() {
 		if (isViewAttached() && song != null) {
 			getView().setTimeSignature(song.timeSigNum + "/" + song.timeSigDenom);
-			getView().setTempo(song.tempo);
+			getView().setTempo(song.tempo + " bpm");
 			getView().setScale(song.key.toString() + " " + song.scaleType.toString());
 			getView().setLeadInstrument(song.melodyInstrument.toString());
 			getView().setRhythmInstrument(song.chordInstrument.toString());

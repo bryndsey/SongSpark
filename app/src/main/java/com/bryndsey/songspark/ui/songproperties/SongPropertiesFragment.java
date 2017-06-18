@@ -50,8 +50,8 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	}
 
 	@Override
-	public void setTempo(int tempo) {
-		tempoView.setText(tempo + " bpm");
+	public void setTempo(String tempo) {
+		tempoView.setText(tempo);
 	}
 
 	@Override
