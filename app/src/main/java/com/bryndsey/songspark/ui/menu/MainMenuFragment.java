@@ -33,8 +33,6 @@ public class MainMenuFragment extends Fragment implements MainMenuView {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-
 		inflater.inflate(R.menu.main_menu, menu);
 	}
 
