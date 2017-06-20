@@ -2,12 +2,13 @@ package com.bryndsey.songspark.ui.menu;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bryndsey.songspark.R;
-import com.bryndsey.songspark.ui.base.BaseFragment;
+import com.bryndsey.songspark.dagger.ComponentHolder;
 
 import javax.inject.Inject;
 
@@ -15,7 +16,7 @@ import easymvp.annotation.FragmentView;
 import easymvp.annotation.Presenter;
 
 @FragmentView(presenter = MainMenuPresenter.class)
-public class MainMenuFragment extends BaseFragment {
+public class MainMenuFragment extends Fragment implements MainMenuView {
 
 	@Inject
 	@Presenter
@@ -24,6 +25,8 @@ public class MainMenuFragment extends BaseFragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		ComponentHolder.getApplicationComponent().inject(this);
 
 		setHasOptionsMenu(true);
 	}
