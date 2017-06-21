@@ -9,14 +9,17 @@ import android.view.MenuItem;
 
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
+import com.bryndsey.songspark.ui.base.BaseFragment;
+import com.metova.slim.annotation.Layout;
 
 import javax.inject.Inject;
 
 import easymvp.annotation.FragmentView;
 import easymvp.annotation.Presenter;
 
+@Layout(R.layout.empty)
 @FragmentView(presenter = MainMenuPresenter.class)
-public class MainMenuFragment extends Fragment implements MainMenuView {
+public class MainMenuFragment extends BaseFragment implements MainMenuView, SimpleInputDialog.OnDialogResultListener {
 
 	@Inject
 	@Presenter
