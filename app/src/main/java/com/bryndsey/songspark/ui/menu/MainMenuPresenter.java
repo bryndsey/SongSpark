@@ -13,7 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-
 class MainMenuPresenter extends RxPresenter<MainMenuView> {
 
 	private MidiFile midiFile;
@@ -33,8 +32,11 @@ class MainMenuPresenter extends RxPresenter<MainMenuView> {
 	}
 
 	void exportMidiSong() {
-		if (midiFile != null) {
-			Log.d("BRYAN", "Logging export");
+		if (midiFile != null && isViewAttached()) {
+			getView().launchSaveFileSelector();
 		}
+	}
+
+	void exportToFile(String fileName) {
 	}
 }

@@ -1,8 +1,8 @@
 package com.bryndsey.songspark.ui.menu;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import easymvp.annotation.FragmentView;
 import easymvp.annotation.Presenter;
+import eltos.simpledialogfragment.input.SimpleInputDialog;
 
 @Layout(R.layout.empty)
 @FragmentView(presenter = MainMenuPresenter.class)
@@ -47,5 +48,29 @@ public class MainMenuFragment extends BaseFragment implements MainMenuView, Simp
 		}
 
 		return true;
+	}
+
+	@Override
+	public void launchSaveFileSelector() {
+			showSaveFileDialog();
+	}
+
+	private void showSaveFileDialog() {
+		SimpleInputDialog.build()
+				.allowEmpty(false)
+				.title("Save as:")
+				.hint("File Name")
+				.show(this, "TAG");
+	}
+
+	@Override
+	public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
+		if (which == BUTTON_POSITIVE) {
+			String fileName = extras.getString(SimpleInputDialog.TEXT);
+			presenter.exportToFile(fileName);
+			return true;
+		}
+
+		return false;
 	}
 }
