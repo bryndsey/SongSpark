@@ -1,4 +1,4 @@
-package com.bryndsey.songspark.data;
+package com.bryndsey.songspark.data.filesave;
 
 import android.content.Context;
 import android.os.Environment;
@@ -22,7 +22,7 @@ public class MidiFileSaver {
 	private File publicFileDirectory;
 
 	@Inject
-	public MidiFileSaver(Context context) {
+	MidiFileSaver(Context context) {
 		this.context = context;
 
 		APP_DIRECTORY_NAME = context.getResources().getString(R.string.app_name);
@@ -44,20 +44,20 @@ public class MidiFileSaver {
 		return fileNameWithExtension;
 	}
 
-	private void writeMidiFile(MidiFile midiFile, File saveFile) {
+	private void writeMidiFile(MidiFile midiFile, File saveFile) throws MidiFileSaveException {
 		try {
 			midiFile.writeToFile(saveFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new MidiFileSaveException();
 		}
 	}
 
-	public void savePublicMidiFile(MidiFile midiFile, String fileName) {
+	public void savePublicMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
 		File saveFile = new File(publicFileDirectory, getFileNameWithProperExternsion(fileName));
 		writeMidiFile(midiFile, saveFile);
 	}
 
-	public void saveTemporaryMidiFile(MidiFile midiFile, String fileName) {
+	public void saveTemporaryMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
 		File saveFile = new File(tempFileDirectory, getFileNameWithProperExternsion(fileName));
 		writeMidiFile(midiFile, saveFile);
 	}
