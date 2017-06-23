@@ -1,5 +1,6 @@
 package com.bryndsey.songspark.ui.menu;
 
+import com.bryndsey.songspark.data.filesave.MidiFileSaveException;
 import com.bryndsey.songspark.data.filesave.MidiFileSaver;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
@@ -40,6 +41,15 @@ class MainMenuPresenter extends RxPresenter<MainMenuView> {
 	}
 
 	void exportToFile(String fileName) {
-		midiFileSaver.savePublicMidiFile(midiFile, fileName);
+		try {
+			midiFileSaver.savePublicMidiFile(midiFile, fileName);
+			if (isViewAttached()) {
+				getView().showFileSaveConfirmation(fileName);
+			}
+		} catch (MidiFileSaveException e) {
+			if (isViewAttached()) {
+				getView().showFileSaveError();
+			}
+		}
 	}
 }

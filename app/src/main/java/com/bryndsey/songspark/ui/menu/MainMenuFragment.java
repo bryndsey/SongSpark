@@ -4,6 +4,7 @@ import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -68,6 +69,18 @@ public class MainMenuFragment extends BaseFragment implements MainMenuView, Simp
 				})
 				.onSameThread()
 				.check();
+	}
+
+	@Override
+	public void showFileSaveConfirmation(String fileName) {
+		Snackbar.make(getView(), "File \"" + fileName + "\" saved.", Snackbar.LENGTH_SHORT)
+		.show();
+	}
+
+	@Override
+	public void showFileSaveError() {
+		Snackbar.make(getView(), "Error occurred. File not saved", Snackbar.LENGTH_SHORT)
+		.show();
 	}
 
 	private void showSaveFileDialog() {
