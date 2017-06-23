@@ -1,5 +1,6 @@
 package com.bryndsey.songspark.ui.menu;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,9 @@ import android.view.MenuItem;
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
 import com.bryndsey.songspark.ui.base.BaseFragment;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.single.BasePermissionListener;
 import com.metova.slim.annotation.Layout;
 
 import javax.inject.Inject;
@@ -54,7 +58,15 @@ public class MainMenuFragment extends BaseFragment implements MainMenuView, Simp
 
 	@Override
 	public void launchSaveFileSelector() {
-			showSaveFileDialog();
+		Dexter.withActivity(getActivity())
+				.withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+				.withListener(new BasePermissionListener() {
+					@Override
+					public void onPermissionGranted(PermissionGrantedResponse response) {
+						showSaveFileDialog();
+					}
+				})
+				.check();
 	}
 
 	private void showSaveFileDialog() {
