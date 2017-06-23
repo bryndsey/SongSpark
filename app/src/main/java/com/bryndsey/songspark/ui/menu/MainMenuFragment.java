@@ -66,6 +66,7 @@ public class MainMenuFragment extends BaseFragment implements MainMenuView, Simp
 						showSaveFileDialog();
 					}
 				})
+				.onSameThread()
 				.check();
 	}
 
