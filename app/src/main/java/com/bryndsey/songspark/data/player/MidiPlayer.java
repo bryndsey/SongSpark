@@ -32,6 +32,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setOnCompletionListener(this);
 
+		//TODO: Switch to using MidiFileSaver
 		tempMidiFile = new File(context.getCacheDir(), TEMP_MIDI_FILE_NAME);
 
 		if (!tempMidiFile.exists()) {
