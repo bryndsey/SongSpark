@@ -22,6 +22,8 @@ import eltos.simpledialogfragment.input.SimpleInputDialog;
 @FragmentView(presenter = MainMenuPresenter.class)
 public class MainMenuFragment extends BaseFragment implements MainMenuView, SimpleInputDialog.OnDialogResultListener {
 
+	private static final String SAVE_FILE_DIALOG_TAG = "saveFileDialog";
+
 	@Inject
 	@Presenter
 	MainMenuPresenter presenter;
@@ -60,12 +62,12 @@ public class MainMenuFragment extends BaseFragment implements MainMenuView, Simp
 				.allowEmpty(false)
 				.title("Save as:")
 				.hint("File Name")
-				.show(this, "TAG");
+				.show(this, SAVE_FILE_DIALOG_TAG);
 	}
 
 	@Override
 	public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
-		if (which == BUTTON_POSITIVE) {
+		if (dialogTag.equals(SAVE_FILE_DIALOG_TAG) && which == BUTTON_POSITIVE) {
 			String fileName = extras.getString(SimpleInputDialog.TEXT);
 			presenter.exportToFile(fileName);
 			return true;
