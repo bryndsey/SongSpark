@@ -28,14 +28,14 @@ public class MidiFileSaver {
 		APP_DIRECTORY_NAME = context.getResources().getString(R.string.app_name);
 		tempFileDirectory = context.getCacheDir();
 
-		//TODO: Make sure external media is mounted and that we have permissions
+		//TODO: Make sure external media is mounted
 		publicFileDirectory = new File(Environment.getExternalStorageDirectory(), APP_DIRECTORY_NAME);
 		if (!publicFileDirectory.exists()) {
 			publicFileDirectory.mkdirs();
 		}
 	}
 
-	private String getFileNameWithProperExternsion(String fileName) {
+	private String getFileNameWithProperExtension(String fileName) {
 		String fileNameWithExtension = fileName;
 		if (!fileNameWithExtension.endsWith(MIDI_FILE_EXTENSION)) {
 			fileNameWithExtension += MIDI_FILE_EXTENSION;
@@ -53,12 +53,12 @@ public class MidiFileSaver {
 	}
 
 	public void savePublicMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
-		File saveFile = new File(publicFileDirectory, getFileNameWithProperExternsion(fileName));
+		File saveFile = new File(publicFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 	}
 
 	public void saveTemporaryMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
-		File saveFile = new File(tempFileDirectory, getFileNameWithProperExternsion(fileName));
+		File saveFile = new File(tempFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 	}
 }
