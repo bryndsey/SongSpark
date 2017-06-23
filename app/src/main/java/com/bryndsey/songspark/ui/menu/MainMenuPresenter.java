@@ -1,7 +1,6 @@
 package com.bryndsey.songspark.ui.menu;
 
-import android.util.Log;
-
+import com.bryndsey.songspark.data.MidiFileSaver;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.pdrogfer.mididroid.MidiFile;
@@ -15,10 +14,11 @@ import io.reactivex.functions.Consumer;
 
 class MainMenuPresenter extends RxPresenter<MainMenuView> {
 
+	private final MidiFileSaver midiFileSaver;
 	private MidiFile midiFile;
 
 	@Inject
-	MainMenuPresenter(MidiSongFactory midiSongFactory) {
+	MainMenuPresenter(MidiSongFactory midiSongFactory, MidiFileSaver midiFileSaver) {
 		Disposable subscription = midiSongFactory.latestSong()
 				.subscribeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {
@@ -29,6 +29,8 @@ class MainMenuPresenter extends RxPresenter<MainMenuView> {
 				});
 
 		addSubscription(subscription);
+
+		this.midiFileSaver = midiFileSaver;
 	}
 
 	void exportMidiSong() {
@@ -38,5 +40,6 @@ class MainMenuPresenter extends RxPresenter<MainMenuView> {
 	}
 
 	void exportToFile(String fileName) {
+		midiFileSaver.savePublicMidiFile(midiFile, fileName);
 	}
 }
