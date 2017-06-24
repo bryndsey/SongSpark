@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
+    android:padding="12dp"
     android:background="@android:color/darker_gray">
 
     <TextView
@@ -53,17 +53,16 @@
         android:id="@+id/lead_instrument"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rhythm_instrument"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_signature"
-        tools:text="Distortion Guitar" />
+        tools:text="Distortion Guitar"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/rhythm_instrument"
