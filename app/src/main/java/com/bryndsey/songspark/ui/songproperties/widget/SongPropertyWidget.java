@@ -53,7 +53,7 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 	}
 
 	public void setPropertyItems(List items) {
-		ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, items);
+		ArrayAdapter adapter = new ArrayAdapter(getContext(), R.layout.song_property_spinner_item, items);
 		adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
 		propertySpinner.setAdapter(adapter);
 	}
