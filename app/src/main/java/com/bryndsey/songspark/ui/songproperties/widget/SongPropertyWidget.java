@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,14 +18,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.functions.Consumer;
 
-public class SongPropertyWidget extends LinearLayout {
+public class SongPropertyWidget extends LinearLayout implements AdapterView.OnItemSelectedListener {
 
 	@BindView(R.id.property_image)
 	ImageView propertyImage;
 
 	@BindView(R.id.property_spinner)
 	Spinner propertySpinner;
+
+	private Consumer<Integer> selectedAction;
 
 	public SongPropertyWidget(Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
@@ -39,7 +43,13 @@ public class SongPropertyWidget extends LinearLayout {
 
 		attributes.recycle();
 
+		propertySpinner.setOnItemSelectedListener(this);
+
 		setOrientation(HORIZONTAL);
+	}
+
+	public void setSongPropertySelectedAction(Consumer<Integer> action) {
+		this.selectedAction = action;
 	}
 
 	public void setPropertyItems(List items) {
@@ -50,5 +60,21 @@ public class SongPropertyWidget extends LinearLayout {
 
 	public void setPropertySelection(int position) {
 		propertySpinner.setSelection(position);
+	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		if (selectedAction != null) {
+			try {
+				selectedAction.accept(position);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+
 	}
 }
