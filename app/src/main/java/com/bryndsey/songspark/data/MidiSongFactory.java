@@ -26,17 +26,19 @@ public class MidiSongFactory {
 		midiGenerator = new MidiGenerator();
 	}
 
-	public MidiSong newSong() {
+	public void newSong() {
 		//TODO: Maybe do this on another thread?
 		Song song = songWriter.writeNewSong();
 
+		makeMidiSongFrom(song);
+	}
+
+	public void makeMidiSongFrom(Song song) {
 		MidiFile songFile = midiGenerator.generateChordMidi(song);
 
 		MidiSong midiSong = new MidiSong(song, songFile);
 
 		midiSongRelay.accept(midiSong);
-
-		return midiSong;
 	}
 
 	public Observable<MidiSong> latestSong() {

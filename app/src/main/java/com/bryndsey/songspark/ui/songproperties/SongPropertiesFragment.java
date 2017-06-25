@@ -2,6 +2,7 @@ package com.bryndsey.songspark.ui.songproperties;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bryndsey.songspark.R;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import easymvp.annotation.FragmentView;
 import easymvp.annotation.Presenter;
+import io.reactivex.functions.Consumer;
 
 @Layout(R.layout.song_properties)
 @FragmentView(presenter = SongPropertiesPresenter.class)
@@ -40,6 +42,18 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	@Inject
 	@Presenter
 	SongPropertiesPresenter presenter;
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		rhythmInstrumentChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+			@Override
+			public void accept(Integer integer) throws Exception {
+				presenter.updateRhythmInstrument(integer);
+			}
+		});
+	}
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.MediaPlayer;
 
 import com.bryndsey.songspark.dagger.ComponentHolder;
+import com.bryndsey.songspark.data.MidiSongFactory;
+import com.bryndsey.songspark.data.model.MidiSong;
 import com.pdrogfer.mididroid.MidiFile;
 
 import java.io.File;
@@ -11,6 +13,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import io.reactivex.functions.Consumer;
 
 @Singleton
 public class MidiPlayer implements MediaPlayer.OnCompletionListener {
@@ -26,8 +30,16 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 	private PlaybackStateListener playbackStateListener;
 
 	@Inject
-	public MidiPlayer(Context context) {
+	public MidiPlayer(Context context, MidiSongFactory midiSongFactory) {
 		ComponentHolder.getApplicationComponent().inject(this);
+
+		midiSongFactory.latestSong()
+				.subscribe(new Consumer<MidiSong>() {
+					@Override
+					public void accept(MidiSong midiSong) throws Exception {
+						preparePlayer(midiSong.midiFile);
+					}
+				});
 
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setOnCompletionListener(this);
@@ -44,7 +56,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 		}
 	}
 
-	public void preparePlayer(MidiFile midiFile) {
+	private void preparePlayer(MidiFile midiFile) {
 
 		resetPlayerState();
 

@@ -1,7 +1,6 @@
 package com.bryndsey.songspark.ui.primarycontrols;
 
 import com.bryndsey.songspark.data.MidiSongFactory;
-import com.bryndsey.songspark.data.model.MidiSong;
 import com.bryndsey.songspark.data.player.MidiPlayer;
 
 import javax.inject.Inject;
@@ -11,7 +10,6 @@ import easymvp.AbstractPresenter;
 public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsView> implements MidiPlayer.PlaybackStateListener {
 
 	private MidiSongFactory midiSongFactory;
-	private MidiSong midiSong;
 	private MidiPlayer midiPlayer;
 
 	private boolean isPlaying;
@@ -65,8 +63,7 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 	}
 
 	void generateNewSong() {
-		midiSong = midiSongFactory.newSong();
-		midiPlayer.preparePlayer(midiSong.midiFile);
+		midiSongFactory.newSong();
 	}
 
 	void playPauseSong() {
