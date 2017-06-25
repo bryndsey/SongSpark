@@ -5,6 +5,7 @@ import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
+import com.google.common.primitives.Ints;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +23,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	private final MidiSongFactory midiSongFactory;
 	private Song song;
 
+	private static final List<Integer> TEMPO_LIST = Ints.asList(SongWriter.bpmValues);
 	private static final List<MusicStructure.MidiInstrument> LEAD_INSTRUMENT_LIST = Arrays.asList(SongWriter.melodyInstruments);
 	private static final List<MusicStructure.MidiInstrument> RHYTHM_INSTRUMENT_LIST = Arrays.asList(SongWriter.chordInstruments);
 
@@ -45,6 +47,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	public void onViewAttached(SongPropertiesView view) {
 		super.onViewAttached(view);
 
+		getView().setTempoList(TEMPO_LIST);
 		getView().setLeadInstrumentList(LEAD_INSTRUMENT_LIST);
 		getView().setRhythmInstrumentList(RHYTHM_INSTRUMENT_LIST);
 
@@ -54,7 +57,10 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	private void updateDisplay() {
 		if (isViewAttached() && song != null) {
 			getView().setTimeSignature(song.timeSigNum + "/" + song.timeSigDenom);
-			getView().setTempo(song.tempo + " bpm");
+
+			int currentTempoSelection = TEMPO_LIST.indexOf(song.tempo);
+			getView().setTempoSelection(currentTempoSelection);
+//			getView().setTempo(song.tempo + " bpm");
 			getView().setScale(song.key.toString() + " " + song.scaleType.toString());
 
 			int currentLeadInstrument = LEAD_INSTRUMENT_LIST.indexOf(song.melodyInstrument);
@@ -62,6 +68,14 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 			int currentRhythmInstrument = RHYTHM_INSTRUMENT_LIST.indexOf(song.chordInstrument);
 			getView().setRhythmInstrumentSelection(currentRhythmInstrument);
+		}
+	}
+
+	void updateTempo(int tempoPosition) {
+		Integer tempo = TEMPO_LIST.get(tempoPosition);
+		if (song.tempo != tempo) {
+			song.tempo = tempo;
+			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
 

@@ -8,6 +8,10 @@ interface SongPropertiesView {
 
 	void setTempo(String tempo);
 
+	void setTempoList(List tempoList);
+
+	void setTempoSelection(int positionInList);
+
 	void setScale(String scale);
 
 	void setLeadInstrumentList(List instrumentList);

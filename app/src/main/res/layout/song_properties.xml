@@ -21,10 +21,11 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="4/4"
         android:layout_marginRight="8dp"
-        android:layout_marginLeft="0dp" />
+        android:layout_marginLeft="0dp"
+        app:layout_constraintHorizontal_chainStyle="spread_inside" />
 
     <TextView
-        android:id="@+id/tempo"
+        android:id="@+id/tempo_old"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -35,7 +36,22 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/time_signature"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="120 bpm" />
+        tools:text="120 bpm"
+        android:visibility="invisible"/>
+
+    <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
+        android:id="@+id/tempo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center_horizontal"
+        app:propertySrc="@drawable/icon_metronome"
+        app:layout_constraintEnd_toStartOf="@+id/scale"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/time_signature"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/scale"
@@ -66,7 +82,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_signature"
-        tools:text="Distortion Guitar"
         app:layout_constraintVertical_bias="0.0"
         android:layout_marginRight="8dp" />
 
@@ -84,7 +99,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/lead_instrument"
         app:layout_constraintTop_toTopOf="@+id/lead_instrument"
-        tools:text="Acoustic Grand Piano"
         android:layout_marginRight="0dp"
         android:layout_marginLeft="8dp" />
 </android.support.constraint.ConstraintLayout>
