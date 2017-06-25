@@ -6,8 +6,6 @@ interface SongPropertiesView {
 
 	void setTimeSignature(String timeSignature);
 
-	void setTempo(String tempo);
-
 	void setTempoList(List tempoList);
 
 	void setTempoSelection(int positionInList);

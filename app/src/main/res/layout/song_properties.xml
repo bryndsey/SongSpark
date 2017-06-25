@@ -24,21 +24,6 @@
         android:layout_marginLeft="0dp"
         app:layout_constraintHorizontal_chainStyle="spread_inside" />
 
-    <TextView
-        android:id="@+id/tempo_old"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="0dp"
-        android:gravity="center_horizontal"
-        app:layout_constraintEnd_toStartOf="@+id/scale"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/time_signature"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="120 bpm"
-        android:visibility="invisible"/>
-
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/tempo"
         android:layout_width="0dp"

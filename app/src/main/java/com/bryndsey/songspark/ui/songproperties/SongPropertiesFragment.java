@@ -27,9 +27,6 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	@BindView(R.id.time_signature)
 	TextView timeSignatureView;
 
-	@BindView(R.id.tempo_old)
-	TextView tempoView;
-
 	@BindView(R.id.tempo)
 	SongPropertyWidget tempoChooser;
 
@@ -81,11 +78,6 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	@Override
 	public void setTimeSignature(String timeSignature) {
 		timeSignatureView.setText(timeSignature);
-	}
-
-	@Override
-	public void setTempo(String tempo) {
-		tempoView.setText(tempo);
 	}
 
 	@Override

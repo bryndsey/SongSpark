@@ -60,7 +60,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 			int currentTempoSelection = TEMPO_LIST.indexOf(song.tempo);
 			getView().setTempoSelection(currentTempoSelection);
-//			getView().setTempo(song.tempo + " bpm");
+
 			getView().setScale(song.key.toString() + " " + song.scaleType.toString());
 
 			int currentLeadInstrument = LEAD_INSTRUMENT_LIST.indexOf(song.melodyInstrument);
