@@ -26,6 +26,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="0.6"
             app:srcCompat="@drawable/icon_time_signature"
             android:layout_marginRight="8dp"/>
 
@@ -72,6 +73,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="0.6"
             android:layout_marginRight="8dp"
             app:srcCompat="@drawable/icon_key_signature" />
 
