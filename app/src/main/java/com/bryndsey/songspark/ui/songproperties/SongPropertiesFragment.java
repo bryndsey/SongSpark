@@ -7,7 +7,10 @@ import android.widget.TextView;
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
 import com.bryndsey.songspark.ui.base.BaseFragment;
+import com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget;
 import com.metova.slim.annotation.Layout;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,7 +35,7 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	TextView leadInstrumentView;
 
 	@BindView(R.id.rhythm_instrument)
-	TextView rhythmInstrumentView;
+	SongPropertyWidget rhythmInstrumentChooser;
 
 	@Inject
 	@Presenter
@@ -65,7 +68,12 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	}
 
 	@Override
-	public void setRhythmInstrument(String rhythmInstrument) {
-		rhythmInstrumentView.setText(rhythmInstrument);
+	public void setRhythmInstrumentList(List instrumentList) {
+		rhythmInstrumentChooser.setPropertyItems(instrumentList);
+	}
+
+	@Override
+	public void setInstrumentSelection(int positionInList) {
+		rhythmInstrumentChooser.setPropertySelection(positionInList);
 	}
 }

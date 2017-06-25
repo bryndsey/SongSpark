@@ -1,5 +1,7 @@
 package com.bryndsey.songspark.ui.songproperties;
 
+import java.util.List;
+
 interface SongPropertiesView {
 
 	void setTimeSignature(String timeSignature);
@@ -10,5 +12,7 @@ interface SongPropertiesView {
 
 	void setLeadInstrument(String leadInstrument);
 
-	void setRhythmInstrument(String rhythmInstrument);
+	void setRhythmInstrumentList(List instrumentList);
+
+	void setInstrumentSelection(int positionInList);
 }

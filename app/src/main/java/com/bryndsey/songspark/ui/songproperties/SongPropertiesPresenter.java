@@ -1,8 +1,12 @@
 package com.bryndsey.songspark.ui.songproperties;
 
+import com.bryndsey.songbuilder.SongWriter;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -15,6 +19,8 @@ import io.reactivex.functions.Consumer;
 public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 	private Song song;
+
+	private static final List RHYTHM_INSTRUMENT_LIST = Arrays.asList(SongWriter.chordInstruments);
 
 	@Inject
 	SongPropertiesPresenter(MidiSongFactory midiSongFactory) {
@@ -35,6 +41,8 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	public void onViewAttached(SongPropertiesView view) {
 		super.onViewAttached(view);
 
+		getView().setRhythmInstrumentList(RHYTHM_INSTRUMENT_LIST);
+
 		updateDisplay();
 	}
 
@@ -44,7 +52,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 			getView().setTempo(song.tempo + " bpm");
 			getView().setScale(song.key.toString() + " " + song.scaleType.toString());
 			getView().setLeadInstrument(song.melodyInstrument.toString());
-			getView().setRhythmInstrument(song.chordInstrument.toString());
+
+			int currentRhythmInstrument = RHYTHM_INSTRUMENT_LIST.indexOf(song.chordInstrument);
+			getView().setInstrumentSelection(currentRhythmInstrument);
 		}
 	}
 }

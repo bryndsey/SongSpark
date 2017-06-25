@@ -67,13 +67,14 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintBottom_toTopOf="@+id/rhythm_instrument" />
 
-    <TextView
+    <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/rhythm_instrument"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         tools:text="Acoustic Grand Piano"
         android:layout_marginTop="0dp"
+        app:propertySrc="@drawable/icon_bass_clef"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="8dp"
