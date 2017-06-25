@@ -64,9 +64,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	}
 
 	void updateRhythmInstrument(int rhythmInstrumentPosition) {
-		MusicStructure.MidiInstrument selectedInstrumet = RHYTHM_INSTRUMENT_LIST.get(rhythmInstrumentPosition);
-		if (song.chordInstrument != selectedInstrumet) {
-			song.chordInstrument = selectedInstrumet;
+		MusicStructure.MidiInstrument selectedInstrument = RHYTHM_INSTRUMENT_LIST.get(rhythmInstrumentPosition);
+		if (song.chordInstrument != selectedInstrument) {
+			song.chordInstrument = selectedInstrument;
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
