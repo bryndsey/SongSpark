@@ -19,7 +19,9 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="4/4" />
+        tools:text="4/4"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="0dp" />
 
     <TextView
         android:id="@+id/tempo"
@@ -47,7 +49,9 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tempo"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="C Major" />
+        tools:text="C Major"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="8dp" />
 
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/lead_instrument"
@@ -63,7 +67,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_signature"
         tools:text="Distortion Guitar"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginRight="8dp" />
 
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/rhythm_instrument"
@@ -79,5 +84,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/lead_instrument"
         app:layout_constraintTop_toTopOf="@+id/lead_instrument"
-        tools:text="Acoustic Grand Piano" />
+        tools:text="Acoustic Grand Piano"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="8dp" />
 </android.support.constraint.ConstraintLayout>
