@@ -49,26 +49,42 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:gravity="center_horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/scale"
+        app:layout_constraintBottom_toTopOf="@+id/scale_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_signature_container"
         app:propertySrc="@drawable/icon_metronome" />
 
-    <TextView
-        android:id="@+id/scale"
+    <LinearLayout
+        android:id="@+id/scale_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:gravity="center_horizontal"
         app:layout_constraintBottom_toTopOf="@+id/lead_instrument"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempo"
-        tools:text="C Major" />
+        app:layout_constraintTop_toBottomOf="@+id/tempo" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            app:srcCompat="@drawable/icon_key_signature" />
+
+        <TextView
+            android:id="@+id/scale"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            tools:text="C Major" />
+
+    </LinearLayout>
 
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/lead_instrument"
@@ -81,7 +97,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scale"
+        app:layout_constraintTop_toBottomOf="@+id/scale_container"
         app:propertySrc="@drawable/icon_treble_clef" />
 
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
