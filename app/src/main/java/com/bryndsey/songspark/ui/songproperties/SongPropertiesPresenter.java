@@ -1,8 +1,14 @@
 package com.bryndsey.songspark.ui.songproperties;
 
+import com.bryndsey.songbuilder.SongWriter;
+import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
+import com.google.common.primitives.Ints;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,10 +20,16 @@ import io.reactivex.functions.Consumer;
 
 public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
+	private final MidiSongFactory midiSongFactory;
 	private Song song;
+
+	private static final List<Integer> TEMPO_LIST = Ints.asList(SongWriter.bpmValues);
+	private static final List<MusicStructure.MidiInstrument> LEAD_INSTRUMENT_LIST = Arrays.asList(SongWriter.melodyInstruments);
+	private static final List<MusicStructure.MidiInstrument> RHYTHM_INSTRUMENT_LIST = Arrays.asList(SongWriter.chordInstruments);
 
 	@Inject
 	SongPropertiesPresenter(MidiSongFactory midiSongFactory) {
+		this.midiSongFactory = midiSongFactory;
 		Disposable subscription = midiSongFactory.latestSong()
 				.subscribeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {
@@ -35,16 +47,51 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	public void onViewAttached(SongPropertiesView view) {
 		super.onViewAttached(view);
 
+		getView().setTempoList(TEMPO_LIST);
+		getView().setLeadInstrumentList(LEAD_INSTRUMENT_LIST);
+		getView().setRhythmInstrumentList(RHYTHM_INSTRUMENT_LIST);
+
 		updateDisplay();
 	}
 
 	private void updateDisplay() {
 		if (isViewAttached() && song != null) {
 			getView().setTimeSignature(song.timeSigNum + "/" + song.timeSigDenom);
-			getView().setTempo(song.tempo + " bpm");
+
+			int currentTempoSelection = TEMPO_LIST.indexOf(song.tempo);
+			getView().setTempoSelection(currentTempoSelection);
+
 			getView().setScale(song.key.toString() + " " + song.scaleType.toString());
-			getView().setLeadInstrument(song.melodyInstrument.toString());
-			getView().setRhythmInstrument(song.chordInstrument.toString());
+
+			int currentLeadInstrument = LEAD_INSTRUMENT_LIST.indexOf(song.melodyInstrument);
+			getView().setLeadInstrumentSelection(currentLeadInstrument);
+
+			int currentRhythmInstrument = RHYTHM_INSTRUMENT_LIST.indexOf(song.chordInstrument);
+			getView().setRhythmInstrumentSelection(currentRhythmInstrument);
+		}
+	}
+
+	void updateTempo(int tempoPosition) {
+		Integer tempo = TEMPO_LIST.get(tempoPosition);
+		if (song.tempo != tempo) {
+			song.tempo = tempo;
+			midiSongFactory.makeMidiSongFrom(song);
+		}
+	}
+
+	void updateLeadInstrument(int leadInstrumentPosition) {
+		MusicStructure.MidiInstrument selectedInstrument = LEAD_INSTRUMENT_LIST.get(leadInstrumentPosition);
+		if (song.melodyInstrument != selectedInstrument) {
+			song.melodyInstrument = selectedInstrument;
+			midiSongFactory.makeMidiSongFrom(song);
+		}
+	}
+
+	void updateRhythmInstrument(int rhythmInstrumentPosition) {
+		MusicStructure.MidiInstrument selectedInstrument = RHYTHM_INSTRUMENT_LIST.get(rhythmInstrumentPosition);
+		if (song.chordInstrument != selectedInstrument) {
+			song.chordInstrument = selectedInstrument;
+			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
 }
