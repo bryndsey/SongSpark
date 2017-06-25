@@ -34,7 +34,7 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	TextView scaleView;
 
 	@BindView(R.id.lead_instrument)
-	TextView leadInstrumentView;
+	SongPropertyWidget leadInstrumentChooser;
 
 	@BindView(R.id.rhythm_instrument)
 	SongPropertyWidget rhythmInstrumentChooser;
@@ -46,6 +46,13 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+
+		leadInstrumentChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+			@Override
+			public void accept(Integer integer) throws Exception {
+				presenter.updateLeadInstrument(integer);
+			}
+		});
 
 		rhythmInstrumentChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
 			@Override
@@ -77,8 +84,13 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	}
 
 	@Override
-	public void setLeadInstrument(String leadInstrument) {
-		leadInstrumentView.setText(leadInstrument);
+	public void setLeadInstrumentList(List instrumentList) {
+		leadInstrumentChooser.setPropertyItems(instrumentList);
+	}
+
+	@Override
+	public void setLeadInstrumentSelection(int positionInList) {
+		leadInstrumentChooser.setPropertySelection(positionInList);
 	}
 
 	@Override
@@ -87,7 +99,7 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	}
 
 	@Override
-	public void setInstrumentSelection(int positionInList) {
+	public void setRhythmInstrumentSelection(int positionInList) {
 		rhythmInstrumentChooser.setPropertySelection(positionInList);
 	}
 }

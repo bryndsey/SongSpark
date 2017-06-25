@@ -53,12 +53,13 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintBottom_toTopOf="@+id/lead_instrument" />
 
-    <TextView
+    <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/lead_instrument"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         tools:text="Distortion Guitar"
+        app:propertySrc="@drawable/icon_treble_clef"
         app:layout_constraintTop_toBottomOf="@+id/scale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

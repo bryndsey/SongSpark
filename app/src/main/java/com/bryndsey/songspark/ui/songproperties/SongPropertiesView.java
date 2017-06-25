@@ -10,9 +10,11 @@ interface SongPropertiesView {
 
 	void setScale(String scale);
 
-	void setLeadInstrument(String leadInstrument);
+	void setLeadInstrumentList(List instrumentList);
+
+	void setLeadInstrumentSelection(int positionInList);
 
 	void setRhythmInstrumentList(List instrumentList);
 
-	void setInstrumentSelection(int positionInList);
+	void setRhythmInstrumentSelection(int positionInList);
 }

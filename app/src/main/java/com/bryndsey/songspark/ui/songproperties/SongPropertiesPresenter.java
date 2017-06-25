@@ -1,7 +1,5 @@
 package com.bryndsey.songspark.ui.songproperties;
 
-import android.util.Log;
-
 import com.bryndsey.songbuilder.SongWriter;
 import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
@@ -24,6 +22,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	private final MidiSongFactory midiSongFactory;
 	private Song song;
 
+	private static final List<MusicStructure.MidiInstrument> LEAD_INSTRUMENT_LIST = Arrays.asList(SongWriter.melodyInstruments);
 	private static final List<MusicStructure.MidiInstrument> RHYTHM_INSTRUMENT_LIST = Arrays.asList(SongWriter.chordInstruments);
 
 	@Inject
@@ -46,6 +45,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	public void onViewAttached(SongPropertiesView view) {
 		super.onViewAttached(view);
 
+		getView().setLeadInstrumentList(LEAD_INSTRUMENT_LIST);
 		getView().setRhythmInstrumentList(RHYTHM_INSTRUMENT_LIST);
 
 		updateDisplay();
@@ -56,10 +56,20 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 			getView().setTimeSignature(song.timeSigNum + "/" + song.timeSigDenom);
 			getView().setTempo(song.tempo + " bpm");
 			getView().setScale(song.key.toString() + " " + song.scaleType.toString());
-			getView().setLeadInstrument(song.melodyInstrument.toString());
+
+			int currentLeadInstrument = LEAD_INSTRUMENT_LIST.indexOf(song.melodyInstrument);
+			getView().setLeadInstrumentSelection(currentLeadInstrument);
 
 			int currentRhythmInstrument = RHYTHM_INSTRUMENT_LIST.indexOf(song.chordInstrument);
-			getView().setInstrumentSelection(currentRhythmInstrument);
+			getView().setRhythmInstrumentSelection(currentRhythmInstrument);
+		}
+	}
+
+	void updateLeadInstrument(int leadInstrumentPosition) {
+		MusicStructure.MidiInstrument selectedInstrument = LEAD_INSTRUMENT_LIST.get(leadInstrumentPosition);
+		if (song.melodyInstrument != selectedInstrument) {
+			song.melodyInstrument = selectedInstrument;
+			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
 
