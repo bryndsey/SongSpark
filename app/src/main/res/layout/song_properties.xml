@@ -4,25 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
-    android:background="@android:color/darker_gray">
+    android:background="@android:color/darker_gray"
+    android:padding="12dp">
 
-    <TextView
-        android:id="@+id/time_signature"
+    <LinearLayout
+        android:id="@+id/time_signature_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:gravity="center_horizontal"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toStartOf="@+id/tempo"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="4/4"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintHorizontal_chainStyle="spread_inside" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/icon_time_signature"
+            android:layout_marginRight="8dp"/>
+
+        <TextView
+            android:id="@+id/time_signature"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            tools:text="4/4" />
+
+    </LinearLayout>
 
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/tempo"
@@ -32,17 +49,19 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:gravity="center_horizontal"
-        app:propertySrc="@drawable/icon_metronome"
         app:layout_constraintEnd_toStartOf="@+id/scale"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/time_signature"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/time_signature_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:propertySrc="@drawable/icon_metronome" />
 
     <TextView
         android:id="@+id/scale"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:gravity="center_horizontal"
@@ -50,25 +69,23 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tempo"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="C Major"
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="8dp" />
+        tools:text="C Major" />
 
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/lead_instrument"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="12dp"
         android:gravity="center_horizontal"
-        app:propertySrc="@drawable/icon_treble_clef"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rhythm_instrument"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_signature"
+        app:layout_constraintTop_toBottomOf="@+id/time_signature_container"
         app:layout_constraintVertical_bias="0.0"
-        android:layout_marginRight="8dp" />
+        app:propertySrc="@drawable/icon_treble_clef" />
 
     <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
         android:id="@+id/rhythm_instrument"
@@ -76,14 +93,14 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:layout_marginEnd="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="0dp"
         android:layout_marginStart="8dp"
         android:gravity="center_horizontal"
-        app:propertySrc="@drawable/icon_bass_clef"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/lead_instrument"
         app:layout_constraintTop_toTopOf="@+id/lead_instrument"
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="8dp" />
+        app:propertySrc="@drawable/icon_bass_clef" />
 </android.support.constraint.ConstraintLayout>
