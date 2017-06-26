@@ -24,6 +24,8 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 	private static final String TAG = MidiPlayer.class.getSimpleName();
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
+	private static final float DUCKED_VOLUME = 0.35f;
+	private static final float FULL_VOLUME = 1;
 
 	private final MidiFileSaver midiFileSaver;
 
@@ -120,7 +122,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	}
 
 	private void startMediaPlayer() {
-		mediaPlayer.setVolume(1, 1);
+		mediaPlayer.setVolume(FULL_VOLUME, FULL_VOLUME);
 		mediaPlayer.start();
 
 		if (playbackStateListener != null) {
@@ -172,7 +174,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
 			mediaPlayer.pause();
 		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-			mediaPlayer.setVolume(0.35f, 0.35f);
+			mediaPlayer.setVolume(DUCKED_VOLUME, DUCKED_VOLUME);
 		}
 	}
 
