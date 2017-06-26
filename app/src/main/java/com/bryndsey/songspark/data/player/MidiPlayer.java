@@ -1,10 +1,10 @@
 package com.bryndsey.songspark.data.player;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 
-import com.bryndsey.songspark.dagger.ComponentHolder;
 import com.bryndsey.songspark.data.MidiSongFactory;
+import com.bryndsey.songspark.data.filesave.MidiFileSaveException;
+import com.bryndsey.songspark.data.filesave.MidiFileSaver;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.pdrogfer.mididroid.MidiFile;
 
@@ -21,7 +21,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
 
-	private File tempMidiFile;
+	private final MidiFileSaver midiFileSaver;
 
 	private MediaPlayer mediaPlayer;
 
@@ -30,8 +30,8 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 	private PlaybackStateListener playbackStateListener;
 
 	@Inject
-	public MidiPlayer(Context context, MidiSongFactory midiSongFactory) {
-		ComponentHolder.getApplicationComponent().inject(this);
+	MidiPlayer(MidiSongFactory midiSongFactory, MidiFileSaver midiFileSaver) {
+		this.midiFileSaver = midiFileSaver;
 
 		midiSongFactory.latestSong()
 				.subscribe(new Consumer<MidiSong>() {
@@ -43,17 +43,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setOnCompletionListener(this);
-
-		//TODO: Switch to using MidiFileSaver
-		tempMidiFile = new File(context.getCacheDir(), TEMP_MIDI_FILE_NAME);
-
-		if (!tempMidiFile.exists()) {
-			try {
-				tempMidiFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	private void preparePlayer(MidiFile midiFile) {
@@ -61,7 +50,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 		resetPlayerState();
 
 		try {
-			midiFile.writeToFile(tempMidiFile);
+			File tempMidiFile = midiFileSaver.saveTemporaryMidiFile(midiFile, TEMP_MIDI_FILE_NAME);
 
 			mediaPlayer.setDataSource(tempMidiFile.getPath());
 			mediaPlayer.prepare();
@@ -71,7 +60,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 			if (playbackStateListener != null) {
 				playbackStateListener.onPlaybackReady();
 			}
-		} catch (IOException e) {
+		} catch (IOException | MidiFileSaveException e) {
 			e.printStackTrace();
 			isPrepared = false;
 

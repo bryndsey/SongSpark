@@ -52,13 +52,15 @@ public class MidiFileSaver {
 		}
 	}
 
-	public void savePublicMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
+	public File savePublicMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
 		File saveFile = new File(publicFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
+		return saveFile;
 	}
 
-	public void saveTemporaryMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
+	public File saveTemporaryMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
 		File saveFile = new File(tempFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
+		return saveFile;
 	}
 }
