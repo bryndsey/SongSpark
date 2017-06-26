@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
-        android:gravity="center_horizontal"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toTopOf="@+id/tempo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -26,8 +26,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.6"
             android:layout_marginRight="8dp"
+            android:alpha="0.6"
             app:srcCompat="@drawable/icon_time_signature" />
 
         <TextView
@@ -37,7 +37,9 @@
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
             android:layout_weight="1"
+            android:ellipsize="marquee"
             android:gravity="center_horizontal"
+            android:singleLine="true"
             tools:text="4/4" />
 
     </LinearLayout>
@@ -63,17 +65,18 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toTopOf="@+id/lead_instrument"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tempo" >
+        app:layout_constraintTop_toBottomOf="@+id/tempo">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.6"
             android:layout_marginRight="8dp"
+            android:alpha="0.6"
             app:srcCompat="@drawable/icon_key_signature" />
 
         <TextView
@@ -83,7 +86,9 @@
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
             android:layout_weight="1"
+            android:ellipsize="marquee"
             android:gravity="center_horizontal"
+            android:singleLine="true"
             tools:text="C Major" />
 
     </LinearLayout>

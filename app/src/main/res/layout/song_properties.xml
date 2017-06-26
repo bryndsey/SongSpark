@@ -13,31 +13,35 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="4dp"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintEnd_toStartOf="@+id/tempo"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintHorizontal_weight="0.75"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
             android:alpha="0.6"
-            app:srcCompat="@drawable/icon_time_signature"
-            android:layout_marginRight="8dp"/>
+            app:srcCompat="@drawable/icon_time_signature" />
 
         <TextView
             android:id="@+id/time_signature"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
+            android:ellipsize="marquee"
             android:gravity="center_horizontal"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
+            android:singleLine="true"
             tools:text="4/4" />
 
     </LinearLayout>
@@ -46,12 +50,13 @@
         android:id="@+id/tempo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="0dp"
         android:gravity="center_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/scale_container"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/time_signature_container"
         app:layout_constraintTop_toTopOf="parent"
         app:propertySrc="@drawable/icon_metronome" />
@@ -61,30 +66,34 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="4dp"
         android:layout_marginRight="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="0dp"
+        android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1.6"
         app:layout_constraintStart_toEndOf="@+id/tempo"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:alpha="0.6"
             android:layout_marginRight="8dp"
+            android:alpha="0.6"
             app:srcCompat="@drawable/icon_key_signature" />
 
         <TextView
             android:id="@+id/scale"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
+            android:ellipsize="marquee"
             android:gravity="center_horizontal"
+            android:singleLine="true"
             tools:text="C Major" />
 
     </LinearLayout>
