@@ -3,6 +3,7 @@ package com.bryndsey.songspark.data.player;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.util.Log;
 
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.filesave.MidiFileSaveException;
@@ -21,6 +22,7 @@ import io.reactivex.functions.Consumer;
 @Singleton
 public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
+	private static final String TAG = MidiPlayer.class.getSimpleName();
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
 
 	private final MidiFileSaver midiFileSaver;
@@ -40,7 +42,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 				.subscribe(new Consumer<MidiSong>() {
 					@Override
 					public void accept(MidiSong midiSong) throws Exception {
-						preparePlayer(midiSong.midiFile);
+						initializePlayer(midiSong.midiFile);
 					}
 				});
 
@@ -50,34 +52,54 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		mediaPlayer.setOnCompletionListener(this);
 	}
 
-	private void preparePlayer(MidiFile midiFile) {
+	private void initializePlayer(MidiFile midiFile) {
 		resetPlayerState();
 
+		File tempMidiFile = null;
 		try {
-			File tempMidiFile = midiFileSaver.saveTemporaryMidiFile(midiFile, TEMP_MIDI_FILE_NAME);
+			tempMidiFile = midiFileSaver.saveTemporaryMidiFile(midiFile, TEMP_MIDI_FILE_NAME);
+		} catch (MidiFileSaveException e) {
+			setPlayerNotReady();
+			return;
+		}
 
+		try {
 			mediaPlayer.setDataSource(tempMidiFile.getPath());
+		} catch (IOException e) {
+			setPlayerNotReady();
+			return;
+		}
+
+		preparePlayer();
+	}
+
+	private void setPlayerNotReady() {
+		Log.d(TAG, "Player failed to enter ready state");
+		isPrepared = false;
+
+		if (playbackStateListener != null) {
+			playbackStateListener.onPlaybackNotReady();
+		}
+	}
+
+	private void preparePlayer() {
+		try {
 			mediaPlayer.prepare();
+		} catch (IOException e) {
+			setPlayerNotReady();
+			return;
+		}
 
-			isPrepared = true;
+		isPrepared = true;
 
-			if (playbackStateListener != null) {
-				playbackStateListener.onPlaybackReady();
-			}
-		} catch (IOException | MidiFileSaveException e) {
-			e.printStackTrace();
-			isPrepared = false;
-
-			if (playbackStateListener != null) {
-				playbackStateListener.onPlaybackNotReady();
-			}
+		if (playbackStateListener != null) {
+			playbackStateListener.onPlaybackReady();
 		}
 	}
 
 	private void resetPlayerState() {
 		if (mediaPlayer.isPlaying()) {
-			mediaPlayer.stop();
-			onPlaybackComplete();
+			stopMediaPlayer();
 		}
 		if (isPrepared) {
 			mediaPlayer.reset();
@@ -90,11 +112,26 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		if (isPrepared) {
 			int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 			if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-				mediaPlayer.start();
+				startMediaPlayer();
 			} else {
 				onPlaybackComplete();
 			}
 		}
+	}
+
+	private void startMediaPlayer() {
+		mediaPlayer.setVolume(1, 1);
+		mediaPlayer.start();
+
+		if (playbackStateListener != null) {
+			playbackStateListener.onPlaybackStarted();
+		}
+	}
+
+	private void stopMediaPlayer() {
+		mediaPlayer.stop();
+		preparePlayer();
+		onPlaybackComplete();
 	}
 
 	public void pause() {
@@ -105,7 +142,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	}
 
 	public void stopPlaying() {
-		mediaPlayer.stop();
+		stopMediaPlayer();
 		audioManager.abandonAudioFocus(this);
 	}
 
@@ -128,13 +165,23 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 	@Override
 	public void onAudioFocusChange(int focusChange) {
-
+		if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+			startMediaPlayer();
+		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+			stopMediaPlayer();
+		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+			mediaPlayer.pause();
+		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+			mediaPlayer.setVolume(0.35f, 0.35f);
+		}
 	}
 
 	public interface PlaybackStateListener {
 		void onPlaybackReady();
 
 		void onPlaybackNotReady();
+
+		void onPlaybackStarted();
 
 		void onPlaybackComplete();
 	}

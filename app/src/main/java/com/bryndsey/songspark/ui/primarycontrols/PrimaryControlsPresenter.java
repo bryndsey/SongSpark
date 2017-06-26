@@ -50,6 +50,13 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 		}
 	}
 
+	private void enterPlayingState() {
+		isPlaying = true;
+		if (isViewAttached()) {
+			getView().displayPlayingState();
+		}
+	}
+
 	private void syncPlayPauseButtonState() {
 		if (isViewAttached()) {
 			if (isPlaybackDisabled) {
@@ -81,10 +88,7 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 
 	private void play() {
 		midiPlayer.startPlaying();
-		isPlaying = true;
-		if (isViewAttached()) {
-			getView().displayPlayingState();
-		}
+		enterPlayingState();
 	}
 
 	@Override
@@ -101,6 +105,11 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 		if (isViewAttached()) {
 			getView().disablePlayback();
 		}
+	}
+
+	@Override
+	public void onPlaybackStarted() {
+		enterPlayingState();
 	}
 
 	@Override
