@@ -1,5 +1,7 @@
 package com.bryndsey.songspark.data.player;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 
 import com.bryndsey.songspark.data.MidiSongFactory;
@@ -17,12 +19,13 @@ import javax.inject.Singleton;
 import io.reactivex.functions.Consumer;
 
 @Singleton
-public class MidiPlayer implements MediaPlayer.OnCompletionListener {
+public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
 	private static final String TEMP_MIDI_FILE_NAME = "play.mid";
 
 	private final MidiFileSaver midiFileSaver;
 
+	private AudioManager audioManager;
 	private MediaPlayer mediaPlayer;
 
 	private boolean isPrepared;
@@ -30,7 +33,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 	private PlaybackStateListener playbackStateListener;
 
 	@Inject
-	MidiPlayer(MidiSongFactory midiSongFactory, MidiFileSaver midiFileSaver) {
+	MidiPlayer(MidiSongFactory midiSongFactory, MidiFileSaver midiFileSaver, Context context) {
 		this.midiFileSaver = midiFileSaver;
 
 		midiSongFactory.latestSong()
@@ -41,12 +44,13 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 					}
 				});
 
+		audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
 		mediaPlayer = new MediaPlayer();
 		mediaPlayer.setOnCompletionListener(this);
 	}
 
 	private void preparePlayer(MidiFile midiFile) {
-
 		resetPlayerState();
 
 		try {
@@ -73,7 +77,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 	private void resetPlayerState() {
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.stop();
-			onCompletion(mediaPlayer);
+			onPlaybackComplete();
 		}
 		if (isPrepared) {
 			mediaPlayer.reset();
@@ -83,24 +87,26 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 	}
 
 	public void startPlaying() {
-
-		//TODO: Implement audio focus
-
 		if (isPrepared) {
-			mediaPlayer.start();
+			int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+			if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				mediaPlayer.start();
+			} else {
+				onPlaybackComplete();
+			}
 		}
-
-		//TODO: Show something to the user if not prepared?
 	}
 
 	public void pause() {
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
+			audioManager.abandonAudioFocus(this);
 		}
 	}
 
 	public void stopPlaying() {
 		mediaPlayer.stop();
+		audioManager.abandonAudioFocus(this);
 	}
 
 	public void setPlaybackStateListener(PlaybackStateListener playbackStateListener) {
@@ -109,9 +115,20 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener {
 
 	@Override
 	public void onCompletion(MediaPlayer mediaPlayer) {
+		audioManager.abandonAudioFocus(this);
+
+		onPlaybackComplete();
+	}
+
+	private void onPlaybackComplete() {
 		if (playbackStateListener != null) {
 			playbackStateListener.onPlaybackComplete();
 		}
+	}
+
+	@Override
+	public void onAudioFocusChange(int focusChange) {
+
 	}
 
 	public interface PlaybackStateListener {
