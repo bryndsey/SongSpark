@@ -3,7 +3,6 @@ package com.bryndsey.songspark.ui.songproperties;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.TextView;
 
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
@@ -24,14 +23,14 @@ import io.reactivex.functions.Consumer;
 @FragmentView(presenter = SongPropertiesPresenter.class)
 public class SongPropertiesFragment extends BaseFragment implements SongPropertiesView {
 
-	@BindView(R.id.time_signature)
-	TextView timeSignatureView;
-
 	@BindView(R.id.tempo)
 	SongPropertyWidget tempoChooser;
 
-	@BindView(R.id.scale)
-	TextView scaleView;
+	@BindView(R.id.scale_root)
+	SongPropertyWidget scaleRootChooser;
+
+	@BindView(R.id.scale_type)
+	SongPropertyWidget scaleTypeChooser;
 
 	@BindView(R.id.lead_instrument)
 	SongPropertyWidget leadInstrumentChooser;
@@ -51,6 +50,20 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 			@Override
 			public void accept(Integer integer) throws Exception {
 				presenter.updateTempo(integer);
+			}
+		});
+
+		scaleRootChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+			@Override
+			public void accept(Integer integer) throws Exception {
+				presenter.updateScaleRoot(integer);
+			}
+		});
+
+		scaleTypeChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+			@Override
+			public void accept(Integer integer) throws Exception {
+				presenter.updateScaleType(integer);
 			}
 		});
 
@@ -76,11 +89,6 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	}
 
 	@Override
-	public void setTimeSignature(String timeSignature) {
-		timeSignatureView.setText(timeSignature);
-	}
-
-	@Override
 	public void setTempoList(List tempoList) {
 		tempoChooser.setPropertyItems(tempoList);
 	}
@@ -91,8 +99,23 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	}
 
 	@Override
-	public void setScale(String scale) {
-		scaleView.setText(scale);
+	public void setScaleRootList(List scaleRootList) {
+		scaleRootChooser.setPropertyItems(scaleRootList);
+	}
+
+	@Override
+	public void setScaleRootSelection(int positionInList) {
+		scaleRootChooser.setPropertySelection(positionInList);
+	}
+
+	@Override
+	public void setScaleTypeList(List scaleTypeList) {
+		scaleTypeChooser.setPropertyItems(scaleTypeList);
+	}
+
+	@Override
+	public void setScaleTypeSelection(int positionInList) {
+		scaleTypeChooser.setPropertySelection(positionInList);
 	}
 
 	@Override
