@@ -24,6 +24,8 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	private Song song;
 
 	private static final List<Integer> TEMPO_LIST = Ints.asList(SongWriter.bpmValues);
+	private static final List<MusicStructure.Pitch> PITCH_LIST = Arrays.asList(MusicStructure.PITCHES);
+	private static final List<MusicStructure.ScaleType> SCALE_TYPE_LIST = Arrays.asList(MusicStructure.ScaleType.values());
 	private static final List<MusicStructure.MidiInstrument> LEAD_INSTRUMENT_LIST = Arrays.asList(SongWriter.melodyInstruments);
 	private static final List<MusicStructure.MidiInstrument> RHYTHM_INSTRUMENT_LIST = Arrays.asList(SongWriter.chordInstruments);
 
@@ -48,6 +50,8 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		super.onViewAttached(view);
 
 		getView().setTempoList(TEMPO_LIST);
+		getView().setScaleRootList(PITCH_LIST);
+		getView().setScaleTypeList(SCALE_TYPE_LIST);
 		getView().setLeadInstrumentList(LEAD_INSTRUMENT_LIST);
 		getView().setRhythmInstrumentList(RHYTHM_INSTRUMENT_LIST);
 
@@ -56,12 +60,15 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 	private void updateDisplay() {
 		if (isViewAttached() && song != null) {
-			getView().setTimeSignature(song.timeSigNum + "/" + song.timeSigDenom);
 
 			int currentTempoSelection = TEMPO_LIST.indexOf(song.tempo);
 			getView().setTempoSelection(currentTempoSelection);
 
-			getView().setScale(song.key.toString() + " " + song.scaleType.toString());
+			int currentScalePitchSelection = PITCH_LIST.indexOf(song.key);
+			getView().setScaleRootSelection(currentScalePitchSelection);
+
+			int currentScaleTypeSelection = SCALE_TYPE_LIST.indexOf(song.scaleType);
+			getView().setScaleTypeSelection(currentScaleTypeSelection);
 
 			int currentLeadInstrument = LEAD_INSTRUMENT_LIST.indexOf(song.melodyInstrument);
 			getView().setLeadInstrumentSelection(currentLeadInstrument);
@@ -75,6 +82,22 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		Integer tempo = TEMPO_LIST.get(tempoPosition);
 		if (song.tempo != tempo) {
 			song.tempo = tempo;
+			midiSongFactory.makeMidiSongFrom(song);
+		}
+	}
+
+	void updateScaleRoot(int scaleRootPosition) {
+		MusicStructure.Pitch pitch = PITCH_LIST.get(scaleRootPosition);
+		if (song.key != pitch) {
+			song.key = pitch;
+			midiSongFactory.makeMidiSongFrom(song);
+		}
+	}
+
+	void updateScaleType(int scaleTypePosition) {
+		MusicStructure.ScaleType scaleType = SCALE_TYPE_LIST.get(scaleTypePosition);
+		if (song.scaleType != scaleType) {
+			song.scaleType = scaleType;
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}

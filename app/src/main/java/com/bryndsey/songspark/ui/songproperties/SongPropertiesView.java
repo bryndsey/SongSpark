@@ -4,13 +4,17 @@ import java.util.List;
 
 interface SongPropertiesView {
 
-	void setTimeSignature(String timeSignature);
-
 	void setTempoList(List tempoList);
 
 	void setTempoSelection(int positionInList);
 
-	void setScale(String scale);
+	void setScaleRootList(List scaleRootList);
+
+	void setScaleRootSelection(int positionInList);
+
+	void setScaleTypeList(List scaleTypeList);
+
+	void setScaleTypeSelection(int positionInList);
 
 	void setLeadInstrumentList(List instrumentList);
 
