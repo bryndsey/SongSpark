@@ -1,4 +1,4 @@
-package com.bryndsey.songspark.ui.menu;
+package com.bryndsey.songspark.ui.menu.exportmidi;
 
 import android.Manifest;
 import android.os.Bundle;
@@ -24,14 +24,14 @@ import easymvp.annotation.Presenter;
 import eltos.simpledialogfragment.input.SimpleInputDialog;
 
 @Layout(R.layout.empty)
-@FragmentView(presenter = MainMenuPresenter.class)
-public class MainMenuFragment extends BaseFragment implements MainMenuView, SimpleInputDialog.OnDialogResultListener {
+@FragmentView(presenter = ExportMidiPresenter.class)
+public class ExportMidiFragment extends BaseFragment implements ExportMidiView, SimpleInputDialog.OnDialogResultListener {
 
 	private static final String SAVE_FILE_DIALOG_TAG = "saveFileDialog";
 
 	@Inject
 	@Presenter
-	MainMenuPresenter presenter;
+	ExportMidiPresenter presenter;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {

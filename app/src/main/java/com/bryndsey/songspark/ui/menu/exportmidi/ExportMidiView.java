@@ -1,6 +1,6 @@
-package com.bryndsey.songspark.ui.menu;
+package com.bryndsey.songspark.ui.menu.exportmidi;
 
-interface MainMenuView {
+interface ExportMidiView {
 
 	void launchSaveFileSelector();
 
