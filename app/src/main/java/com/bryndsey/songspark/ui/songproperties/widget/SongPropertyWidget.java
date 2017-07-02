@@ -13,11 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.bryndsey.songspark.R;
+import com.github.zagum.switchicon.SwitchIconView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.functions.Consumer;
 
 public class SongPropertyWidget extends LinearLayout implements AdapterView.OnItemSelectedListener {
@@ -27,6 +29,9 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 
 	@BindView(R.id.property_spinner)
 	Spinner propertySpinner;
+
+	@BindView(R.id.property_randomize_toggle)
+	SwitchIconView randomizeToggle;
 
 	private Consumer<Integer> selectedAction;
 
@@ -76,5 +81,10 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
 
+	}
+
+	@OnClick(R.id.property_randomize_toggle)
+	public void onRandomizeToggleClicked() {
+		randomizeToggle.switchState();
 	}
 }
