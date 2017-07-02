@@ -14,21 +14,6 @@
         tools:layout="@layout/empty" />
 
     <FrameLayout
-        android:id="@+id/song_properties_frame"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryLight"
-        android:elevation="4dp">
-
-        <fragment
-            android:id="@+id/fragment3"
-            android:name="com.bryndsey.songspark.ui.songproperties.SongPropertiesFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/song_properties" />
-    </FrameLayout>
-
-    <FrameLayout
         android:id="@+id/info"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -36,10 +21,10 @@
 
         <fragment
             android:id="@+id/fragment"
-            android:name="com.bryndsey.songspark.ui.chordview.ChordFragment"
+            android:name="com.bryndsey.songspark.ui.main.ViewTabFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/chord_view" />
+            tools:layout="@layout/fragment_view_tab" />
 
     </FrameLayout>
 
