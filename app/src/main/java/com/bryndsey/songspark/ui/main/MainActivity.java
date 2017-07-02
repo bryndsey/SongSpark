@@ -11,8 +11,6 @@ import com.metova.slim.annotation.Layout;
 @Layout(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
 
-	private static final String MENU_FRAGMENT_TAG = "menu_fragment";
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
