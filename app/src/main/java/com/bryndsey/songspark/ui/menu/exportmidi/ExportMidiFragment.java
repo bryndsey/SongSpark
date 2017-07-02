@@ -1,6 +1,8 @@
 package com.bryndsey.songspark.ui.menu.exportmidi;
 
 import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,10 +10,12 @@ import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
+import com.bryndsey.songspark.data.filesave.MidiFileSaver;
 import com.bryndsey.songspark.ui.base.BaseFragment;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
@@ -71,9 +75,23 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 	}
 
 	@Override
-	public void showFileSaveConfirmation(String fileName) {
-		Snackbar.make(getView(), "File \"" + fileName + "\" saved.", Snackbar.LENGTH_SHORT)
-				.show();
+	public void showFileSaveConfirmation(final String fileName) {
+		Snackbar snackbar = Snackbar.make(getView(), "File \"" + fileName + "\" saved.", Snackbar.LENGTH_SHORT);
+		snackbar.setAction("SHOW", new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Uri selectedUri = Uri.parse("content://" + MidiFileSaver.publicFileDirectory.getPath() + "/" + fileName + ".mid");
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setDataAndType(selectedUri, "audio/midi");
+				intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+//				if (intent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null)
+//				{
+					startActivity(intent);
+//				}
+			}
+		});
+		snackbar.show();
 	}
 
 	@Override

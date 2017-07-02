@@ -17,7 +17,7 @@ public class MidiFileSaver {
 	private static String APP_DIRECTORY_NAME;
 
 	private File tempFileDirectory;
-	private File publicFileDirectory;
+	public static File publicFileDirectory;
 
 	@Inject
 	MidiFileSaver(Context context) {
@@ -76,5 +76,9 @@ public class MidiFileSaver {
 		File saveFile = new File(tempFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 		return saveFile;
+	}
+
+	public File getPublicSaveDirectory() {
+		return publicFileDirectory;
 	}
 }
