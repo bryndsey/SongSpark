@@ -32,8 +32,8 @@ public class ViewTabFragment extends BaseFragment {
 		FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
 				getActivity().getSupportFragmentManager(),
 				FragmentPagerItems.with(getContext())
-						.add("Song Properties", SongPropertiesFragment.class)
-						.add("Chords", ChordFragment.class)
+						.add(R.string.properties_tab_title, SongPropertiesFragment.class)
+						.add(R.string.chords_tab_title, ChordFragment.class)
 						.create()
 		);
 
