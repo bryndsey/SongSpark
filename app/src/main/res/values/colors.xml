@@ -7,4 +7,6 @@
     <color name="background_light">#E0E0E0</color>
 
     <color name="transparent">#00000000</color>
+
+    <color name="black_60_percent">#99000000</color>
 </resources>

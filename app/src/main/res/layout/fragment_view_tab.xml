@@ -13,6 +13,7 @@
         android:elevation="2dp"
         app:stl_distributeEvenly="true"
         app:stl_indicatorInterpolation="linear"
+        app:stl_defaultTabTextColor="@color/black_60_percent"
         app:stl_dividerColor="@color/transparent"
         app:stl_dividerThickness="0dp"
         app:stl_indicatorColor="@color/colorPrimary"
