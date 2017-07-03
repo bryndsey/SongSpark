@@ -91,6 +91,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		MusicStructure.Pitch pitch = PITCH_LIST.get(scaleRootPosition);
 		if (song.key != pitch) {
 			song.key = pitch;
+			midiSongFactory.setScaleRoot(pitch);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -121,5 +122,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 	void updateTempoRandomization(boolean isRandom) {
 		midiSongFactory.setTempoRandomization(isRandom);
+	}
+
+	void updateScalePitchRandomization(boolean isRandom) {
+		midiSongFactory.setScaleRootRandomization(isRandom);
 	}
 }

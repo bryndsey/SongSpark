@@ -2,6 +2,7 @@ package com.bryndsey.songspark.data;
 
 import com.bryndsey.songbuilder.MidiGenerator;
 import com.bryndsey.songbuilder.SongWriter;
+import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.jakewharton.rxrelay2.BehaviorRelay;
@@ -51,5 +52,13 @@ public class MidiSongFactory {
 
 	public void setTempoRandomization(boolean isRandom) {
 		songWriter.setUseRandomTempo(isRandom);
+	}
+
+	public void setScaleRoot(MusicStructure.Pitch scaleRoot) {
+		songWriter.setKey(scaleRoot);
+	}
+
+	public void setScaleRootRandomization(boolean isRandom) {
+		songWriter.setUseRandomScaleRoot(isRandom);
 	}
 }
