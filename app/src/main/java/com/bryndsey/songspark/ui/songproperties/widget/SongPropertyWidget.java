@@ -36,6 +36,8 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 
 	private Consumer<Integer> selectedAction;
 
+	private SongPropertyInteractionListener listener;
+
 	public SongPropertyWidget(Context context, @Nullable AttributeSet attrs) {
 		super(context, attrs);
 
@@ -59,6 +61,10 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 		this.selectedAction = action;
 	}
 
+	public void setSongPropertyInteractionListener(SongPropertyInteractionListener listener) {
+		this.listener = listener;
+	}
+
 	public void setPropertyItems(List items) {
 		ArrayAdapter adapter = new ArrayAdapter(getContext(), R.layout.song_property_spinner_item, items);
 		adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
@@ -71,7 +77,9 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		if (selectedAction != null) {
+		if (listener != null) {
+			listener.onSelectionChanged(position);
+		} else if (selectedAction != null) {
 			try {
 				selectedAction.accept(position);
 			} catch (Exception e) {
@@ -81,12 +89,20 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 	}
 
 	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-
-	}
+	public void onNothingSelected(AdapterView<?> parent) {}
 
 	@OnClick(R.id.property_randomize_toggle)
 	public void onRandomizeToggleClicked() {
 		randomizeToggle.switchState();
+		if (listener != null) {
+			listener.onRandomizeToggleChanged(randomizeToggle.isIconEnabled());
+		}
+	}
+
+	public interface SongPropertyInteractionListener {
+
+		void onSelectionChanged(int position);
+
+		void onRandomizeToggleChanged(boolean value);
 	}
 }

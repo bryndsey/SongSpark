@@ -44,4 +44,12 @@ public class MidiSongFactory {
 	public Observable<MidiSong> latestSong() {
 		return midiSongRelay;
 	}
+
+	public void setTempo(int tempo) {
+		songWriter.setTempo(tempo);
+	}
+
+	public void setTempoRandomization(boolean isRandom) {
+		songWriter.setUseRandomTempo(isRandom);
+	}
 }

@@ -46,10 +46,15 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		tempoChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		tempoChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateTempo(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateTempo(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateTempoRandomization(value);
 			}
 		});
 

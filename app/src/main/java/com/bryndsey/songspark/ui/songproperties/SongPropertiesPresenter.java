@@ -82,6 +82,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		Integer tempo = TEMPO_LIST.get(tempoPosition);
 		if (song.tempo != tempo) {
 			song.tempo = tempo;
+			midiSongFactory.setTempo(tempo);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -116,5 +117,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 			song.chordInstrument = selectedInstrument;
 			midiSongFactory.makeMidiSongFrom(song);
 		}
+	}
+
+	void updateTempoRandomization(boolean isRandom) {
+		midiSongFactory.setTempoRandomization(isRandom);
 	}
 }
