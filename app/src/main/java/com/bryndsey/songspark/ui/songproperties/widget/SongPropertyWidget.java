@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -51,6 +52,7 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 		propertySpinner.setOnItemSelectedListener(this);
 
 		setOrientation(HORIZONTAL);
+		setGravity(Gravity.CENTER_VERTICAL);
 	}
 
 	public void setSongPropertySelectedAction(Consumer<Integer> action) {

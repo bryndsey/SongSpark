@@ -6,9 +6,8 @@
         android:id="@+id/property_image"
         android:layout_width="@dimen/song_property_widget_height"
         android:layout_height="@dimen/song_property_widget_height"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:alpha="0.6"
-        android:layout_marginRight="8dp"
         android:contentDescription="PROPERTY IMAGE" />
 
     <Spinner
@@ -16,12 +15,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
         android:spinnerMode="dialog"/>
 
     <com.github.zagum.switchicon.SwitchIconView
         android:id="@+id/property_randomize_toggle"
+        android:layout_marginRight="12dp"
         android:layout_width="@dimen/song_property_widget_height"
         android:layout_height="@dimen/song_property_widget_height"
+        app:si_tint_color="@color/colorAccentDark"
+        app:si_animation_duration="200"
         app:srcCompat="@drawable/generate_icon"/>
 
 </merge>
