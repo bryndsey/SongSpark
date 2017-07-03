@@ -21,7 +21,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.functions.Consumer;
 
 public class SongPropertyWidget extends LinearLayout implements AdapterView.OnItemSelectedListener {
 
@@ -33,8 +32,6 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 
 	@BindView(R.id.property_randomize_toggle)
 	SwitchIconView randomizeToggle;
-
-	private Consumer<Integer> selectedAction;
 
 	private SongPropertyInteractionListener listener;
 
@@ -57,10 +54,6 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 		setGravity(Gravity.CENTER_VERTICAL);
 	}
 
-	public void setSongPropertySelectedAction(Consumer<Integer> action) {
-		this.selectedAction = action;
-	}
-
 	public void setSongPropertyInteractionListener(SongPropertyInteractionListener listener) {
 		this.listener = listener;
 	}
@@ -79,12 +72,6 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		if (listener != null) {
 			listener.onSelectionChanged(position);
-		} else if (selectedAction != null) {
-			try {
-				selectedAction.accept(position);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
