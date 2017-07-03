@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import easymvp.annotation.FragmentView;
 import easymvp.annotation.Presenter;
-import io.reactivex.functions.Consumer;
 
 @Layout(R.layout.song_properties)
 @FragmentView(presenter = SongPropertiesPresenter.class)
@@ -94,10 +93,15 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 			}
 		});
 
-		rhythmInstrumentChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		rhythmInstrumentChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateRhythmInstrument(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateRhythmInstrument(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateRhythmInstrumentRandomization(value);
 			}
 		});
 	}

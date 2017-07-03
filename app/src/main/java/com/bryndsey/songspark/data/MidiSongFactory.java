@@ -77,4 +77,12 @@ public class MidiSongFactory {
 	public void setLeadInstrumentRandomization(boolean isRandom) {
 		songWriter.setUseRandomMelodyInst(isRandom);
 	}
+
+	public void setRhythmInstrument(MusicStructure.MidiInstrument rhythmInstrument) {
+		songWriter.setChordInstrument(rhythmInstrument);
+	}
+
+	public void setRhythmInstrumentRandomization(boolean isRandom) {
+		songWriter.setUseRandomChordInst(isRandom);
+	}
 }
