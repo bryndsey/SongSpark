@@ -134,7 +134,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		midiSongFactory.setScaleTypeRandomization(isRandom);
 	}
 
-	void updateLeadIsntrumentRandomization(boolean isRandom) {
+	void updateLeadInstrumentRandomization(boolean isRandom) {
 		midiSongFactory.setLeadInstrumentRandomization(isRandom);
 	}
 }

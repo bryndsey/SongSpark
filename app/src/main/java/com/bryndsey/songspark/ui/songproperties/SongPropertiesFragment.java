@@ -90,7 +90,7 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 
 			@Override
 			public void onRandomizeToggleChanged(boolean value) {
-				presenter.updateLeadIsntrumentRandomization(value);
+				presenter.updateLeadInstrumentRandomization(value);
 			}
 		});
 
