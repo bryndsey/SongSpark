@@ -82,10 +82,15 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 			}
 		});
 
-		leadInstrumentChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		leadInstrumentChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateLeadInstrument(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateLeadInstrument(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateLeadIsntrumentRandomization(value);
 			}
 		});
 

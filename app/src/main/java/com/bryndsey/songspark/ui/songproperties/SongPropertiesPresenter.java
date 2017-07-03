@@ -109,6 +109,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		MusicStructure.MidiInstrument selectedInstrument = LEAD_INSTRUMENT_LIST.get(leadInstrumentPosition);
 		if (song.melodyInstrument != selectedInstrument) {
 			song.melodyInstrument = selectedInstrument;
+			midiSongFactory.setLeadInstrument(selectedInstrument);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -131,5 +132,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 	void updateScaleTypeRandomization(boolean isRandom) {
 		midiSongFactory.setScaleTypeRandomization(isRandom);
+	}
+
+	void updateLeadIsntrumentRandomization(boolean isRandom) {
+		midiSongFactory.setLeadInstrumentRandomization(isRandom);
 	}
 }
