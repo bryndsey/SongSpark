@@ -100,6 +100,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		MusicStructure.ScaleType scaleType = SCALE_TYPE_LIST.get(scaleTypePosition);
 		if (song.scaleType != scaleType) {
 			song.scaleType = scaleType;
+			midiSongFactory.setScaleType(scaleType);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -126,5 +127,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 	void updateScalePitchRandomization(boolean isRandom) {
 		midiSongFactory.setScaleRootRandomization(isRandom);
+	}
+
+	void updateScaleTypeRandomization(boolean isRandom) {
+		midiSongFactory.setScaleTypeRandomization(isRandom);
 	}
 }

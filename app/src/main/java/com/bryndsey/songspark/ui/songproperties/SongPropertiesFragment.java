@@ -70,10 +70,15 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 			}
 		});
 
-		scaleTypeChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		scaleTypeChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateScaleType(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateScaleType(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateScaleTypeRandomization(value);
 			}
 		});
 

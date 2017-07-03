@@ -61,4 +61,12 @@ public class MidiSongFactory {
 	public void setScaleRootRandomization(boolean isRandom) {
 		songWriter.setUseRandomScaleRoot(isRandom);
 	}
+
+	public void setScaleType(MusicStructure.ScaleType scaleType) {
+		songWriter.setScaleType(scaleType);
+	}
+
+	public void setScaleTypeRandomization(boolean isRandom) {
+		songWriter.setUseRandomScaleType(isRandom);
+	}
 }
