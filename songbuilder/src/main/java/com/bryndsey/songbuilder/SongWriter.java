@@ -184,7 +184,8 @@ public class SongWriter {
 	private MidiInstrument mChordInstrument;
 	
 	private boolean mUseRandomTempo;
-	private boolean mUseRandomScale;
+	private boolean mUseRandomScaleRoot;
+	private boolean mUseRandomScaleType;
 	private boolean mUseRandomChordInst;
 	private boolean mUseRandomMelodyInst;
 	
@@ -207,7 +208,8 @@ public class SongWriter {
 		mChordInstrument = null;
 		
 		mUseRandomTempo = true;
-		mUseRandomScale = true;
+		mUseRandomScaleRoot = true;
+		mUseRandomScaleType = true;
 		mUseRandomChordInst = true;
 		mUseRandomMelodyInst = true;
 		
@@ -241,8 +243,10 @@ public class SongWriter {
 	public boolean getUseRandomTempo() { return mUseRandomTempo; }
 	public void setUseRandomTempo(boolean useRandomTempo) { mUseRandomTempo = useRandomTempo; }
 	
-	public boolean getUseRandomScale() { return mUseRandomScale; }
-	public void setUseRandomScale(boolean useRandomScale) { mUseRandomScale = useRandomScale; }
+	public boolean getUseRandomScaleRoot() { return mUseRandomScaleType; }
+	public void setUseRandomScaleRoot(boolean useRandomScaleRoot) { mUseRandomScaleRoot = useRandomScaleRoot; }
+	public boolean getUseRandomScaleType() { return mUseRandomScaleType; }
+	public void setUseRandomScaleType(boolean useRandomScaleType) { mUseRandomScaleType = useRandomScaleType; }
 	
 	public boolean getUseRandomChordInst() { return mUseRandomChordInst; }
 	public void setUseRandomChordInst(boolean useRandomChordInst) { mUseRandomChordInst = useRandomChordInst; }
@@ -262,30 +266,31 @@ public class SongWriter {
 		int numTimeSigDenoms = MusicStructure.TIMESIGDENOMVALUES.length;
 		mTimeSigNumer = masterpiece.timeSigNum = MusicStructure.TIMESIGNUMVALUES[randGen.nextInt(numTimeSigNums)];
 		mTimeSigDenom = masterpiece.timeSigDenom = MusicStructure.TIMESIGDENOMVALUES[randGen.nextInt(numTimeSigDenoms)];
+
+		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax) {
+			mTempo = bpmValues[randGen.nextInt(bpmValues.length)];
+		}
+		masterpiece.tempo = mTempo;
 		
-		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax)
-			masterpiece.tempo = bpmValues[randGen.nextInt(bpmValues.length)];
-		else
-			masterpiece.tempo = mTempo;
+		if (mUseRandomScaleRoot || mCurrKey == null) {
+			mCurrKey = MusicStructure.PITCHES[randGen.nextInt(MusicStructure.NUMPITCHES)];
+		}
+		masterpiece.key = mCurrKey;
+
+		if (mUseRandomScaleType || mCurrScaleType == null) {
+			mCurrScaleType = chooseScaleType();
+		}
+		masterpiece.scaleType = mCurrScaleType;
 		
-		if (mUseRandomScale || mCurrKey == null)
-			masterpiece.key = MusicStructure.PITCHES[randGen.nextInt(MusicStructure.NUMPITCHES)];
-		else
-			masterpiece.key = mCurrKey;
-		if (mUseRandomScale || mCurrScaleType == null)
-			masterpiece.scaleType = chooseScaleType();
-		else
-			masterpiece.scaleType = mCurrScaleType;
+		if (mUseRandomChordInst || mChordInstrument == null) {
+			mChordInstrument = chordInstruments[randGen.nextInt(chordInstruments.length)];
+		}
+		masterpiece.chordInstrument = mChordInstrument;
 		
-		if (mUseRandomChordInst || mChordInstrument == null)
-			masterpiece.chordInstrument = chordInstruments[randGen.nextInt(chordInstruments.length)];
-		else
-			masterpiece.chordInstrument = mChordInstrument;
-		
-		if (mUseRandomMelodyInst || mMelodyInstrument == null)
-			masterpiece.melodyInstrument = melodyInstruments[randGen.nextInt(melodyInstruments.length)];
-		else
-			masterpiece.melodyInstrument = mMelodyInstrument;
+		if (mUseRandomMelodyInst || mMelodyInstrument == null) {
+			mMelodyInstrument = melodyInstruments[randGen.nextInt(melodyInstruments.length)];
+		}
+		masterpiece.melodyInstrument = mMelodyInstrument;
 		
 		masterpiece.structure = generateStructure();
 		masterpiece.verseProgression = generateVerseProgression();

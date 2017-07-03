@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import easymvp.annotation.FragmentView;
 import easymvp.annotation.Presenter;
-import io.reactivex.functions.Consumer;
 
 @Layout(R.layout.song_properties)
 @FragmentView(presenter = SongPropertiesPresenter.class)
@@ -46,38 +45,63 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		tempoChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		tempoChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateTempo(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateTempo(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateTempoRandomization(value);
 			}
 		});
 
-		scaleRootChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		scaleRootChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateScaleRoot(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateScaleRoot(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateScalePitchRandomization(value);
 			}
 		});
 
-		scaleTypeChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		scaleTypeChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateScaleType(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateScaleType(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateScaleTypeRandomization(value);
 			}
 		});
 
-		leadInstrumentChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		leadInstrumentChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateLeadInstrument(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateLeadInstrument(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateLeadInstrumentRandomization(value);
 			}
 		});
 
-		rhythmInstrumentChooser.setSongPropertySelectedAction(new Consumer<Integer>() {
+		rhythmInstrumentChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
 			@Override
-			public void accept(Integer integer) throws Exception {
-				presenter.updateRhythmInstrument(integer);
+			public void onSelectionChanged(int position) {
+				presenter.updateRhythmInstrument(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateRhythmInstrumentRandomization(value);
 			}
 		});
 	}

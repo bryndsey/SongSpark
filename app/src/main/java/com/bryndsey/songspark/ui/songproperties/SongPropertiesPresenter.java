@@ -82,6 +82,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		Integer tempo = TEMPO_LIST.get(tempoPosition);
 		if (song.tempo != tempo) {
 			song.tempo = tempo;
+			midiSongFactory.setTempo(tempo);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -90,6 +91,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		MusicStructure.Pitch pitch = PITCH_LIST.get(scaleRootPosition);
 		if (song.key != pitch) {
 			song.key = pitch;
+			midiSongFactory.setScaleRoot(pitch);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -98,6 +100,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		MusicStructure.ScaleType scaleType = SCALE_TYPE_LIST.get(scaleTypePosition);
 		if (song.scaleType != scaleType) {
 			song.scaleType = scaleType;
+			midiSongFactory.setScaleType(scaleType);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -106,6 +109,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		MusicStructure.MidiInstrument selectedInstrument = LEAD_INSTRUMENT_LIST.get(leadInstrumentPosition);
 		if (song.melodyInstrument != selectedInstrument) {
 			song.melodyInstrument = selectedInstrument;
+			midiSongFactory.setLeadInstrument(selectedInstrument);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
 	}
@@ -114,7 +118,28 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		MusicStructure.MidiInstrument selectedInstrument = RHYTHM_INSTRUMENT_LIST.get(rhythmInstrumentPosition);
 		if (song.chordInstrument != selectedInstrument) {
 			song.chordInstrument = selectedInstrument;
+			midiSongFactory.setRhythmInstrument(selectedInstrument);
 			midiSongFactory.makeMidiSongFrom(song);
 		}
+	}
+
+	void updateTempoRandomization(boolean isRandom) {
+		midiSongFactory.setTempoRandomization(isRandom);
+	}
+
+	void updateScalePitchRandomization(boolean isRandom) {
+		midiSongFactory.setScaleRootRandomization(isRandom);
+	}
+
+	void updateScaleTypeRandomization(boolean isRandom) {
+		midiSongFactory.setScaleTypeRandomization(isRandom);
+	}
+
+	void updateLeadInstrumentRandomization(boolean isRandom) {
+		midiSongFactory.setLeadInstrumentRandomization(isRandom);
+	}
+
+	void updateRhythmInstrumentRandomization(boolean isRandom) {
+		midiSongFactory.setRhythmInstrumentRandomization(isRandom);
 	}
 }
