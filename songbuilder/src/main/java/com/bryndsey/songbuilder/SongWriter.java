@@ -262,30 +262,31 @@ public class SongWriter {
 		int numTimeSigDenoms = MusicStructure.TIMESIGDENOMVALUES.length;
 		mTimeSigNumer = masterpiece.timeSigNum = MusicStructure.TIMESIGNUMVALUES[randGen.nextInt(numTimeSigNums)];
 		mTimeSigDenom = masterpiece.timeSigDenom = MusicStructure.TIMESIGDENOMVALUES[randGen.nextInt(numTimeSigDenoms)];
+
+		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax) {
+			mTempo = bpmValues[randGen.nextInt(bpmValues.length)];
+		}
+		masterpiece.tempo = mTempo;
 		
-		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax)
-			masterpiece.tempo = bpmValues[randGen.nextInt(bpmValues.length)];
-		else
-			masterpiece.tempo = mTempo;
+		if (mUseRandomScale || mCurrKey == null) {
+			mCurrKey = MusicStructure.PITCHES[randGen.nextInt(MusicStructure.NUMPITCHES)];
+		}
+		masterpiece.key = mCurrKey;
+
+		if (mUseRandomScale || mCurrScaleType == null) {
+			mCurrScaleType = chooseScaleType();
+		}
+		masterpiece.scaleType = mCurrScaleType;
 		
-		if (mUseRandomScale || mCurrKey == null)
-			masterpiece.key = MusicStructure.PITCHES[randGen.nextInt(MusicStructure.NUMPITCHES)];
-		else
-			masterpiece.key = mCurrKey;
-		if (mUseRandomScale || mCurrScaleType == null)
-			masterpiece.scaleType = chooseScaleType();
-		else
-			masterpiece.scaleType = mCurrScaleType;
+		if (mUseRandomChordInst || mChordInstrument == null) {
+			mChordInstrument = chordInstruments[randGen.nextInt(chordInstruments.length)];
+		}
+		masterpiece.chordInstrument = mChordInstrument;
 		
-		if (mUseRandomChordInst || mChordInstrument == null)
-			masterpiece.chordInstrument = chordInstruments[randGen.nextInt(chordInstruments.length)];
-		else
-			masterpiece.chordInstrument = mChordInstrument;
-		
-		if (mUseRandomMelodyInst || mMelodyInstrument == null)
-			masterpiece.melodyInstrument = melodyInstruments[randGen.nextInt(melodyInstruments.length)];
-		else
-			masterpiece.melodyInstrument = mMelodyInstrument;
+		if (mUseRandomMelodyInst || mMelodyInstrument == null) {
+			mMelodyInstrument = melodyInstruments[randGen.nextInt(melodyInstruments.length)];
+		}
+		masterpiece.melodyInstrument = mMelodyInstrument;
 		
 		masterpiece.structure = generateStructure();
 		masterpiece.verseProgression = generateVerseProgression();
