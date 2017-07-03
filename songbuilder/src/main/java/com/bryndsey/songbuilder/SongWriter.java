@@ -184,7 +184,8 @@ public class SongWriter {
 	private MidiInstrument mChordInstrument;
 	
 	private boolean mUseRandomTempo;
-	private boolean mUseRandomScale;
+	private boolean mUseRandomScaleRoot;
+	private boolean mUseRandomScaleType;
 	private boolean mUseRandomChordInst;
 	private boolean mUseRandomMelodyInst;
 	
@@ -207,7 +208,8 @@ public class SongWriter {
 		mChordInstrument = null;
 		
 		mUseRandomTempo = true;
-		mUseRandomScale = true;
+		mUseRandomScaleRoot = true;
+		mUseRandomScaleType = true;
 		mUseRandomChordInst = true;
 		mUseRandomMelodyInst = true;
 		
@@ -241,8 +243,10 @@ public class SongWriter {
 	public boolean getUseRandomTempo() { return mUseRandomTempo; }
 	public void setUseRandomTempo(boolean useRandomTempo) { mUseRandomTempo = useRandomTempo; }
 	
-	public boolean getUseRandomScale() { return mUseRandomScale; }
-	public void setUseRandomScale(boolean useRandomScale) { mUseRandomScale = useRandomScale; }
+	public boolean getUseRandomScaleRoot() { return mUseRandomScaleType; }
+	public void setUseRandomScaleRoot(boolean useRandomScaleRoot) { mUseRandomScaleRoot = useRandomScaleRoot; }
+	public boolean getUseRandomScaleType() { return mUseRandomScaleType; }
+	public void setUseRandomScaleType(boolean useRandomScaleType) { mUseRandomScaleType = useRandomScaleType; }
 	
 	public boolean getUseRandomChordInst() { return mUseRandomChordInst; }
 	public void setUseRandomChordInst(boolean useRandomChordInst) { mUseRandomChordInst = useRandomChordInst; }
@@ -268,12 +272,12 @@ public class SongWriter {
 		}
 		masterpiece.tempo = mTempo;
 		
-		if (mUseRandomScale || mCurrKey == null) {
+		if (mUseRandomScaleRoot || mCurrKey == null) {
 			mCurrKey = MusicStructure.PITCHES[randGen.nextInt(MusicStructure.NUMPITCHES)];
 		}
 		masterpiece.key = mCurrKey;
 
-		if (mUseRandomScale || mCurrScaleType == null) {
+		if (mUseRandomScaleType || mCurrScaleType == null) {
 			mCurrScaleType = chooseScaleType();
 		}
 		masterpiece.scaleType = mCurrScaleType;
