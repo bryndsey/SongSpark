@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:gravity="center"
-        android:text="Open Source Licenses"
+        android:text="@string/attributions"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
     <TextView
