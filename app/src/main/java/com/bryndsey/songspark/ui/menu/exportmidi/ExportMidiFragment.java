@@ -44,7 +44,7 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView, 
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.main_menu, menu);
+		inflater.inflate(R.menu.export_menu, menu);
 	}
 
 	@Override
