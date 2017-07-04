@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.ui.base.BaseFragment;
 import com.metova.slim.annotation.Layout;
@@ -22,5 +24,20 @@ public class AboutFragment extends BaseFragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.about, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.about) {
+			new MaterialDialog.Builder(getContext())
+					.title(R.string.about)
+					.customView(R.layout.about_page, true)
+					.positiveText("OK")
+					.show();
+
+			return true;
+		}
+
+		return false;
 	}
 }
