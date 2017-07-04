@@ -75,6 +75,17 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		preparePlayer();
 	}
 
+	private void resetPlayerState() {
+		if (mediaPlayer.isPlaying()) {
+			stopMediaPlayer();
+		}
+		if (isPrepared) {
+			mediaPlayer.reset();
+		}
+
+		isPrepared = false;
+	}
+
 	private void setPlayerNotReady() {
 		Log.d(TAG, "Player failed to enter ready state");
 		isPrepared = false;
@@ -99,24 +110,13 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		}
 	}
 
-	private void resetPlayerState() {
-		if (mediaPlayer.isPlaying()) {
-			stopMediaPlayer();
-		}
-		if (isPrepared) {
-			mediaPlayer.reset();
-		}
-
-		isPrepared = false;
-	}
-
 	public void startPlaying() {
 		if (isPrepared) {
 			int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 			if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
 				startMediaPlayer();
 			} else {
-				onPlaybackComplete();
+				notifyPlaybackComplete();
 			}
 		}
 	}
@@ -130,12 +130,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		}
 	}
 
-	private void stopMediaPlayer() {
-		mediaPlayer.stop();
-		preparePlayer();
-		onPlaybackComplete();
-	}
-
 	public void pause() {
 		if (mediaPlayer.isPlaying()) {
 			mediaPlayer.pause();
@@ -143,8 +137,18 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		}
 	}
 
-	public void stopPlaying() {
+	public void stop() {
+		stopAndPrepareAgain();
+	}
+
+	private void stopAndPrepareAgain() {
 		stopMediaPlayer();
+		preparePlayer();
+	}
+
+	private void stopMediaPlayer() {
+		mediaPlayer.stop();
+		notifyPlaybackComplete();
 		audioManager.abandonAudioFocus(this);
 	}
 
@@ -156,10 +160,10 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	public void onCompletion(MediaPlayer mediaPlayer) {
 		audioManager.abandonAudioFocus(this);
 
-		onPlaybackComplete();
+		notifyPlaybackComplete();
 	}
 
-	private void onPlaybackComplete() {
+	private void notifyPlaybackComplete() {
 		if (playbackStateListener != null) {
 			playbackStateListener.onPlaybackComplete();
 		}
