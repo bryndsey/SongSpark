@@ -32,6 +32,8 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	private AudioManager audioManager;
 	private MediaPlayer mediaPlayer;
 
+	private File currentSongFile;
+
 	private boolean isPrepared;
 
 	private PlaybackStateListener playbackStateListener;
@@ -44,7 +46,8 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 				.subscribe(new Consumer<MidiSong>() {
 					@Override
 					public void accept(MidiSong midiSong) throws Exception {
-						initializePlayer(midiSong.midiFile);
+						saveSongForPlayback(midiSong);
+						initializePlayer();
 					}
 				});
 
@@ -54,25 +57,29 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		mediaPlayer.setOnCompletionListener(this);
 	}
 
-	private void initializePlayer(MidiFile midiFile) {
-		resetPlayerState();
-
-		File tempMidiFile = null;
+	private void saveSongForPlayback(MidiSong song) {
+		MidiFile midiFile = song.midiFile;
+		currentSongFile = null;
 		try {
-			tempMidiFile = midiFileSaver.saveTemporaryMidiFile(midiFile, TEMP_MIDI_FILE_NAME);
+			currentSongFile = midiFileSaver.saveTemporaryMidiFile(midiFile, TEMP_MIDI_FILE_NAME);
 		} catch (MidiFileSaveException e) {
 			setPlayerNotReady();
-			return;
 		}
+	}
 
-		try {
-			mediaPlayer.setDataSource(tempMidiFile.getPath());
-		} catch (IOException e) {
-			setPlayerNotReady();
-			return;
+	private void initializePlayer() {
+		resetPlayerState();
+
+		if (currentSongFile != null) {
+			try {
+				mediaPlayer.setDataSource(currentSongFile.getPath());
+			} catch (IOException e) {
+				setPlayerNotReady();
+				return;
+			}
+
+			preparePlayer();
 		}
-
-		preparePlayer();
 	}
 
 	private void resetPlayerState() {
@@ -143,13 +150,14 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 	private void stopAndPrepareAgain() {
 		stopMediaPlayer();
-		preparePlayer();
+		initializePlayer();
 	}
 
 	private void stopMediaPlayer() {
-		mediaPlayer.stop();
-		notifyPlaybackComplete();
-		audioManager.abandonAudioFocus(this);
+		if (mediaPlayer.isPlaying()) {
+			mediaPlayer.stop();
+			finishPlayback();
+		}
 	}
 
 	public void setPlaybackStateListener(PlaybackStateListener playbackStateListener) {
@@ -158,8 +166,12 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 	@Override
 	public void onCompletion(MediaPlayer mediaPlayer) {
-		audioManager.abandonAudioFocus(this);
+		finishPlayback();
+		initializePlayer();
+	}
 
+	private void finishPlayback() {
+		audioManager.abandonAudioFocus(this);
 		notifyPlaybackComplete();
 	}
 
@@ -174,7 +186,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
 			startMediaPlayer();
 		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-			stopMediaPlayer();
+			stopAndPrepareAgain();
 		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
 			mediaPlayer.pause();
 		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
