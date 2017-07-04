@@ -52,9 +52,10 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView, 
 
 		if (item.getItemId() == R.id.export_midi) {
 			presenter.exportMidiSong();
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
