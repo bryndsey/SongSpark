@@ -3,4 +3,5 @@
     <string name="properties_tab_title">Properties</string>
     <string name="chords_tab_title">Chords</string>
     <string name="export_midi_file">Export MIDI file</string>
+    <string name="about">About</string>
 </resources>
