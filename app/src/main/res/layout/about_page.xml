@@ -32,8 +32,8 @@
         android:id="@+id/disclaimer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="@string/about_disclaimer" />
 
@@ -55,15 +55,6 @@
         android:gravity="center"
         android:text="@string/apache_libraries" />
 
-    <TextView
-        android:id="@+id/apacheLicense"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/apache_license"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/mitLibs"
@@ -75,13 +66,12 @@
         android:text="@string/mit_libraries" />
 
     <TextView
-        android:id="@+id/mitLicense"
+        android:id="@+id/metronomeIcon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="PLACEHOLDER FOR LICENSE"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:text="@string/metronomeIconAttribution" />
 
 </LinearLayout>
