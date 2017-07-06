@@ -1,10 +1,12 @@
 package com.bryndsey.songspark.ui.menu.exportmidi;
 
+import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.filesave.MidiFileSaveException;
 import com.bryndsey.songspark.data.filesave.MidiFileSaver;
-import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
 import com.pdrogfer.mididroid.MidiFile;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -42,9 +44,9 @@ class ExportMidiPresenter extends RxPresenter<ExportMidiView> {
 
 	void exportToFile(String fileName) {
 		try {
-			midiFileSaver.savePublicMidiFile(midiFile, fileName);
+			File savedFile = midiFileSaver.savePublicMidiFile(midiFile, fileName);
 			if (isViewAttached()) {
-				getView().showFileSaveConfirmation(fileName);
+				getView().showFileSaveConfirmation(savedFile.getName());
 			}
 		} catch (MidiFileSaveException e) {
 			if (isViewAttached()) {

@@ -3,5 +3,5 @@
 
     <item
         android:id="@+id/export_midi"
-        android:title="Export MIDI file" />
+        android:title="@string/export_midi_file" />
 </menu>
