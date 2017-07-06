@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
 import com.bryndsey.songspark.ui.base.BaseFragment;
@@ -21,13 +22,10 @@ import javax.inject.Inject;
 
 import easymvp.annotation.FragmentView;
 import easymvp.annotation.Presenter;
-import eltos.simpledialogfragment.input.SimpleInputDialog;
 
 @Layout(R.layout.empty)
 @FragmentView(presenter = ExportMidiPresenter.class)
-public class ExportMidiFragment extends BaseFragment implements ExportMidiView, SimpleInputDialog.OnDialogResultListener {
-
-	private static final String SAVE_FILE_DIALOG_TAG = "saveFileDialog";
+public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 
 	@Inject
 	@Presenter
@@ -75,31 +73,28 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView, 
 	@Override
 	public void showFileSaveConfirmation(String fileName) {
 		Snackbar.make(getView(), "File \"" + fileName + "\" saved.", Snackbar.LENGTH_SHORT)
-		.show();
+				.show();
 	}
 
 	@Override
 	public void showFileSaveError() {
 		Snackbar.make(getView(), "Error occurred. File not saved", Snackbar.LENGTH_SHORT)
-		.show();
+				.show();
 	}
 
 	private void showSaveFileDialog() {
-		SimpleInputDialog.build()
-				.allowEmpty(false)
+
+		new MaterialDialog.Builder(getContext())
 				.title("Save as:")
-				.hint("File Name")
-				.show(this, SAVE_FILE_DIALOG_TAG);
-	}
-
-	@Override
-	public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
-		if (dialogTag.equals(SAVE_FILE_DIALOG_TAG) && which == BUTTON_POSITIVE) {
-			String fileName = extras.getString(SimpleInputDialog.TEXT);
-			presenter.exportToFile(fileName);
-			return true;
-		}
-
-		return false;
+				.input("File Name",
+						"",
+						false,
+						new MaterialDialog.InputCallback() {
+							@Override
+							public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+								presenter.exportToFile(input.toString());
+							}
+						})
+				.show();
 	}
 }
