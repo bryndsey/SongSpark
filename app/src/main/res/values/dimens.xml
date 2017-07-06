@@ -3,6 +3,7 @@
     <dimen name="tab_view_height">52dp</dimen>
 
     <dimen name="song_property_widget_height">32dp</dimen>
+    <dimen name="song_property_max_width">480dp</dimen>
 
     <dimen name="primary_control_button_size">72dp</dimen>
 </resources>

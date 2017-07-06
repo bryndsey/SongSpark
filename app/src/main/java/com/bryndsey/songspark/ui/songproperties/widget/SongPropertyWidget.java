@@ -24,6 +24,8 @@ import butterknife.OnClick;
 
 public class SongPropertyWidget extends LinearLayout implements AdapterView.OnItemSelectedListener {
 
+	private Integer maximumWidth;
+
 	@BindView(R.id.property_image)
 	ImageView propertyImage;
 
@@ -46,12 +48,30 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 		Drawable image = attributes.getDrawable(R.styleable.SongPropertyWidget_propertySrc);
 		propertyImage.setImageDrawable(image);
 
+		int maxWidth = attributes.getDimensionPixelSize(R.styleable.SongPropertyWidget_maxWidth, 0);
+		if (maxWidth > 0) {
+			maximumWidth = maxWidth;
+		}
+
 		attributes.recycle();
 
 		propertySpinner.setOnItemSelectedListener(this);
 
 		setOrientation(HORIZONTAL);
 		setGravity(Gravity.CENTER_VERTICAL);
+	}
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		if (maximumWidth != null) {
+			int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
+			if(maximumWidth < measuredWidth) {
+				int measureMode = MeasureSpec.getMode(widthMeasureSpec);
+				widthMeasureSpec = MeasureSpec.makeMeasureSpec(maximumWidth, measureMode);
+			}
+		}
+
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 
 	public void setSongPropertyInteractionListener(SongPropertyInteractionListener listener) {

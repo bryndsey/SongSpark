@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="SongPropertyWidget">
         <attr name="propertySrc" format="reference" />
+        <attr name="maxWidth" format="dimension" />
     </declare-styleable>
 
 </resources>

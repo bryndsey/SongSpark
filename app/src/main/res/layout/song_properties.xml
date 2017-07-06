@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center"
         android:padding="16dp">
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -15,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            app:maxWidth="@dimen/song_property_max_width"
             app:propertySrc="@drawable/icon_metronome" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -23,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            app:maxWidth="@dimen/song_property_max_width"
             app:propertySrc="@drawable/icon_key_signature" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -31,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            app:maxWidth="@dimen/song_property_max_width"
             app:propertySrc="@drawable/icon_key_signature" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -39,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            app:maxWidth="@dimen/song_property_max_width"
             app:propertySrc="@drawable/icon_treble_clef" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -47,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            app:maxWidth="@dimen/song_property_max_width"
             app:propertySrc="@drawable/icon_bass_clef" />
     </LinearLayout>
 </ScrollView>
