@@ -9,7 +9,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="16dp">
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="@dimen/primary_control_spacing"
+        >
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
             android:id="@+id/tempo"
