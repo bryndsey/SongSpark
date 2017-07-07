@@ -39,5 +39,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/play_pause_button"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/generate_icon" />
+        app:srcCompat="@drawable/generate_spin" />
 </android.support.constraint.ConstraintLayout>
