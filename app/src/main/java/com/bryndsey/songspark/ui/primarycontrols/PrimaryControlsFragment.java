@@ -1,5 +1,7 @@
 package com.bryndsey.songspark.ui.primarycontrols;
 
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
@@ -60,6 +62,10 @@ public class PrimaryControlsFragment extends BaseFragment implements PrimaryCont
 
 	@OnClick(R.id.new_song_button)
 	void onGenerateNewSong() {
+		Drawable drawable = newSongButton.getDrawable();
+		if (drawable instanceof Animatable) {
+			((Animatable) drawable).start();
+		}
 		presenter.generateNewSong();
 	}
 }
