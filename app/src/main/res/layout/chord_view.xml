@@ -4,8 +4,10 @@
     android:id="@+id/display"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
     android:paddingLeft="4dp"
     android:paddingRight="4dp"
+    android:paddingBottom="@dimen/primary_control_spacing"
     tools:text="Test chords display">
 
 </android.support.v7.widget.RecyclerView>
