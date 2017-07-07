@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        app:srcCompat="@drawable/play_icon" />
+        app:srcCompat="@drawable/pause_to_play" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/new_song_button"
