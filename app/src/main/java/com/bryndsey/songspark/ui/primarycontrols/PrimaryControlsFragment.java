@@ -1,5 +1,7 @@
 package com.bryndsey.songspark.ui.primarycontrols;
 
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
@@ -38,19 +40,32 @@ public class PrimaryControlsFragment extends BaseFragment implements PrimaryCont
 
 	@Override
 	public void displayPlayingState() {
-		playPauseButton.setImageResource(R.drawable.pause_icon);
+		playPauseButton.setImageResource(R.drawable.play_to_pause);
+		Drawable drawable = playPauseButton.getDrawable();
+		if (drawable instanceof Animatable) {
+			((Animatable) drawable).start();
+		}
 		playPauseButton.setEnabled(true);
 	}
 
 	@Override
 	public void displayPausedState() {
-		playPauseButton.setImageResource(R.drawable.play_icon);
+		playPauseButton.setImageResource(R.drawable.pause_to_play);
+		Drawable drawable = playPauseButton.getDrawable();
+		if (drawable instanceof Animatable) {
+			((Animatable) drawable).start();
+		}
 		playPauseButton.setEnabled(true);
 	}
 
 	@Override
 	public void disablePlayback() {
 		playPauseButton.setEnabled(false);
+	}
+
+	@Override
+	public void enablePlayback() {
+		playPauseButton.setEnabled(true);
 	}
 
 	@OnClick(R.id.play_pause_button)
@@ -60,6 +75,10 @@ public class PrimaryControlsFragment extends BaseFragment implements PrimaryCont
 
 	@OnClick(R.id.new_song_button)
 	void onGenerateNewSong() {
+		Drawable drawable = newSongButton.getDrawable();
+		if (drawable instanceof Animatable) {
+			((Animatable) drawable).start();
+		}
 		presenter.generateNewSong();
 	}
 }

@@ -44,17 +44,17 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 	}
 
 	private void enterNotPlayingState() {
-		isPlaying = false;
-		if (isViewAttached()) {
+		if (isViewAttached() && isPlaying) {
 			getView().displayPausedState();
 		}
+		isPlaying = false;
 	}
 
 	private void enterPlayingState() {
-		isPlaying = true;
-		if (isViewAttached()) {
+		if (isViewAttached() && !isPlaying) {
 			getView().displayPlayingState();
 		}
+		isPlaying = true;
 	}
 
 	private void syncPlayPauseButtonState() {
@@ -95,8 +95,9 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 	public void onPlaybackReady() {
 		isPlaybackDisabled = false;
 		if (isViewAttached()) {
-			getView().displayPausedState();
+			getView().enablePlayback();
 		}
+		enterNotPlayingState();
 	}
 
 	@Override

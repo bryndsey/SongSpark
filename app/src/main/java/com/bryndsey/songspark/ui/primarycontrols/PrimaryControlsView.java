@@ -6,4 +6,6 @@ interface PrimaryControlsView {
 	void displayPausedState();
 
 	void disablePlayback();
+
+	void enablePlayback();
 }
