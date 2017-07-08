@@ -2,6 +2,7 @@ package com.bryndsey.songspark.ui.menu.exportmidi;
 
 import android.Manifest;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -80,15 +81,21 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 		snackbar.setAction("SHOW", new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Uri selectedUri = Uri.parse("content://" + MidiFileSaver.publicFileDirectory.getPath() + "/" + fileName + ".mid");
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setDataAndType(selectedUri, "audio/midi");
-				intent.addCategory(Intent.CATEGORY_DEFAULT);
-
-//				if (intent.resolveActivityInfo(getActivity().getPackageManager(), 0) != null)
-//				{
-					startActivity(intent);
-//				}
+				String path = MidiFileSaver.publicFileDirectory.getPath() + "/" + fileName;
+				MediaScannerConnection.scanFile(getContext(),
+						new String[]{path},
+						new String[]{"audio/midi"},
+						new MediaScannerConnection.OnScanCompletedListener() {
+							@Override
+							public void onScanCompleted(String path, Uri uri) {
+								Intent intent = new Intent(Intent.ACTION_SEND);
+								intent.putExtra(Intent.EXTRA_STREAM, uri);
+								intent.setType("audio/midi");
+								intent.addCategory(Intent.CATEGORY_DEFAULT);
+								startActivity(intent);
+							}
+						}
+				);
 			}
 		});
 		snackbar.show();
