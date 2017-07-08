@@ -8,4 +8,5 @@
     <dimen name="primary_control_button_size">64dp</dimen>
     <dimen name="primary_control_spacing">104dp</dimen>
     <dimen name="primary_control_padding">24dp</dimen>
+    <dimen name="chord_view_padding">8dp</dimen>
 </resources>
