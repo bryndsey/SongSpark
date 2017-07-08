@@ -7,4 +7,6 @@ interface ExportMidiView {
 	void showFileSaveConfirmation(String fileName);
 
 	void showFileSaveError();
+
+	void showFileSaveErrorWithMessage(String message);
 }
