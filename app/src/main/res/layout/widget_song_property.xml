@@ -24,7 +24,7 @@
         android:layout_marginRight="12dp"
         android:layout_width="@dimen/song_property_widget_height"
         android:layout_height="@dimen/song_property_widget_height"
-        app:si_tint_color="@color/colorAccentDark"
+        app:si_tint_color="@color/colorAccent"
         app:si_animation_duration="200"
         app:srcCompat="@drawable/generate_icon"/>
 
