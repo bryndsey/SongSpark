@@ -78,7 +78,12 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 
 	@Override
 	public void showFileSaveError() {
-		Snackbar.make(getView(), "Error occurred. File not saved", Snackbar.LENGTH_SHORT)
+		showFileSaveErrorWithMessage("Error occurred. File not saved");
+	}
+
+	@Override
+	public void showFileSaveErrorWithMessage(String message) {
+		Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT)
 				.show();
 	}
 

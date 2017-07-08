@@ -50,7 +50,11 @@ class ExportMidiPresenter extends RxPresenter<ExportMidiView> {
 			}
 		} catch (MidiFileSaveException e) {
 			if (isViewAttached()) {
-				getView().showFileSaveError();
+				if (e.getMessage() != null && !e.getMessage().equals("")) {
+					getView().showFileSaveErrorWithMessage(e.getMessage());
+				} else {
+					getView().showFileSaveError();
+				}
 			}
 		}
 	}
