@@ -16,23 +16,29 @@ public class MidiFileSaver {
 	private static final String MIDI_FILE_EXTENSION = ".mid";
 	private static String APP_DIRECTORY_NAME;
 
-	private Context context;
-
 	private File tempFileDirectory;
 	private File publicFileDirectory;
 
 	@Inject
 	MidiFileSaver(Context context) {
-		this.context = context;
-
 		APP_DIRECTORY_NAME = context.getResources().getString(R.string.app_name);
 		tempFileDirectory = context.getCacheDir();
 
-		//TODO: Make sure external media is mounted
-		publicFileDirectory = new File(Environment.getExternalStorageDirectory(), APP_DIRECTORY_NAME);
-		if (!publicFileDirectory.exists()) {
-			publicFileDirectory.mkdirs();
+		setUpPublicFileDirectory();
+	}
+
+	private void setUpPublicFileDirectory() {
+		if (publicFileDirectory == null && isExternalStorageWritable()) {
+			publicFileDirectory = new File(Environment.getExternalStorageDirectory(), APP_DIRECTORY_NAME);
+			if (!publicFileDirectory.exists()) {
+				publicFileDirectory.mkdirs();
+			}
 		}
+	}
+
+	private boolean isExternalStorageWritable() {
+		String state = Environment.getExternalStorageState();
+		return Environment.MEDIA_MOUNTED.equals(state);
 	}
 
 	private String getFileNameWithProperExtension(String fileName) {
@@ -53,6 +59,14 @@ public class MidiFileSaver {
 	}
 
 	public File savePublicMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
+		if (publicFileDirectory == null) {
+			setUpPublicFileDirectory();
+		}
+
+		if (publicFileDirectory == null || !isExternalStorageWritable()) {
+			throw new MidiFileSaveException("External storage not available.");
+		}
+
 		File saveFile = new File(publicFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 		return saveFile;
