@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MidiFileSaver {
 
 	private static final String MIDI_FILE_EXTENSION = ".mid";
