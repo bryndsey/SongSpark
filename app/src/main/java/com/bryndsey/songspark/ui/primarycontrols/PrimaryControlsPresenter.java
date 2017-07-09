@@ -45,14 +45,14 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 
 	private void enterNotPlayingState() {
 		if (isViewAttached() && isPlaying) {
-			getView().displayPausedState();
+			getView().transitionToPausedState();
 		}
 		isPlaying = false;
 	}
 
 	private void enterPlayingState() {
 		if (isViewAttached() && !isPlaying) {
-			getView().displayPlayingState();
+			getView().transitionToPlayingState();
 		}
 		isPlaying = true;
 	}

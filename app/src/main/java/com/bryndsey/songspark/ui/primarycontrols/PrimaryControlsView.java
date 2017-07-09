@@ -5,6 +5,10 @@ interface PrimaryControlsView {
 
 	void displayPausedState();
 
+	void transitionToPlayingState();
+
+	void transitionToPausedState();
+
 	void disablePlayback();
 
 	void enablePlayback();
