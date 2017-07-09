@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">SongSpark</string>
 
+    <string name="file_provider_authority">com.bryndsey.songspark.fileprovider</string>
+
     <string name="properties_tab_title">Properties</string>
     <string name="chords_tab_title">Chords</string>
 

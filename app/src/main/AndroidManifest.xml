@@ -21,7 +21,7 @@
         </activity>
 
         <provider
-            android:authorities="com.bryndsey.songspark.fileprovider"
+            android:authorities="@string/file_provider_authority"
             android:name="android.support.v4.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">
