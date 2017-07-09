@@ -41,6 +41,8 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile project(':songbuilder')
 
+    compile 'com.android.support:design:25.4.0'
+
     kapt 'com.google.dagger:dagger-compiler:2.11'
     compile 'com.google.dagger:dagger:2.11'
 
@@ -58,7 +60,7 @@ dependencies {
     
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
 
-    compile 'com.karumi:dexter:4.1.0'
+//    compile 'com.karumi:dexter:4.1.0'
 
     compile 'com.google.guava:guava:22.0-android'
 
