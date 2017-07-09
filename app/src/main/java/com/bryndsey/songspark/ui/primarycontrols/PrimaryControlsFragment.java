@@ -40,6 +40,18 @@ public class PrimaryControlsFragment extends BaseFragment implements PrimaryCont
 
 	@Override
 	public void displayPlayingState() {
+		playPauseButton.setImageResource(R.drawable.pause_icon);
+		playPauseButton.setEnabled(true);
+	}
+
+	@Override
+	public void displayPausedState() {
+		playPauseButton.setImageResource(R.drawable.play_icon);
+		playPauseButton.setEnabled(true);
+	}
+
+	@Override
+	public void transitionToPlayingState() {
 		playPauseButton.setImageResource(R.drawable.play_to_pause);
 		Drawable drawable = playPauseButton.getDrawable();
 		if (drawable instanceof Animatable) {
@@ -49,7 +61,7 @@ public class PrimaryControlsFragment extends BaseFragment implements PrimaryCont
 	}
 
 	@Override
-	public void displayPausedState() {
+	public void transitionToPausedState() {
 		playPauseButton.setImageResource(R.drawable.pause_to_play);
 		Drawable drawable = playPauseButton.getDrawable();
 		if (drawable instanceof Animatable) {

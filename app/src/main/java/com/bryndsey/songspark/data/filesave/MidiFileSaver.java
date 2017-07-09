@@ -1,44 +1,39 @@
 package com.bryndsey.songspark.data.filesave;
 
 import android.content.Context;
-import android.os.Environment;
 
 import com.bryndsey.songspark.R;
 import com.pdrogfer.mididroid.MidiFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class MidiFileSaver {
 
 	private static final String MIDI_FILE_EXTENSION = ".mid";
-	private static String APP_DIRECTORY_NAME;
+	private static String APP_NAME;
 
 	private File tempFileDirectory;
-	private File publicFileDirectory;
+	private File shareableFileDirectory;
 
 	@Inject
 	MidiFileSaver(Context context) {
-		APP_DIRECTORY_NAME = context.getResources().getString(R.string.app_name);
+		APP_NAME = context.getString(R.string.app_name);
+
 		tempFileDirectory = context.getCacheDir();
 
-		setUpPublicFileDirectory();
-	}
+		// TODO: Delete the share subdirectory to clean up cache
 
-	private void setUpPublicFileDirectory() {
-		if (publicFileDirectory == null && isExternalStorageWritable()) {
-			publicFileDirectory = new File(Environment.getExternalStorageDirectory(), APP_DIRECTORY_NAME);
-			if (!publicFileDirectory.exists()) {
-				publicFileDirectory.mkdirs();
-			}
+		shareableFileDirectory = new File(tempFileDirectory, context.getString(R.string.share_directory));
+		if (!shareableFileDirectory.exists()) {
+			shareableFileDirectory.mkdirs();
 		}
-	}
-
-	private boolean isExternalStorageWritable() {
-		String state = Environment.getExternalStorageState();
-		return Environment.MEDIA_MOUNTED.equals(state);
 	}
 
 	private String getFileNameWithProperExtension(String fileName) {
@@ -58,16 +53,12 @@ public class MidiFileSaver {
 		}
 	}
 
-	public File savePublicMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
-		if (publicFileDirectory == null) {
-			setUpPublicFileDirectory();
-		}
+	public File saveShareableMidiFile(MidiFile midiFile) throws MidiFileSaveException {
+		return saveShareableMidiFile(midiFile, generateTimeStampFilename());
+	}
 
-		if (publicFileDirectory == null || !isExternalStorageWritable()) {
-			throw new MidiFileSaveException("External storage not available.");
-		}
-
-		File saveFile = new File(publicFileDirectory, getFileNameWithProperExtension(fileName));
+	public File saveShareableMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
+		File saveFile = new File(shareableFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 		return saveFile;
 	}
@@ -76,5 +67,11 @@ public class MidiFileSaver {
 		File saveFile = new File(tempFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 		return saveFile;
+	}
+
+	private String generateTimeStampFilename() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
+		String timestamp = simpleDateFormat.format(new Date());
+		return APP_NAME + "_" + timestamp;
 	}
 }
