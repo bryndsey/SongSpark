@@ -83,8 +83,7 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 		intent.putExtra(Intent.EXTRA_STREAM, uri);
 		intent.setType("audio/midi");
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
-		startActivity(intent);
-
+		startActivity(Intent.createChooser(intent, "Share with"));
 	}
 
 	@Override
