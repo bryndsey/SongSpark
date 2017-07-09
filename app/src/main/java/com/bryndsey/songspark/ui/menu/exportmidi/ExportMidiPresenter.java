@@ -50,7 +50,7 @@ class ExportMidiPresenter extends RxPresenter<ExportMidiView> {
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
 			String timestamp = simpleDateFormat.format(new Date());
 			String fileName = "SongSpark_" + timestamp;
-			File savedFile = midiFileSaver.savePublicMidiFile(midiFile, fileName);
+			File savedFile = midiFileSaver.saveShareableMidiFile(midiFile, fileName);
 			if (isViewAttached()) {
 				getView().shareFile(savedFile);
 			}
