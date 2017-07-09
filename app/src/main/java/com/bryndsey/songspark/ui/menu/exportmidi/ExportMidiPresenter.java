@@ -36,13 +36,7 @@ class ExportMidiPresenter extends RxPresenter<ExportMidiView> {
 		this.midiFileSaver = midiFileSaver;
 	}
 
-	void exportMidiSong() {
-		if (midiFile != null && isViewAttached()) {
-			getView().launchSaveFileSelector();
-		}
-	}
-
-	void exportToFile() {
+	void exportToShareableFile() {
 		try {
 			File savedFile = midiFileSaver.saveShareableMidiFile(midiFile);
 			if (isViewAttached()) {

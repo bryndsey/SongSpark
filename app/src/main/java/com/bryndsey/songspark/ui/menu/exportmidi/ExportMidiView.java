@@ -4,8 +4,6 @@ import java.io.File;
 
 interface ExportMidiView {
 
-	void launchSaveFileSelector();
-
 	void shareFile(File file);
 
 	void showFileSaveError();
