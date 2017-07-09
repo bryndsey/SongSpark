@@ -7,6 +7,8 @@ import com.pdrogfer.mididroid.MidiFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,12 +17,15 @@ import javax.inject.Singleton;
 public class MidiFileSaver {
 
 	private static final String MIDI_FILE_EXTENSION = ".mid";
+	private static String APP_NAME;
 
 	private File tempFileDirectory;
 	private File shareableFileDirectory;
 
 	@Inject
 	MidiFileSaver(Context context) {
+		APP_NAME = context.getString(R.string.app_name);
+
 		tempFileDirectory = context.getCacheDir();
 
 		// TODO: Delete the share subdirectory to clean up cache
@@ -48,6 +53,10 @@ public class MidiFileSaver {
 		}
 	}
 
+	public File saveShareableMidiFile(MidiFile midiFile) throws MidiFileSaveException {
+		return saveShareableMidiFile(midiFile, generateTimeStampFilename());
+	}
+
 	public File saveShareableMidiFile(MidiFile midiFile, String fileName) throws MidiFileSaveException {
 		File saveFile = new File(shareableFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
@@ -58,5 +67,11 @@ public class MidiFileSaver {
 		File saveFile = new File(tempFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 		return saveFile;
+	}
+
+	private String generateTimeStampFilename() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
+		String timestamp = simpleDateFormat.format(new Date());
+		return APP_NAME + "_" + timestamp;
 	}
 }
