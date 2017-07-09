@@ -2,26 +2,26 @@ package com.bryndsey.songspark.ui.menu.exportmidi;
 
 import android.Manifest;
 import android.content.Intent;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.FileProvider;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bryndsey.songspark.R;
 import com.bryndsey.songspark.dagger.ComponentHolder;
-import com.bryndsey.songspark.data.filesave.MidiFileSaver;
 import com.bryndsey.songspark.ui.base.BaseFragment;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.single.BasePermissionListener;
 import com.metova.slim.annotation.Layout;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -54,7 +54,8 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		if (item.getItemId() == R.id.export_midi) {
-			presenter.exportMidiSong();
+//			presenter.exportMidiSong();
+			presenter.exportToFile();
 			return true;
 		}
 
@@ -76,29 +77,14 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 	}
 
 	@Override
-	public void showFileSaveConfirmation(final String fileName) {
-		Snackbar snackbar = Snackbar.make(getView(), "File \"" + fileName + "\" saved.", Snackbar.LENGTH_SHORT);
-		snackbar.setAction("SHOW", new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String path = MidiFileSaver.publicFileDirectory.getPath() + "/" + fileName;
-				MediaScannerConnection.scanFile(getContext(),
-						new String[]{path},
-						new String[]{"audio/midi"},
-						new MediaScannerConnection.OnScanCompletedListener() {
-							@Override
-							public void onScanCompleted(String path, Uri uri) {
-								Intent intent = new Intent(Intent.ACTION_SEND);
-								intent.putExtra(Intent.EXTRA_STREAM, uri);
-								intent.setType("audio/midi");
-								intent.addCategory(Intent.CATEGORY_DEFAULT);
-								startActivity(intent);
-							}
-						}
-				);
-			}
-		});
-		snackbar.show();
+	public void shareFile(File file) {
+		Uri uri = FileProvider.getUriForFile(getContext(), getString(R.string.file_provider_authority), file);
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_STREAM, uri);
+		intent.setType("audio/midi");
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		startActivity(intent);
+
 	}
 
 	@Override
@@ -122,7 +108,7 @@ public class ExportMidiFragment extends BaseFragment implements ExportMidiView {
 						new MaterialDialog.InputCallback() {
 							@Override
 							public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-								presenter.exportToFile(input.toString());
+//								presenter.exportToFile(input.toString());
 							}
 						})
 				.show();

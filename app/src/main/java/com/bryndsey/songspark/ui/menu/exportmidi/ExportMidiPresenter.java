@@ -7,6 +7,8 @@ import com.bryndsey.songspark.data.model.MidiSong;
 import com.pdrogfer.mididroid.MidiFile;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -42,11 +44,15 @@ class ExportMidiPresenter extends RxPresenter<ExportMidiView> {
 		}
 	}
 
-	void exportToFile(String fileName) {
+	void exportToFile() {
 		try {
+			// TODO: Make timestamp utility
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
+			String timestamp = simpleDateFormat.format(new Date());
+			String fileName = "SongSpark_" + timestamp;
 			File savedFile = midiFileSaver.savePublicMidiFile(midiFile, fileName);
 			if (isViewAttached()) {
-				getView().showFileSaveConfirmation(savedFile.getName());
+				getView().shareFile(savedFile);
 			}
 		} catch (MidiFileSaveException e) {
 			if (isViewAttached()) {

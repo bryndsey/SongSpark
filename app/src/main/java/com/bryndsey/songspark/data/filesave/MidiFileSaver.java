@@ -19,7 +19,7 @@ public class MidiFileSaver {
 	private static String APP_DIRECTORY_NAME;
 
 	private File tempFileDirectory;
-	public static File publicFileDirectory;
+	private File publicFileDirectory;
 
 	@Inject
 	MidiFileSaver(Context context) {
@@ -30,11 +30,9 @@ public class MidiFileSaver {
 	}
 
 	private void setUpPublicFileDirectory() {
-		if (publicFileDirectory == null && isExternalStorageWritable()) {
-			publicFileDirectory = new File(Environment.getExternalStorageDirectory(), APP_DIRECTORY_NAME);
-			if (!publicFileDirectory.exists()) {
-				publicFileDirectory.mkdirs();
-			}
+		publicFileDirectory = new File(tempFileDirectory, "share");
+		if (!publicFileDirectory.exists()) {
+			publicFileDirectory.mkdirs();
 		}
 	}
 
@@ -78,9 +76,5 @@ public class MidiFileSaver {
 		File saveFile = new File(tempFileDirectory, getFileNameWithProperExtension(fileName));
 		writeMidiFile(midiFile, saveFile);
 		return saveFile;
-	}
-
-	public File getPublicSaveDirectory() {
-		return publicFileDirectory;
 	}
 }
