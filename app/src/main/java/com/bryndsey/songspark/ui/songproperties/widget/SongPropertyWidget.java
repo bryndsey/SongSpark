@@ -38,22 +38,30 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 	private SongPropertyInteractionListener listener;
 
 	public SongPropertyWidget(Context context, @Nullable AttributeSet attrs) {
-		super(context, attrs);
+		this(context, attrs, 0);
+	}
+
+	public SongPropertyWidget(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
 
 		View view = inflate(context, R.layout.widget_song_property, this);
 		ButterKnife.bind(view);
 
-		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.SongPropertyWidget);
+		if (attrs != null) {
+			TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.SongPropertyWidget);
 
-		Drawable image = attributes.getDrawable(R.styleable.SongPropertyWidget_propertySrc);
-		propertyImage.setImageDrawable(image);
+			if (attributes != null) {
+				Drawable image = attributes.getDrawable(R.styleable.SongPropertyWidget_propertySrc);
+				propertyImage.setImageDrawable(image);
 
-		int maxWidth = attributes.getDimensionPixelSize(R.styleable.SongPropertyWidget_maxWidth, 0);
-		if (maxWidth > 0) {
-			maximumWidth = maxWidth;
+				int maxWidth = attributes.getDimensionPixelSize(R.styleable.SongPropertyWidget_maxWidth, 0);
+				if (maxWidth > 0) {
+					maximumWidth = maxWidth;
+				}
+
+				attributes.recycle();
+			}
 		}
-
-		attributes.recycle();
 
 		propertySpinner.setOnItemSelectedListener(this);
 
