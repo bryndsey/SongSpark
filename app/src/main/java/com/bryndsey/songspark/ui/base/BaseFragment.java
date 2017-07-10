@@ -16,7 +16,7 @@ public abstract class BaseFragment extends Fragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = Slim.createLayout(getActivity(), this, container);
+		View view = Slim.createLayout(getContext(), this, container);
 		ButterKnife.bind(this, view);
 		return view;
 	}
