@@ -28,12 +28,23 @@ public class MidiFileSaver {
 
 		tempFileDirectory = context.getCacheDir();
 
-		// TODO: Delete the share subdirectory to clean up cache
-
 		shareableFileDirectory = new File(tempFileDirectory, context.getString(R.string.share_directory));
-		if (!shareableFileDirectory.exists()) {
-			shareableFileDirectory.mkdirs();
+		if (shareableFileDirectory.exists()) {
+			deleteRecursive(shareableFileDirectory);
 		}
+
+		shareableFileDirectory.mkdirs();
+	}
+
+	private void deleteRecursive(File fileOrDirectory) {
+
+		if (fileOrDirectory.isDirectory()) {
+			for (File child : fileOrDirectory.listFiles()) {
+				deleteRecursive(child);
+			}
+		}
+
+		fileOrDirectory.delete();
 	}
 
 	private String getFileNameWithProperExtension(String fileName) {
