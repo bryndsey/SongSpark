@@ -10,7 +10,10 @@
     android:layout_marginTop="5dp"
     app:cardCornerRadius="0dp"
     app:cardElevation="2dp"
-    app:contentPadding="16dp">
+    app:contentPaddingTop="20dp"
+    app:contentPaddingBottom="20dp"
+    app:contentPaddingLeft="16dp"
+    app:contentPaddingRight="16dp">
 
     <TextView
         android:id="@+id/chord_name"
