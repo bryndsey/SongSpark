@@ -40,7 +40,7 @@ public class ChordFragment extends BaseFragment implements ChordView {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
+		GridLayoutManager layoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R.integer.chord_view_column_count));
 		display.setLayoutManager(layoutManager);
 		chordTileAdapter = new ChordTileAdapter();
 		display.setAdapter(chordTileAdapter);
