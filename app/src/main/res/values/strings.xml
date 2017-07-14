@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">SongSpark</string>
+
+    <string name="file_provider_authority">com.bryndsey.songspark.fileprovider</string>
+    <string name="share_directory">share</string>
+
+    <string name="properties_tab_title">Properties</string>
+    <string name="chords_tab_title">Chords</string>
+
+    <string name="export_midi_file">Export MIDI file</string>
+
+    <string name="about">About</string>
+    <string name="copyright">© 2014 – 2017</string>
+    <string name="about_disclaimer">Songs made by this app are procedurally generated. Any resemblance to existing songs is coincidental.</string>
+
+    <string name="attributions">Attributions</string>
+    <string name="apache_libraries">MidiDroid, Guava, ButterKnife, Slim, Dagger 2, RxJava, RxAndroid, RxRelay, SmartTabLayout, Android-SwitchIcon, and LicenseDialog are used under the Apache 2.0 License</string>
+    <string name="mit_libraries">Material Dialogs is used under the MIT License</string>
+    <string name="metronomeIconAttribution">Metronome Icon created by Philip Hogeboom from the Noun Project</string>
 </resources>
