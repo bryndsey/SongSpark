@@ -49,11 +49,11 @@ public class ChordFragment extends BaseFragment implements ChordView {
 	@Override
 	public void displayChords(List<ChordViewModel> chords) {
 		chordTileAdapter.setChords(chords);
-		display.scrollToPosition(0);
 		highlightChord(0);
 	}
 
 	public void highlightChord(int chordPosition) {
 		chordTileAdapter.highlightTile(chordPosition);
+		display.scrollToPosition(chordPosition);
 	}
 }
