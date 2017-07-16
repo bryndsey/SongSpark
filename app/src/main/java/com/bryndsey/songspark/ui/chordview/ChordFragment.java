@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
 
 import com.bryndsey.songspark.R;
@@ -44,6 +45,7 @@ public class ChordFragment extends BaseFragment implements ChordView {
 		display.setLayoutManager(layoutManager);
 		chordTileAdapter = new ChordTileAdapter();
 		display.setAdapter(chordTileAdapter);
+		((SimpleItemAnimator) display.getItemAnimator()).setSupportsChangeAnimations(false);
 	}
 
 	@Override
