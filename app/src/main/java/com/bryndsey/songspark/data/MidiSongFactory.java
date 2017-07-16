@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class MidiSongFactory {
@@ -28,10 +29,9 @@ public class MidiSongFactory {
 	}
 
 	public void newSong() {
-		//TODO: Maybe do this on another thread?
-		Song song = songWriter.writeNewSong();
-
-		makeMidiSongFrom(song);
+		Observable.fromCallable(() -> songWriter.writeNewSong())
+		.subscribeOn(Schedulers.computation())
+		.subscribe(song -> makeMidiSongFrom(song));
 	}
 
 	public void makeMidiSongFrom(Song song) {

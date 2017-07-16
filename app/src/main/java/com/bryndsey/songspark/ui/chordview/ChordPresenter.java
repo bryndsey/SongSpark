@@ -3,7 +3,6 @@ package com.bryndsey.songspark.ui.chordview;
 import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
-import com.bryndsey.songspark.data.model.MidiSong;
 import com.bryndsey.songspark.data.player.MidiPlayer;
 
 import java.util.ArrayList;
@@ -17,9 +16,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 class ChordPresenter extends RxPresenter<ChordView> {
@@ -35,13 +32,10 @@ class ChordPresenter extends RxPresenter<ChordView> {
 	public ChordPresenter(MidiSongFactory midiSongFactory, final MidiPlayer midiPlayer) {
 		this.midiPlayer = midiPlayer;
 		Disposable subscription = midiSongFactory.latestSong()
-				.subscribeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Consumer<MidiSong>() {
-					@Override
-					public void accept(MidiSong midiSong) throws Exception {
-						song = midiSong.song;
-						updateDisplay();
-					}
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(midiSong -> {
+					song = midiSong.song;
+					updateDisplay();
 				});
 
 		addSubscription(subscription);
@@ -51,37 +45,25 @@ class ChordPresenter extends RxPresenter<ChordView> {
 
 	private void startHighlightUpdating() {
 		Observable.interval(HIGHLIGHT_UPDATE_CHECK_INTERVAL, TimeUnit.MILLISECONDS)
-				.flatMap(new Function<Long, ObservableSource<?>>() {
-					@Override
-					public ObservableSource<Float> apply(Long aLong) throws Exception {
-						return Observable.just(midiPlayer.getPlayerProgress());
+				.flatMap((Function<Long, ObservableSource<?>>) aLong ->
+						Observable.just(midiPlayer.getPlayerProgress())
+				)
+				.map(aFloat -> {
+					if (chordViewModels != null && chordViewModels.size() != 0) {
+						Float chordProgress = chordViewModels.size() * (float) aFloat;
+						return chordProgress.intValue();
 					}
+					return -1;
 				})
-				.map(new Function<Object, Integer>() {
-					@Override
-					public Integer apply(Object aFloat) throws Exception {
-						if (chordViewModels != null && chordViewModels.size() != 0) {
-							Float chordProgress = chordViewModels.size() * (float) aFloat;
-							return chordProgress.intValue();
-						}
-						return -1;
-					}
-				})
-				.filter(new Predicate<Integer>() {
-					@Override
-					public boolean test(Integer integer) throws Exception {
-						return integer >= 0 && integer != currentPlayingTile;
-					}
-				})
+				.filter(integer ->
+						integer >= 0 && integer != currentPlayingTile
+				)
 				.subscribeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Consumer<Object>() {
-					@Override
-					public void accept(Object v) throws Exception {
-						currentPlayingTile = (int) v;
-						if (isViewAttached()) {
-							getView().highlightChord(currentPlayingTile);
-						}
+				.subscribe(v -> {
+					currentPlayingTile = v;
+					if (isViewAttached()) {
+						getView().highlightChord(currentPlayingTile);
 					}
 				});
 	}
