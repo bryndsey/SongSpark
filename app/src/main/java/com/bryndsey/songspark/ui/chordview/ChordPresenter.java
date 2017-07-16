@@ -91,6 +91,8 @@ class ChordPresenter extends RxPresenter<ChordView> {
 		super.onViewAttached(view);
 
 		updateDisplay();
+
+		view.highlightChord(currentPlayingTile);
 	}
 
 	private void updateDisplay() {
