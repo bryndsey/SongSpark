@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
@@ -45,8 +45,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		this.midiFileSaver = midiFileSaver;
 
 		midiSongFactory.latestSong()
-				// TODO: If I make this class more reactive, then I probably don't need this line
-				.observeOn(AndroidSchedulers.mainThread())
+				.observeOn(Schedulers.computation())
 				.subscribe(midiSong -> {
 					saveSongForPlayback(midiSong);
 					initializePlayer();
