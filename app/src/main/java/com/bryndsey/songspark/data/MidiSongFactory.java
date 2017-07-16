@@ -8,13 +8,10 @@ import com.bryndsey.songspark.data.model.MidiSong;
 import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.pdrogfer.mididroid.MidiFile;
 
-import java.util.concurrent.Callable;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
@@ -33,19 +30,9 @@ public class MidiSongFactory {
 
 	public void newSong() {
 
-		Observable.fromCallable(new Callable<Song>() {
-			@Override
-			public Song call() throws Exception {
-				return songWriter.writeNewSong();
-			}
-		})
+		Observable.fromCallable(() -> songWriter.writeNewSong())
 		.subscribeOn(Schedulers.computation())
-		.subscribe(new Consumer<Song>() {
-			@Override
-			public void accept(Song song) throws Exception {
-				makeMidiSongFrom(song);
-			}
-		});
+		.subscribe(song -> makeMidiSongFrom(song));
 	}
 
 	public void makeMidiSongFrom(Song song) {

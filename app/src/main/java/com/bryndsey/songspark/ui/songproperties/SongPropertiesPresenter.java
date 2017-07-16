@@ -4,7 +4,6 @@ import com.bryndsey.songbuilder.SongWriter;
 import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
-import com.bryndsey.songspark.data.model.MidiSong;
 import com.google.common.primitives.Ints;
 
 import java.util.Arrays;
@@ -15,7 +14,6 @@ import javax.inject.Inject;
 import easymvp.RxPresenter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 
 public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
@@ -34,12 +32,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		this.midiSongFactory = midiSongFactory;
 		Disposable subscription = midiSongFactory.latestSong()
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(new Consumer<MidiSong>() {
-					@Override
-					public void accept(MidiSong midiSong) throws Exception {
-						song = midiSong.song;
-						updateDisplay();
-					}
+				.subscribe(midiSong -> {
+					song = midiSong.song;
+					updateDisplay();
 				});
 
 		addSubscription(subscription);
