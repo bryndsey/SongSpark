@@ -9,6 +9,7 @@ import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.filesave.MidiFileSaveException;
 import com.bryndsey.songspark.data.filesave.MidiFileSaver;
 import com.bryndsey.songspark.data.model.MidiSong;
+import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.pdrogfer.mididroid.MidiFile;
 
 import java.io.File;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 @Singleton
@@ -37,6 +39,8 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	private boolean isPrepared;
 
 	private PlaybackStateListener playbackStateListener;
+
+	private BehaviorRelay<PlaybackStateEvent> playbackStateEventRelay = BehaviorRelay.create();
 
 	@Inject
 	MidiPlayer(MidiSongFactory midiSongFactory, MidiFileSaver midiFileSaver, Context context) {
@@ -95,6 +99,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		Log.d(TAG, "Player failed to enter ready state");
 		isPrepared = false;
 
+		playbackStateEventRelay.accept(PlaybackStateEvent.NOTREADY);
 		if (playbackStateListener != null) {
 			playbackStateListener.onPlaybackNotReady();
 		}
@@ -110,6 +115,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 		isPrepared = true;
 
+		playbackStateEventRelay.accept(PlaybackStateEvent.READY);
 		if (playbackStateListener != null) {
 			playbackStateListener.onPlaybackReady();
 		}
@@ -133,6 +139,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		if (playbackStateListener != null) {
 			playbackStateListener.onPlaybackStarted();
 		}
+		playbackStateEventRelay.accept(PlaybackStateEvent.STARTED);
 	}
 
 	public void pause() {
@@ -177,6 +184,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		if (playbackStateListener != null) {
 			playbackStateListener.onPlaybackComplete();
 		}
+		playbackStateEventRelay.accept(PlaybackStateEvent.COMPLETED);
 	}
 
 	@Override
@@ -200,6 +208,10 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		return (float) mediaPlayer.getCurrentPosition() / (float) mediaPlayer.getDuration();
 	}
 
+	public Observable<PlaybackStateEvent> getLatestPlaybackStateEvent() {
+		return playbackStateEventRelay;
+	}
+
 	public interface PlaybackStateListener {
 		void onPlaybackReady();
 
@@ -208,5 +220,12 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		void onPlaybackStarted();
 
 		void onPlaybackComplete();
+	}
+
+	public enum PlaybackStateEvent {
+		NOTREADY,
+		READY,
+		STARTED,
+		COMPLETED
 	}
 }
