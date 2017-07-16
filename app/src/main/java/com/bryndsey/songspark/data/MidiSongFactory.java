@@ -29,7 +29,6 @@ public class MidiSongFactory {
 	}
 
 	public void newSong() {
-
 		Observable.fromCallable(() -> songWriter.writeNewSong())
 		.subscribeOn(Schedulers.computation())
 		.subscribe(song -> makeMidiSongFrom(song));
