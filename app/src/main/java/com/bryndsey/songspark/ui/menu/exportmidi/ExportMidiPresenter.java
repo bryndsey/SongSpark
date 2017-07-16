@@ -23,7 +23,7 @@ class ExportMidiPresenter extends RxPresenter<ExportMidiView> {
 	@Inject
 	ExportMidiPresenter(MidiSongFactory midiSongFactory, MidiFileSaver midiFileSaver) {
 		Disposable subscription = midiSongFactory.latestSong()
-				.subscribeOn(AndroidSchedulers.mainThread())
+				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {
 					@Override
 					public void accept(MidiSong midiSong) throws Exception {

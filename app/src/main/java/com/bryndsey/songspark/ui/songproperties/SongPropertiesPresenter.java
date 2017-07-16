@@ -33,7 +33,7 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	SongPropertiesPresenter(MidiSongFactory midiSongFactory) {
 		this.midiSongFactory = midiSongFactory;
 		Disposable subscription = midiSongFactory.latestSong()
-				.subscribeOn(AndroidSchedulers.mainThread())
+				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {
 					@Override
 					public void accept(MidiSong midiSong) throws Exception {
