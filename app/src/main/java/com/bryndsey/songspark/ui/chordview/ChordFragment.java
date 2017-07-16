@@ -50,6 +50,10 @@ public class ChordFragment extends BaseFragment implements ChordView {
 	public void displayChords(List<ChordViewModel> chords) {
 		chordTileAdapter.setChords(chords);
 		display.scrollToPosition(0);
+		highlightChord(0);
 	}
 
+	private void highlightChord(int position) {
+		chordTileAdapter.highlightTile(position);
+	}
 }
