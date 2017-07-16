@@ -53,7 +53,7 @@ public class ChordFragment extends BaseFragment implements ChordView {
 		highlightChord(0);
 	}
 
-	private void highlightChord(int position) {
-		chordTileAdapter.highlightTile(position);
+	public void highlightChord(int chordPosition) {
+		chordTileAdapter.highlightTile(chordPosition);
 	}
 }

@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface ChordView {
 	void displayChords(List<ChordViewModel> chords);
+
+	void highlightChord(int chordPosition);
 }
