@@ -4,26 +4,36 @@ import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.model.MidiSong;
+import com.bryndsey.songspark.data.player.MidiPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import easymvp.RxPresenter;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 class ChordPresenter extends RxPresenter<ChordView> {
-	private final MidiSongFactory midiSongFactory;
+	private static final int HIGHLIGHT_UPDATE_CHECK_INTERVAL = 100;
+
+	private final MidiPlayer midiPlayer;
 
 	private Song song;
+	private List<ChordViewModel> chordViewModels;
+	private int currentPlayingTile;
 
 	@Inject
-	public ChordPresenter(MidiSongFactory midiSongFactory) {
-		this.midiSongFactory = midiSongFactory;
-
+	public ChordPresenter(MidiSongFactory midiSongFactory, final MidiPlayer midiPlayer) {
+		this.midiPlayer = midiPlayer;
 		Disposable subscription = midiSongFactory.latestSong()
 				.subscribeOn(AndroidSchedulers.mainThread())
 				.subscribe(new Consumer<MidiSong>() {
@@ -35,6 +45,45 @@ class ChordPresenter extends RxPresenter<ChordView> {
 				});
 
 		addSubscription(subscription);
+
+		startHighlightUpdating();
+	}
+
+	private void startHighlightUpdating() {
+		Observable.interval(HIGHLIGHT_UPDATE_CHECK_INTERVAL, TimeUnit.MILLISECONDS)
+				.flatMap(new Function<Long, ObservableSource<?>>() {
+					@Override
+					public ObservableSource<Float> apply(Long aLong) throws Exception {
+						return Observable.just(midiPlayer.getPlayerProgress());
+					}
+				})
+				.map(new Function<Object, Integer>() {
+					@Override
+					public Integer apply(Object aFloat) throws Exception {
+						if (chordViewModels != null && chordViewModels.size() != 0) {
+							Float chordProgress = chordViewModels.size() * (float) aFloat;
+							return chordProgress.intValue();
+						}
+						return -1;
+					}
+				})
+				.filter(new Predicate<Integer>() {
+					@Override
+					public boolean test(Integer integer) throws Exception {
+						return integer >= 0 && integer != currentPlayingTile;
+					}
+				})
+				.subscribeOn(Schedulers.computation())
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(new Consumer<Object>() {
+					@Override
+					public void accept(Object v) throws Exception {
+						currentPlayingTile = (int) v;
+						if (isViewAttached()) {
+							getView().highlightChord(currentPlayingTile);
+						}
+					}
+				});
 	}
 
 	@Override
@@ -42,13 +91,14 @@ class ChordPresenter extends RxPresenter<ChordView> {
 		super.onViewAttached(view);
 
 		updateDisplay();
-	}
 
+		view.highlightChord(currentPlayingTile);
+	}
 
 	private void updateDisplay() {
 		if (isViewAttached() && song != null) {
-			List<ChordViewModel> chords = getViewModelsFromSong();
-			getView().displayChords(chords);
+			chordViewModels = getViewModelsFromSong();
+			getView().displayChords(chordViewModels);
 		}
 	}
 
@@ -59,7 +109,7 @@ class ChordPresenter extends RxPresenter<ChordView> {
 
 		List<ChordViewModel> chords = new ArrayList<>(rawChords.size());
 
-		for ( Integer chordDegree : rawChords ) {
+		for (Integer chordDegree : rawChords) {
 			// Get absolute note of key (in semitones)
 			int key = song.key.ordinal();
 			// Get offset of chord degree from root of chord (in semitones)

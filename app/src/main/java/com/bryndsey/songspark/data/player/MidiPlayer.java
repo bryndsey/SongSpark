@@ -87,10 +87,9 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 			stopMediaPlayer();
 		}
 		if (isPrepared) {
+			isPrepared = false;
 			mediaPlayer.reset();
 		}
-
-		isPrepared = false;
 	}
 
 	private void setPlayerNotReady() {
@@ -192,6 +191,14 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
 			mediaPlayer.setVolume(DUCKED_VOLUME, DUCKED_VOLUME);
 		}
+	}
+
+	public float getPlayerProgress() {
+		if (mediaPlayer == null || !isPrepared || mediaPlayer.getDuration() <= 0) {
+			return 0;
+		}
+
+		return (float) mediaPlayer.getCurrentPosition() / (float) mediaPlayer.getDuration();
 	}
 
 	public interface PlaybackStateListener {
