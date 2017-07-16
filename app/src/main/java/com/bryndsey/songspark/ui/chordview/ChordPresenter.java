@@ -45,7 +45,9 @@ class ChordPresenter extends RxPresenter<ChordView> {
 
 	private void startHighlightUpdating() {
 		Observable.interval(HIGHLIGHT_UPDATE_CHECK_INTERVAL, TimeUnit.MILLISECONDS)
-				.flatMap((Function<Long, ObservableSource<?>>) aLong -> Observable.just(midiPlayer.getPlayerProgress()))
+				.flatMap((Function<Long, ObservableSource<?>>) aLong ->
+						Observable.just(midiPlayer.getPlayerProgress())
+				)
 				.map(aFloat -> {
 					if (chordViewModels != null && chordViewModels.size() != 0) {
 						Float chordProgress = chordViewModels.size() * (float) aFloat;
@@ -53,7 +55,9 @@ class ChordPresenter extends RxPresenter<ChordView> {
 					}
 					return -1;
 				})
-				.filter(integer -> integer >= 0 && integer != currentPlayingTile)
+				.filter(integer ->
+						integer >= 0 && integer != currentPlayingTile
+				)
 				.subscribeOn(Schedulers.computation())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(v -> {
