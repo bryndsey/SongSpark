@@ -38,8 +38,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 	private boolean isPrepared;
 
-	private PlaybackStateListener playbackStateListener;
-
 	private BehaviorRelay<PlaybackStateEvent> playbackStateEventRelay = BehaviorRelay.create();
 
 	@Inject
@@ -100,9 +98,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		isPrepared = false;
 
 		playbackStateEventRelay.accept(PlaybackStateEvent.NOTREADY);
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackNotReady();
-		}
 	}
 
 	private void preparePlayer() {
@@ -116,9 +111,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		isPrepared = true;
 
 		playbackStateEventRelay.accept(PlaybackStateEvent.READY);
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackReady();
-		}
 	}
 
 	public void startPlaying() {
@@ -136,9 +128,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		mediaPlayer.setVolume(FULL_VOLUME, FULL_VOLUME);
 		mediaPlayer.start();
 
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackStarted();
-		}
 		playbackStateEventRelay.accept(PlaybackStateEvent.STARTED);
 	}
 
@@ -165,10 +154,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		}
 	}
 
-	public void setPlaybackStateListener(PlaybackStateListener playbackStateListener) {
-		this.playbackStateListener = playbackStateListener;
-	}
-
 	@Override
 	public void onCompletion(MediaPlayer mediaPlayer) {
 		finishPlayback();
@@ -181,9 +166,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	}
 
 	private void notifyPlaybackComplete() {
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackComplete();
-		}
 		playbackStateEventRelay.accept(PlaybackStateEvent.COMPLETED);
 	}
 
@@ -210,16 +192,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 	public Observable<PlaybackStateEvent> getLatestPlaybackStateEvent() {
 		return playbackStateEventRelay;
-	}
-
-	public interface PlaybackStateListener {
-		void onPlaybackReady();
-
-		void onPlaybackNotReady();
-
-		void onPlaybackStarted();
-
-		void onPlaybackComplete();
 	}
 
 	public enum PlaybackStateEvent {
