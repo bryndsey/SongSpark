@@ -29,7 +29,7 @@ class ChordPresenter extends RxPresenter<ChordView> {
 	private int currentPlayingTile;
 
 	@Inject
-	public ChordPresenter(MidiSongFactory midiSongFactory, final MidiPlayer midiPlayer) {
+	ChordPresenter(MidiSongFactory midiSongFactory, final MidiPlayer midiPlayer) {
 		this.midiPlayer = midiPlayer;
 		Disposable subscription = midiSongFactory.latestSong()
 				.observeOn(AndroidSchedulers.mainThread())
@@ -48,9 +48,9 @@ class ChordPresenter extends RxPresenter<ChordView> {
 				.flatMap((Function<Long, ObservableSource<?>>) aLong ->
 						Observable.just(midiPlayer.getPlayerProgress())
 				)
-				.map(aFloat -> {
+				.map(progress -> {
 					if (chordViewModels != null && chordViewModels.size() != 0) {
-						Float chordProgress = chordViewModels.size() * (float) aFloat;
+						Double chordProgress = chordViewModels.size() * (double) progress;
 						return chordProgress.intValue();
 					}
 					return -1;
@@ -107,5 +107,10 @@ class ChordPresenter extends RxPresenter<ChordView> {
 		}
 
 		return chords;
+	}
+
+	void seekToChord(int chordPosition) {
+		double playerPosition = (double) chordPosition / (double) chordViewModels.size();
+		midiPlayer.setPlayerProgress(playerPosition);
 	}
 }
