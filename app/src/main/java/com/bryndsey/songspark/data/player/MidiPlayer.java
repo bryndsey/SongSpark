@@ -181,12 +181,13 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		}
 	}
 
-	public float getPlayerProgress() {
+	public double getPlayerProgress() {
 		if (mediaPlayer == null || !isPrepared || mediaPlayer.getDuration() <= 0) {
 			return 0;
 		}
 
-		return (float) mediaPlayer.getCurrentPosition() / (float) mediaPlayer.getDuration();
+		return (double) mediaPlayer.getCurrentPosition() / (double) mediaPlayer.getDuration();
+	}
 
 	public void setPlayerProgress(double progress) {
 		if (mediaPlayer != null && isPrepared && mediaPlayer.getDuration() >= 0) {

@@ -48,9 +48,9 @@ class ChordPresenter extends RxPresenter<ChordView> {
 				.flatMap((Function<Long, ObservableSource<?>>) aLong ->
 						Observable.just(midiPlayer.getPlayerProgress())
 				)
-				.map(aFloat -> {
+				.map(progress -> {
 					if (chordViewModels != null && chordViewModels.size() != 0) {
-						Float chordProgress = chordViewModels.size() * (float) aFloat;
+						Double chordProgress = chordViewModels.size() * (double) progress;
 						return chordProgress.intValue();
 					}
 					return -1;
