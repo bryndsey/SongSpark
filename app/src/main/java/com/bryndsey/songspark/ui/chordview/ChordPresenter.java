@@ -29,7 +29,7 @@ class ChordPresenter extends RxPresenter<ChordView> {
 	private int currentPlayingTile;
 
 	@Inject
-	public ChordPresenter(MidiSongFactory midiSongFactory, final MidiPlayer midiPlayer) {
+	ChordPresenter(MidiSongFactory midiSongFactory, final MidiPlayer midiPlayer) {
 		this.midiPlayer = midiPlayer;
 		Disposable subscription = midiSongFactory.latestSong()
 				.observeOn(AndroidSchedulers.mainThread())
