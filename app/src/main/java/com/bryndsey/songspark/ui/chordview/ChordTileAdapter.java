@@ -19,7 +19,10 @@ public class ChordTileAdapter extends RecyclerView.Adapter<ChordTileViewHolder> 
 
 	private int highlightPosition;
 
-	ChordTileAdapter() {
+	private ChordTileClickListener tileClickListener;
+
+	ChordTileAdapter(ChordTileClickListener tileClickListener) {
+		this.tileClickListener = tileClickListener;
 		chords = new ArrayList<>();
 		highlightPosition = 0;
 	}
@@ -36,6 +39,10 @@ public class ChordTileAdapter extends RecyclerView.Adapter<ChordTileViewHolder> 
 		chordTileViewHolder.chordName.setText(chord.chordName);
 
 		chordTileViewHolder.itemView.setSelected(shouldBeHighlighted(position));
+
+		chordTileViewHolder.itemView.setOnClickListener(view ->
+			tileClickListener.onChordTileClicked(position)
+		);
 	}
 
 	private boolean shouldBeHighlighted(int position) {
@@ -58,5 +65,9 @@ public class ChordTileAdapter extends RecyclerView.Adapter<ChordTileViewHolder> 
 
 		notifyItemChanged(oldHighlightPosition);
 		notifyItemChanged(highlightPosition);
+	}
+
+	interface ChordTileClickListener {
+		void onChordTileClicked(int position);
 	}
 }

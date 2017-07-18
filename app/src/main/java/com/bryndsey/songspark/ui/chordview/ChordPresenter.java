@@ -108,4 +108,9 @@ class ChordPresenter extends RxPresenter<ChordView> {
 
 		return chords;
 	}
+
+	void seekToChord(int chordPosition) {
+		double playerPosition = (double) chordPosition / (double) chordViewModels.size();
+		midiPlayer.setPlayerProgress(playerPosition);
+	}
 }
