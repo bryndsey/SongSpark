@@ -192,6 +192,11 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	public void setPlayerProgress(double progress) {
 		if (mediaPlayer != null && isPrepared && mediaPlayer.getDuration() >= 0) {
 			Double newPosition = Math.ceil((double) mediaPlayer.getDuration() * progress);
+			if (newPosition.intValue() < 0) {
+				newPosition = 0.0;
+			} else if (newPosition > mediaPlayer.getDuration()) {
+				newPosition = (double)mediaPlayer.getDuration();
+			}
 			mediaPlayer.seekTo(newPosition.intValue());
 		}
 	}
