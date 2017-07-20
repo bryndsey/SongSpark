@@ -10,137 +10,6 @@ import java.util.Random;
 
 public class SongWriter {
 
-	/*
-	 * TODO: Should some of these go into the MusicStructure class?
-	 */
-	public static MidiInstrument[] chordInstruments = {
-			MidiInstrument.ACCORDION,
-			MidiInstrument.ACOUSTIC_GRAND_PIANO,
-			MidiInstrument.ACOUSTIC_GUITAR_NYLON,
-			MidiInstrument.ACOUSTIC_GUITAR_STEEL,
-			MidiInstrument.BAGPIPE,
-			MidiInstrument.BANJO,
-			MidiInstrument.BARITONE_SAX,
-			MidiInstrument.BRASS_SECTION,
-			MidiInstrument.BRIGHT_ACOUSTIC_PIANO,
-			MidiInstrument.CELLO,
-			MidiInstrument.CHOIR_AAHS,
-			MidiInstrument.CHURCH_ORGAN,
-			MidiInstrument.DISTORTION_GUITAR,
-			MidiInstrument.DRAWBAR_ORGAN,
-			MidiInstrument.DULCIMER,
-			MidiInstrument.ELECTRIC_GRAND_PIANO,
-			MidiInstrument.ELECTRIC_GUITAR_CLEAN,
-			MidiInstrument.ELECTRIC_GUITAR_JAZZ,
-			MidiInstrument.ELECTRIC_GUITAR_MUTED,
-			MidiInstrument.ELECTRIC_PIANO_1,
-			MidiInstrument.ELECTRIC_PIANO_2,
-			MidiInstrument.HARPSICHORD,
-			MidiInstrument.HONKYTONK_PIANO,
-			MidiInstrument.LEAD_1_SQUARE,
-			MidiInstrument.LEAD_2_SAWTOOTH,
-			MidiInstrument.LEAD_3_CALLIOPE,
-			MidiInstrument.LEAD_4_CHIFF,
-			MidiInstrument.LEAD_5_CHARANG,
-			MidiInstrument.LEAD_6_VOICE,
-			MidiInstrument.LEAD_7_FIFTHS,
-			MidiInstrument.LEAD_8_BASS_AND_LEAD,
-			MidiInstrument.OBOE,
-			MidiInstrument.ORCHESTRA_HIT,
-			MidiInstrument.OVERDRIVEN_GUITAR,
-			MidiInstrument.PAD_1_NEW_AGE,
-			MidiInstrument.PAD_2_WARM,
-			MidiInstrument.PAD_3_POLYSYNTH,
-			MidiInstrument.PAD_4_CHOIR,
-			MidiInstrument.PAD_5_BOWED,
-			MidiInstrument.PAD_6_METALLIC,
-			MidiInstrument.PAD_7_HALO,
-			MidiInstrument.PAD_8_SWEEP,
-			MidiInstrument.PERCUSSIVE_ORGAN,
-			MidiInstrument.PIZZICATO_STRINGS,
-			MidiInstrument.REED_ORGAN,
-			MidiInstrument.ROCK_ORGAN,
-			MidiInstrument.STRING_ENSEMBLE_1,
-			MidiInstrument.STRING_ENSEMBLE_2,
-			MidiInstrument.SYNTH_BRASS_1,
-			MidiInstrument.SYNTH_BRASS_2,
-			MidiInstrument.SYNTH_CHOIR,
-			MidiInstrument.SYNTH_STRINGS_1,
-			MidiInstrument.SYNTH_STRINGS_2,
-			MidiInstrument.TANGO_ACCORDION,
-			MidiInstrument.TIMPANI,
-			MidiInstrument.TREMOLO_STRINGS,
-			MidiInstrument.TROMBONE,
-			MidiInstrument.VOICE_OOHS,
-			MidiInstrument.XYLOPHONE
-	};
-
-	public static MidiInstrument[] melodyInstruments = {
-			MidiInstrument.ACCORDION,
-			MidiInstrument.ACOUSTIC_GRAND_PIANO,
-			MidiInstrument.ACOUSTIC_GUITAR_NYLON,
-			MidiInstrument.ACOUSTIC_GUITAR_STEEL,
-			MidiInstrument.ALTO_SAX,
-			MidiInstrument.BAGPIPE,
-			MidiInstrument.BANJO,
-			MidiInstrument.BRASS_SECTION,
-			MidiInstrument.BRIGHT_ACOUSTIC_PIANO,
-			MidiInstrument.CELLO,
-			MidiInstrument.CHOIR_AAHS,
-			MidiInstrument.CHURCH_ORGAN,
-			MidiInstrument.CLARINET,
-			MidiInstrument.DISTORTION_GUITAR,
-			MidiInstrument.DRAWBAR_ORGAN,
-			MidiInstrument.DULCIMER,
-			MidiInstrument.ELECTRIC_GRAND_PIANO,
-			MidiInstrument.ELECTRIC_GUITAR_CLEAN,
-			MidiInstrument.ELECTRIC_GUITAR_JAZZ,
-			MidiInstrument.FIDDLE,
-			MidiInstrument.FLUTE,
-			MidiInstrument.HARMONICA,
-			MidiInstrument.HARPSICHORD,
-			MidiInstrument.HONKYTONK_PIANO,
-			MidiInstrument.LEAD_1_SQUARE,
-			MidiInstrument.LEAD_2_SAWTOOTH,
-			MidiInstrument.LEAD_3_CALLIOPE,
-			MidiInstrument.LEAD_4_CHIFF,
-			MidiInstrument.LEAD_5_CHARANG,
-			MidiInstrument.LEAD_6_VOICE,
-			MidiInstrument.LEAD_7_FIFTHS,
-			MidiInstrument.LEAD_8_BASS_AND_LEAD,
-			MidiInstrument.MUSIC_BOX,
-			MidiInstrument.MUTED_TRUMPET,
-			MidiInstrument.OCARINA,
-			MidiInstrument.OVERDRIVEN_GUITAR,
-			MidiInstrument.PAD_1_NEW_AGE,
-			MidiInstrument.PAD_2_WARM,
-			MidiInstrument.PAD_3_POLYSYNTH,
-			MidiInstrument.PAD_4_CHOIR,
-			MidiInstrument.PAD_5_BOWED,
-			MidiInstrument.PAD_6_METALLIC,
-			MidiInstrument.PAD_7_HALO,
-			MidiInstrument.PAD_8_SWEEP,
-			MidiInstrument.PERCUSSIVE_ORGAN,
-			MidiInstrument.REED_ORGAN,
-			MidiInstrument.ROCK_ORGAN,
-			MidiInstrument.SITAR,
-			MidiInstrument.STRING_ENSEMBLE_1,
-			MidiInstrument.STRING_ENSEMBLE_2,
-			MidiInstrument.SYNTH_BRASS_1,
-			MidiInstrument.SYNTH_BRASS_2,
-			MidiInstrument.SYNTH_CHOIR,
-			MidiInstrument.SYNTH_STRINGS_1,
-			MidiInstrument.SYNTH_STRINGS_2,
-			MidiInstrument.TANGO_ACCORDION,
-			MidiInstrument.TREMOLO_STRINGS,
-			MidiInstrument.TRUMPET,
-			MidiInstrument.TUBULAR_BELLS,
-			MidiInstrument.VIOLIN,
-			MidiInstrument.VOICE_OOHS,
-			MidiInstrument.WHISTLE,
-			MidiInstrument.XYLOPHONE
-	};
-
 	protected static final double[] SCALETYPEPROBS = {25.0, 15.0, 1.0, 3.0, 2.0, 2.0, 2.0, 1.0/*, 1.0*/};
 
 	public static final int bpmMin = 80;
@@ -317,12 +186,12 @@ public class SongWriter {
 		masterpiece.scaleType = mCurrScaleType;
 
 		if (mUseRandomChordInst || mChordInstrument == null) {
-			mChordInstrument = chordInstruments[randGen.nextInt(chordInstruments.length)];
+			mChordInstrument = SongInstruments.chordInstruments[randGen.nextInt(SongInstruments.chordInstruments.length)];
 		}
 		masterpiece.chordInstrument = mChordInstrument;
 
 		if (mUseRandomMelodyInst || mMelodyInstrument == null) {
-			mMelodyInstrument = melodyInstruments[randGen.nextInt(melodyInstruments.length)];
+			mMelodyInstrument = SongInstruments.melodyInstruments[randGen.nextInt(SongInstruments.melodyInstruments.length)];
 		}
 		masterpiece.melodyInstrument = mMelodyInstrument;
 
