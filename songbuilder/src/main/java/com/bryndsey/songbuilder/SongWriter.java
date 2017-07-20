@@ -10,8 +10,6 @@ import java.util.Random;
 
 public class SongWriter {
 
-	protected static final double[] SCALETYPEPROBS = {25.0, 15.0, 1.0, 3.0, 2.0, 2.0, 2.0, 1.0/*, 1.0*/};
-
 	public static final int bpmMin = 80;
 	public static final int bpmMax = 200;
 	public static final int[] bpmValues = Utils.createRangeArray(bpmMin, bpmMax);
@@ -35,6 +33,7 @@ public class SongWriter {
 	private boolean mUseRandomMelodyInst;
 
 	private SongGenerator songGenerator;
+	private ScaleRandomizer scaleRandomizer;
 
 	public SongWriter() {
 		randGen = new Random();
@@ -55,7 +54,9 @@ public class SongWriter {
 		mUseRandomChordInst = true;
 		mUseRandomMelodyInst = true;
 
+		// TODO: Inject this
 		songGenerator = new SongGenerator();
+		scaleRandomizer = new ScaleRandomizer();
 	}
 
 	// TODO: Should I do some validation in the setters? Some of these have a set of valid
@@ -175,13 +176,14 @@ public class SongWriter {
 		}
 		masterpiece.tempo = mTempo;
 
+		// TODO: Move scale root chooser into scaleRandomizer
 		if (mUseRandomScaleRoot || mCurrKey == null) {
 			mCurrKey = MusicStructure.PITCHES[randGen.nextInt(MusicStructure.NUMPITCHES)];
 		}
 		masterpiece.key = mCurrKey;
 
 		if (mUseRandomScaleType || mCurrScaleType == null) {
-			mCurrScaleType = chooseScaleType();
+			mCurrScaleType = scaleRandomizer.chooseScaleType();
 		}
 		masterpiece.scaleType = mCurrScaleType;
 
@@ -213,13 +215,5 @@ public class SongWriter {
 
 		return masterpiece;
 	} // writeNewSong
-
-	/*
-	 * Generation methods
-	 */
-	public ScaleType chooseScaleType() {
-		int ndx = Utils.pickNdxByProb(SCALETYPEPROBS);
-		return ScaleType.values()[ndx];
-	}
 
 } //class SongWriter
