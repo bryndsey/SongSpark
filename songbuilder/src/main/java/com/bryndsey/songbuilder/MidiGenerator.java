@@ -75,7 +75,7 @@ public class MidiGenerator {
 
 		ProgramChange melodyInstrumentSelect = new ProgramChange(0, melodyChannel, song.melodyInstrument.ordinal());//programNumber());
 		melodyTrack.insertEvent(melodyInstrumentSelect);
-		
+
 		int chordTick = renderChords(0, chordTrack, song.verseProgression, song.verseChordRhythm);
 		int melodyTick = renderMelody(0, melodyTrack, song.verseProgression);
 
@@ -93,12 +93,10 @@ public class MidiGenerator {
 		tracks.add(melodyTrack);
 		tracks.add(chordTrack);
 
-		MidiFile midi = new MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks);
-
-		return midi;
+		return new MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks);
 	}
 
-	public int renderChords(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
+	private int renderChords(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
 		int basePitch = song.key.getBaseMidiPitch();
 
 		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
@@ -117,8 +115,8 @@ public class MidiGenerator {
 
 				}
 				int length = eigthNote * duration;
-				for (int interval = 0; interval < triad.length; interval++) {
-					track.insertNote(chordChannel, basePitch + triad[interval] - 12, noteVelocity, chordTick, length);
+				for (int pitch : triad) {
+					track.insertNote(chordChannel, basePitch + pitch - 12, noteVelocity, chordTick, length);
 				}
 				// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER, AND ESTABLISH CHORD BETTER
 				// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
@@ -133,7 +131,7 @@ public class MidiGenerator {
 		return tick;
 	}
 
-	public int renderMelody(int tick, MidiTrack track, ChordProgression progression) {
+	private int renderMelody(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();
 
 		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
