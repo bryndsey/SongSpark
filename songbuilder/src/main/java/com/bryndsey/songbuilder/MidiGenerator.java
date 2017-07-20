@@ -75,18 +75,14 @@ public class MidiGenerator {
 
 		ProgramChange melodyInstrumentSelect = new ProgramChange(0, melodyChannel, song.melodyInstrument.ordinal());//programNumber());
 		melodyTrack.insertEvent(melodyInstrumentSelect);
-
-		//ChordProgression longerProgression = song.verseProgression.plus(song.chorusProgression);
-		//addChordProgressionV2(melodyTrack, chordTrack, longerProgression);//song.verseProgression);
-//		addChordProgression(melodyTrack, chordTrack, song.chorusProgression);
-//		addChordProgression(melodyTrack, chordTrack, song.bridgeProgression);
-		int chordTick = addChordProgressionV3(0, chordTrack, song.verseProgression, song.verseChordRhythm);
-		int melodyTick = addMelody(0, melodyTrack, song.verseProgression);
+		
+		int chordTick = renderChords(0, chordTrack, song.verseProgression, song.verseChordRhythm);
+		int melodyTick = renderMelody(0, melodyTrack, song.verseProgression);
 
 		int nextTick = Math.max(chordTick, melodyTick);
 
-		addChordProgressionV3(nextTick, chordTrack, song.chorusProgression, song.chorusChordRhythm);
-		addMelody(nextTick, melodyTrack, song.chorusProgression);
+		renderChords(nextTick, chordTrack, song.chorusProgression, song.chorusChordRhythm);
+		renderMelody(nextTick, melodyTrack, song.chorusProgression);
 
 		// It's best not to manually insert EndOfTrack events; MidiTrack will
 		// call closeTrack() on itself before writing itself to a file
@@ -102,88 +98,7 @@ public class MidiGenerator {
 		return midi;
 	}
 
-	// TODO: Maybe clean up parameters list... break out into separate functions for chords and melody
-	public void addChordProgression(MidiTrack melodyTrack, MidiTrack chordTrack, ChordProgression progression) {
-		int channel = 0;
-		int basePitch = song.key.getBaseMidiPitch();
-		int velocity = 100;
-
-		int chordTick = 0;
-		int melodyTick = 0;
-
-		ArrayList<Integer> themeNotes = song.theme;
-		ArrayList<Integer> chords = progression.getChords();
-
-		for (int ndx = 0; ndx < chords.size(); ndx++) {
-			int root = chords.get(ndx);
-			int[] triad = song.scaleType.generateTriad(root);
-
-			for (int interval = 0; interval < triad.length; interval++) {
-				chordTrack.insertNote(channel, basePitch + triad[interval] - 12, velocity, chordTick /*ndx * qtrNote * song.timeSigNum*/, qtrNote * song.timeSigNum);
-			}
-			chordTick += qtrNote * song.timeSigNum;
-			/*for (int melodyNote = 0; melodyNote < themeNotes.size(); melodyNote++)
-			{
-				int timeStart = (ndx * qtrNote * timeSigNum) + (qtrNote * melodyNote);
-				int pitch = basePitch + root + themeNotes.get(melodyNote) + 12;
-				noteTrack.insertNote(channel + 1, pitch, velocity + 20, timeStart, qtrNote);
-			}*/
-
-			themeNotes = progression.getMelody().get(ndx); //song.melody.get(ndx);
-			for (int melodyNote = 0; melodyNote < themeNotes.size(); melodyNote++) {
-				//int timeStart = (ndx * qtrNote * song.timeSigNum) + (qtrNote * melodyNote);
-				int pitch = basePitch + song.scaleType.getAbsIntervals()[(root + themeNotes.get(melodyNote)) % 7];// + 12;
-				melodyTrack.insertNote(channel + 1, pitch, velocity + 20, melodyTick/*timeStart*/, qtrNote);
-				melodyTick += qtrNote;
-			}
-
-		}
-	}
-
-	// TODO: Maybe clean up parameters list... break out into separate functions for chords and melody
-	public void addChordProgressionV2(MidiTrack melodyTrack, MidiTrack chordTrack, ChordProgression progression) {
-		int channel = 0;
-		int basePitch = song.key.getBaseMidiPitch();
-		int velocity = 85;
-
-		int chordTick = 0;
-		int melodyTick = 0;
-
-		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
-		ArrayList<Integer> chords = progression.getChords();
-
-		for (int ndx = 0; ndx < chords.size(); ndx++) {
-			int root = chords.get(ndx);
-			int[] triad = song.scaleType.generateTriad(root);
-
-			for (int interval = 0; interval < triad.length; interval++) {
-				chordTrack.insertNote(channel, basePitch + triad[interval] - 12, velocity, chordTick /*ndx * qtrNote * song.timeSigNum*/, qtrNote * song.timeSigNum);
-			}
-			// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER..
-			// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
-			chordTrack.insertNote(channel, basePitch + triad[0] - 24, velocity, chordTick, qtrNote * song.timeSigNum);
-			chordTick += qtrNote * song.timeSigNum;
-
-			ArrayList<Note> melodyNotes = progression.getNotes().get(ndx); //song.melody.get(ndx);
-			for (Note note : melodyNotes) {
-				int noteVelocity = velocity + 30;
-				int numHalfBeats = note.numBeats;
-				if (note.numBeats < 0 || note.pitch < 0) {
-					noteVelocity = 0;
-					numHalfBeats *= -1;
-				}
-				// numBeats is actually in halfBeats
-				int duration = numHalfBeats * qtrNote / 2;
-				int pitch = basePitch + song.scaleType.getAbsIntervals()[(root + note.pitch) % 7];// + 12;
-				melodyTrack.insertNote(channel + 1, pitch, noteVelocity, melodyTick, duration);
-				melodyTick += duration;
-			}
-
-		}
-	}
-
-	// TODO: Maybe clean up parameters list... break out into separate functions for chords and melody
-	public int addChordProgressionV3(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
+	public int renderChords(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
 		int basePitch = song.key.getBaseMidiPitch();
 
 		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
@@ -218,7 +133,7 @@ public class MidiGenerator {
 		return tick;
 	}
 
-	public int addMelody(int tick, MidiTrack track, ChordProgression progression) {
+	public int renderMelody(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();
 
 		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
