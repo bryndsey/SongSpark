@@ -15,15 +15,18 @@ import java.util.ArrayList;
 
 public class MidiGenerator {
 	
-	protected static final int qtrNote = 480; // Still need to figure out why this value works... is it the resolution below?
-	protected static final int eigthNote = qtrNote / 2;
+	private static final int qtrNote = 480; // Still need to figure out why this value works... is it the resolution below?
+	private static final int eigthNote = qtrNote / 2;
 	
-	protected static final int chordChannel = 0;
-	protected static final int melodyChannel = 1;
+	private static final int chordChannel = 0;
+	private static final int melodyChannel = 1;
+
+	private static final int CHORD_VOLUME = 70;
+	private static final int MELODY_VOLUME = 105;
+
+//	private static final int drumChannel = 9;
 	
-	protected static final int drumChannel = 9;
-	
-	protected Song song;
+	private Song song;
 	
 	public MidiGenerator()
 	{
@@ -197,7 +200,6 @@ public class MidiGenerator {
 	public int addChordProgressionV3(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm)
 	{
 		int basePitch = song.key.getBaseMidiPitch();
-		int velocity = 70;
 		
 		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
 		ArrayList<Integer> chords = progression.getChords();
@@ -210,7 +212,7 @@ public class MidiGenerator {
 			int chordTick = tick;
 			for (Integer duration: rhythm)
 			{
-				int noteVelocity = velocity;
+				int noteVelocity = CHORD_VOLUME;
 				if (duration < 0)
 				{
 					noteVelocity = 0;
@@ -224,7 +226,7 @@ public class MidiGenerator {
 				}
 				// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER, AND ESTABLISH CHORD BETTER
 				// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
-				track.insertNote(chordChannel, basePitch + triad[0] - 24, velocity + 25, chordTick, length);
+				track.insertNote(chordChannel, basePitch + triad[0] - 24, CHORD_VOLUME + 25, chordTick, length);
 				
 				chordTick += length;
 			}
@@ -257,7 +259,6 @@ public class MidiGenerator {
 	public int addMelody(int tick, MidiTrack track, ChordProgression progression)
 	{
 		int basePitch = song.key.getBaseMidiPitch();
-		int velocity = 105;
 		
 		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
 		ArrayList<Integer> chords = progression.getChords();
@@ -269,7 +270,7 @@ public class MidiGenerator {
 			ArrayList<Note> melodyNotes = progression.getNotes().get(ndx); //song.melody.get(ndx);
 			for (Note note: melodyNotes)
 			{
-				int noteVelocity = velocity;
+				int noteVelocity = MELODY_VOLUME;
 				int numHalfBeats = note.numBeats;
 				if (note.numBeats < 0 || note.pitch < 0)
 				{
