@@ -9,8 +9,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
 		SongWriterModule.class,
-		}
-)
+})
+
 public interface SongWriterComponent {
 
 	void inject(SongWriter songWriter);
