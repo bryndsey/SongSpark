@@ -3,7 +3,6 @@ package com.bryndsey.songbuilder;
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
 import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.Cadence;
-import com.bryndsey.songbuilder.songstructure.MusicStructure.SongPart;
 import com.bryndsey.songbuilder.songstructure.Note;
 import com.bryndsey.songbuilder.songstructure.Pattern;
 
@@ -11,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDoubleInRange;
+import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDoubleUpTo;
+
 class SongGenerator {
 
 	private final Random randGen;
 
 	private static final double[] CHORDPROBS = {8.0, 0.5, 1.0, 4.0, 5.0, 1.0, 0.1};
-
-	private double[] basePartProbs = {0.6, 0.3, 0.1};
 
 	private double[] basePitchProbs = {10, 1, 5, 2, 5, 1, 0.025};
 
@@ -41,29 +41,13 @@ class SongGenerator {
 	}
 
 	public void shuffleProbabilities() {
-		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
-		chordRepeatChance = randGen.nextDouble() * 0.75;
-		noteRepeatFactor = 2 + (randGen.nextDouble() * 2.0);
+		eighthNoteFactor = getRandomDoubleInRange(0.2, 3.2);//randGen.nextDouble() * 3.0) + 0.2;
+		chordRepeatChance = getRandomDoubleUpTo(0.75);//randGen.nextDouble() * 0.75;
+		noteRepeatFactor = getRandomDoubleInRange(2, 4);//2 + (randGen.nextDouble() * 2.0);
 	}
 
 	public void setTimeSignatureNumerator(int timeSigNumerator) {
 		mTimeSigNumer = timeSigNumerator;
-	}
-
-	public ArrayList<SongPart> generateStructure() {
-		ArrayList<SongPart> structure = new ArrayList<SongPart>();
-		double[] partProbs = basePartProbs;
-
-		int iNumParts = randGen.nextInt(2) + 4;
-
-		for (int iPart = 0; iPart < iNumParts; iPart++) {
-			int songPartNdx = Utils.pickNdxByProb(partProbs);
-
-			structure.add(SongPart.values()[songPartNdx]);
-			partProbs = basePartProbs;
-			partProbs[songPartNdx] = 0.1;
-		}
-		return structure;
 	}
 
 	public ChordProgression generateVerseProgression() {

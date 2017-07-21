@@ -34,6 +34,7 @@ public class SongWriter {
 
 	private SongGenerator songGenerator;
 	private ScaleRandomizer scaleRandomizer;
+	private StructureGenerator structureGenerator;
 
 	public SongWriter() {
 		randGen = new Random();
@@ -54,9 +55,10 @@ public class SongWriter {
 		mUseRandomChordInst = true;
 		mUseRandomMelodyInst = true;
 
-		// TODO: Inject this
+		// TODO: Inject these
 		songGenerator = new SongGenerator();
 		scaleRandomizer = new ScaleRandomizer();
+		structureGenerator = new StructureGenerator();
 	}
 
 	// TODO: Should I do some validation in the setters? Some of these have a set of valid
@@ -197,7 +199,7 @@ public class SongWriter {
 		}
 		masterpiece.melodyInstrument = mMelodyInstrument;
 
-		masterpiece.structure = songGenerator.generateStructure();
+		masterpiece.structure = structureGenerator.generateStructure();
 		masterpiece.verseProgression = songGenerator.generateVerseProgression();
 		masterpiece.chorusProgression = songGenerator.generateChorusProgression();
 		masterpiece.bridgeProgression = songGenerator.generateVerseProgression();
