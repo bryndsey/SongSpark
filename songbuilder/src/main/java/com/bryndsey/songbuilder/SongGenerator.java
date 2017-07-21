@@ -63,7 +63,6 @@ class SongGenerator {
 		return verseProgression;
 	}
 
-
 	public ChordProgression generateChorusProgression() {
 		ChordProgression chorus = generateChordProgression();
 		Cadence type = null;
@@ -78,29 +77,37 @@ class SongGenerator {
 		return chorus;
 	}
 
-	public ChordProgression generate2PatternProgression() {
-		ChordProgression chordProg = new ChordProgression();
 
-		int numChords = 4;
+	public void applyCadence(Pattern pattern, Cadence type) {
+		if (pattern == null || type == null)
+			return;
 
-		Pattern partA, partB;
+		List<Integer> cadenceChords = type.getChords();
+		int numCadenceChords = cadenceChords.size();
+		int numPatternChords = pattern.chords.size();
 
-		partA = generatePattern(numChords);
-		// always start with root chord
-		//double[] startChords = {5.0, 0.0, 0.0, 3.0, 0.5, 1.0, 0.0};
-		//partA.chords.set(0, Utils.pickNdxByProb(startChords) + 1);
+		// realistically, this shouldn't happen, but try to handle it just in case
+		if (numCadenceChords > numPatternChords)
+			cadenceChords = cadenceChords.subList(numCadenceChords - numPatternChords, numCadenceChords);
 
-		if (randGen.nextDouble() < 0.45) {
-			partB = new Pattern(partA);
-			if (randGen.nextDouble() < 0.7)
-				applyMelodyVariation(partB);
-		} else
-			partB = generatePattern(numChords);
+		for (int chord = 0; chord < cadenceChords.size(); chord++) {
+			pattern.chords.set(numPatternChords - numCadenceChords + chord, cadenceChords.get(chord));
+		}
 
-		chordProg.patterns.add(partA);
-		chordProg.patterns.add(partB);
+		if (type == Cadence.INTERRUPTED) {
+			pattern.chords.set(numPatternChords - 1, Utils.pickNdxByProb(Cadence.INTERRUPTEDCHORDCHANCES) + 1);
+		}
+	}
 
-		return chordProg;
+	// slightly better(?) "algorithm" for generating chord progressions
+	// TODO: Keep working on this so it is more robust and
+	// generates more varied songs
+	public ChordProgression generateChordProgression() {
+		double typeProb = randGen.nextDouble();
+		if (typeProb < 0.85)
+			return generate4PatternProgression();
+		else //(typeProb < 0.95)
+			return generate2PatternProgression();
 	}
 
 	public ChordProgression generate4PatternProgression() {
@@ -139,15 +146,71 @@ class SongGenerator {
 		return chordProg;
 	}
 
-	// slightly better(?) "algorithm" for generating chord progressions
-	// TODO: Keep working on this so it is more robust and
-	// generates more varied songs
-	public ChordProgression generateChordProgression() {
-		double typeProb = randGen.nextDouble();
-		if (typeProb < 0.85)
-			return generate4PatternProgression();
-		else //(typeProb < 0.95)
-			return generate2PatternProgression();
+
+	public ChordProgression generate2PatternProgression() {
+		ChordProgression chordProg = new ChordProgression();
+
+		int numChords = 4;
+
+		Pattern partA, partB;
+
+		partA = generatePattern(numChords);
+		// always start with root chord
+		//double[] startChords = {5.0, 0.0, 0.0, 3.0, 0.5, 1.0, 0.0};
+		//partA.chords.set(0, Utils.pickNdxByProb(startChords) + 1);
+
+		if (randGen.nextDouble() < 0.45) {
+			partB = new Pattern(partA);
+			if (randGen.nextDouble() < 0.7)
+				applyMelodyVariation(partB);
+		} else
+			partB = generatePattern(numChords);
+
+		chordProg.patterns.add(partA);
+		chordProg.patterns.add(partB);
+
+		return chordProg;
+	}
+
+
+	public void applyMelodyVariation(Pattern pattern) {
+		if (pattern == null)
+			return;
+
+		int numMeasures = pattern.chords.size();
+		double variationChance = randGen.nextDouble();
+		// 10% chance to just make a whole new melody
+		if (variationChance < 0.1) {
+			for (int chord = 0; chord < numMeasures; chord++) {
+				pattern.melody.set(chord, generateTheme());
+				pattern.notes.set(chord, generateNotes());
+			}
+		}
+		// 40% change to regenerate just modify the last measure/chord
+		else if (variationChance < 0.5) {
+			pattern.melody.set(numMeasures - 1, generateTheme());
+			pattern.notes.set(numMeasures - 1, generateNotes());
+		}
+		// 40% chance to modify a a random number of measure so that it has the same rhythm with different pitches
+		else if (variationChance < 0.9) {
+			int numMeasuresToChange = randGen.nextInt(numMeasures) + 1;
+			// currently has a chance to repeatedly replace the same measure... I'm ok with this for now...
+			for (int measureCount = 0; measureCount < numMeasuresToChange; measureCount++) {
+				int iMeasure = randGen.nextInt(numMeasures);
+				ArrayList<Integer> rhythm = getRhythmFromNotes(pattern.notes.get(iMeasure));
+				pattern.notes.set(iMeasure, generateNotes(rhythm));
+			}
+		}
+		// 10% chance to just make the last note last the whole measure
+		else {
+			int pitch = Utils.pickNdxByProb(basePitchProbs) + 1;
+			// have to multiply by 2 here since duration is in half beats
+			Note lastNote = new Note(pitch, mTimeSigNumer * 2);
+			ArrayList<Note> notes = pattern.notes.get(numMeasures - 1);
+			notes.clear();
+			notes.add(lastNote);
+		}
+
 	}
 
 	public Pattern generatePattern(int numChords) {
@@ -191,6 +254,24 @@ class SongGenerator {
 		return pattern;
 	}
 
+	public ArrayList<Integer> generateTheme() {
+		ArrayList<Integer> theme = new ArrayList<Integer>();
+
+		for (int note = 0; note < mTimeSigNumer; note++) {
+			theme.add(Utils.pickNdxByProb(basePitchProbs) + 1);
+		}
+
+		return theme;
+	}
+
+	public ArrayList<Note> generateNotes() {
+		// generate a rhythm based on 1/8th notes
+		ArrayList<Integer> rhythm = generateRhythm(2);
+		return generateNotes(rhythm);
+
+	}
+
+
 	public ArrayList<Integer> generateRhythm(int numUnitsPerBeat) {
 		if (numUnitsPerBeat <= 0)
 			return null;
@@ -232,23 +313,6 @@ class SongGenerator {
 		return rhythm;
 	}
 
-	public ArrayList<Integer> generateTheme() {
-		ArrayList<Integer> theme = new ArrayList<Integer>();
-
-		for (int note = 0; note < mTimeSigNumer; note++) {
-			theme.add(Utils.pickNdxByProb(basePitchProbs) + 1);
-		}
-
-		return theme;
-	}
-
-	public ArrayList<Note> generateNotes() {
-		// generate a rhythm based on 1/8th notes
-		ArrayList<Integer> rhythm = generateRhythm(2);
-		return generateNotes(rhythm);
-
-	}
-
 	public ArrayList<Note> generateNotes(ArrayList<Integer> rhythm) {
 		if (rhythm == null)
 			return null;
@@ -279,67 +343,6 @@ class SongGenerator {
 			notes.add(new Note(pitch, item));
 		}
 		return notes;
-	}
-
-	public void applyCadence(Pattern pattern, Cadence type) {
-		if (pattern == null || type == null)
-			return;
-
-		List<Integer> cadenceChords = type.getChords();
-		int numCadenceChords = cadenceChords.size();
-		int numPatternChords = pattern.chords.size();
-
-		// realistically, this shouldn't happen, but try to handle it just in case
-		if (numCadenceChords > numPatternChords)
-			cadenceChords = cadenceChords.subList(numCadenceChords - numPatternChords, numCadenceChords);
-
-		for (int chord = 0; chord < cadenceChords.size(); chord++) {
-			pattern.chords.set(numPatternChords - numCadenceChords + chord, cadenceChords.get(chord));
-		}
-
-		if (type == Cadence.INTERRUPTED) {
-			pattern.chords.set(numPatternChords - 1, Utils.pickNdxByProb(Cadence.INTERRUPTEDCHORDCHANCES) + 1);
-		}
-	}
-
-	public void applyMelodyVariation(Pattern pattern) {
-		if (pattern == null)
-			return;
-
-		int numMeasures = pattern.chords.size();
-		double variationChance = randGen.nextDouble();
-		// 10% chance to just make a whole new melody
-		if (variationChance < 0.1) {
-			for (int chord = 0; chord < numMeasures; chord++) {
-				pattern.melody.set(chord, generateTheme());
-				pattern.notes.set(chord, generateNotes());
-			}
-		}
-		// 40% change to regenerate just modify the last measure/chord
-		else if (variationChance < 0.5) {
-			pattern.melody.set(numMeasures - 1, generateTheme());
-			pattern.notes.set(numMeasures - 1, generateNotes());
-		}
-		// 40% chance to modify a a random number of measure so that it has the same rhythm with different pitches
-		else if (variationChance < 0.9) {
-			int numMeasuresToChange = randGen.nextInt(numMeasures) + 1;
-			// currently has a chance to repeatedly replace the same measure... I'm ok with this for now...
-			for (int measureCount = 0; measureCount < numMeasuresToChange; measureCount++) {
-				int iMeasure = randGen.nextInt(numMeasures);
-				ArrayList<Integer> rhythm = getRhythmFromNotes(pattern.notes.get(iMeasure));
-				pattern.notes.set(iMeasure, generateNotes(rhythm));
-			}
-		}
-		// 10% chance to just make the last note last the whole measure
-		else {
-			int pitch = Utils.pickNdxByProb(basePitchProbs) + 1;
-			// have to multiply by 2 here since duration is in half beats
-			Note lastNote = new Note(pitch, mTimeSigNumer * 2);
-			ArrayList<Note> notes = pattern.notes.get(numMeasures - 1);
-			notes.clear();
-			notes.add(lastNote);
-		}
-
 	}
 
 	public ArrayList<Integer> getRhythmFromNotes(ArrayList<Note> notes) {
