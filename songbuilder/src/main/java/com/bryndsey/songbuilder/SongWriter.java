@@ -1,10 +1,16 @@
 package com.bryndsey.songbuilder;
 
+import com.bryndsey.songbuilder.dagger.ComponentHolder;
+import com.bryndsey.songbuilder.dagger.DaggerSongWriterComponent;
+import com.bryndsey.songbuilder.dagger.SongWriterComponent;
+import com.bryndsey.songbuilder.dagger.SongWriterModule;
 import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.MidiInstrument;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.Pitch;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.ScaleType;
 import com.bryndsey.songbuilder.songstructure.Song;
+
+import javax.inject.Inject;
 
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDouble;
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
@@ -35,7 +41,21 @@ public class SongWriter {
 	private ScaleRandomizer scaleRandomizer;
 	private StructureGenerator structureGenerator;
 
+	@Inject
+	ChordProgressionGenerator chordProgressionGenerator;
+
 	public SongWriter() {
+
+		SongWriterComponent songWriterComponent = DaggerSongWriterComponent.builder()
+				.songWriterModule(new SongWriterModule())
+				.build();
+
+		ComponentHolder.setSongWriterComponent(songWriterComponent);
+
+		songWriterComponent.inject(this);
+
+
+
 		mCurrKey = null;
 		mCurrScaleType = null;
 
@@ -53,7 +73,7 @@ public class SongWriter {
 		mUseRandomMelodyInst = true;
 
 		// TODO: Inject these
-		songGenerator = new SongGenerator();
+		songGenerator = new SongGenerator(chordProgressionGenerator);
 		scaleRandomizer = new ScaleRandomizer();
 		structureGenerator = new StructureGenerator();
 	}
@@ -159,7 +179,7 @@ public class SongWriter {
 	public Song writeNewSong() {
 		Song masterpiece = new Song();
 
-		songGenerator.shuffleProbabilities();
+		chordProgressionGenerator.shuffleProbabilities();
 
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 
@@ -168,7 +188,7 @@ public class SongWriter {
 		mTimeSigNumer = masterpiece.timeSigNum = MusicStructure.TIMESIGNUMVALUES[getRandomIntUpTo(numTimeSigNums)];
 		mTimeSigDenom = masterpiece.timeSigDenom = MusicStructure.TIMESIGDENOMVALUES[getRandomIntUpTo(numTimeSigDenoms)];
 
-		songGenerator.setTimeSignatureNumerator(mTimeSigNumer);
+		chordProgressionGenerator.setTimeSignatureNumerator(mTimeSigNumer);
 
 		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax) {
 			mTempo = bpmValues[getRandomIntUpTo(bpmValues.length)];
@@ -204,13 +224,13 @@ public class SongWriter {
 //		// change factor here for more variation between rhythm and melody
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 		// generate based on eighth notes - 1 for verse and 1 for chorus
-		masterpiece.verseChordRhythm = songGenerator.generateRhythm(2);
+		masterpiece.verseChordRhythm = chordProgressionGenerator.generateRhythm(2);
 		if (getRandomDouble() < 0.2)
 			masterpiece.chorusChordRhythm = masterpiece.verseChordRhythm;
 		else
-			masterpiece.chorusChordRhythm = songGenerator.generateRhythm(2);
+			masterpiece.chorusChordRhythm = chordProgressionGenerator.generateRhythm(2);
 
-		masterpiece.theme = songGenerator.generateTheme();
+		masterpiece.theme = chordProgressionGenerator.generateTheme();
 
 		return masterpiece;
 	} // writeNewSong
