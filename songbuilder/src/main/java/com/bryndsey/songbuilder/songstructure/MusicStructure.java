@@ -8,6 +8,7 @@ import java.util.List;
 
 public class MusicStructure {
 
+	//TODO: Break this into individual classes all grouped under a MusicStructure package
 	public enum ScaleType {
 		MAJOR("Major", new int[]{2, 2, 1, 2, 2, 2, 1}),
 		NATURALMINOR("Minor", new int[]{2, 1, 2, 2, 1, 2, 2}),
