@@ -67,17 +67,16 @@ class SongGenerator {
 	}
 
 	public ChordProgression generateVerseProgression() {
-		ChordProgression chorus = generateChordProgression();
+		ChordProgression verseProgression = generateChordProgression();
 		double cadenceChance = randGen.nextDouble();
 		if (cadenceChance < 0.75)
-			applyCadence(chorus.patterns.get(chorus.patterns.size() - 1), Cadence.HALF);
+			applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.HALF);
 		else if (cadenceChance < 0.8)
-			applyCadence(chorus.patterns.get(chorus.patterns.size() - 1), Cadence.AUTHENTIC);
+			applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.AUTHENTIC);
 		else if (cadenceChance < 0.9)
-			applyCadence(chorus.patterns.get(chorus.patterns.size() - 1), Cadence.INTERRUPTED);
+			applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.INTERRUPTED);
 
-
-		return chorus;
+		return verseProgression;
 	}
 
 
