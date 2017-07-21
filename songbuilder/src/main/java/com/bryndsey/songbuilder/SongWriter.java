@@ -6,15 +6,14 @@ import com.bryndsey.songbuilder.songstructure.MusicStructure.Pitch;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.ScaleType;
 import com.bryndsey.songbuilder.songstructure.Song;
 
-import java.util.Random;
+import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDouble;
+import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
 
 public class SongWriter {
 
 	public static final int bpmMin = 80;
 	public static final int bpmMax = 200;
 	public static final int[] bpmValues = Utils.createRangeArray(bpmMin, bpmMax);
-
-	private Random randGen;
 
 	private Pitch mCurrKey;
 	private ScaleType mCurrScaleType;
@@ -37,8 +36,6 @@ public class SongWriter {
 	private StructureGenerator structureGenerator;
 
 	public SongWriter() {
-		randGen = new Random();
-
 		mCurrKey = null;
 		mCurrScaleType = null;
 
@@ -168,19 +165,19 @@ public class SongWriter {
 
 		int numTimeSigNums = MusicStructure.TIMESIGNUMVALUES.length;
 		int numTimeSigDenoms = MusicStructure.TIMESIGDENOMVALUES.length;
-		mTimeSigNumer = masterpiece.timeSigNum = MusicStructure.TIMESIGNUMVALUES[randGen.nextInt(numTimeSigNums)];
-		mTimeSigDenom = masterpiece.timeSigDenom = MusicStructure.TIMESIGDENOMVALUES[randGen.nextInt(numTimeSigDenoms)];
+		mTimeSigNumer = masterpiece.timeSigNum = MusicStructure.TIMESIGNUMVALUES[getRandomIntUpTo(numTimeSigNums)];
+		mTimeSigDenom = masterpiece.timeSigDenom = MusicStructure.TIMESIGDENOMVALUES[getRandomIntUpTo(numTimeSigDenoms)];
 
 		songGenerator.setTimeSignatureNumerator(mTimeSigNumer);
 
 		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax) {
-			mTempo = bpmValues[randGen.nextInt(bpmValues.length)];
+			mTempo = bpmValues[getRandomIntUpTo(bpmValues.length)];
 		}
 		masterpiece.tempo = mTempo;
 
 		// TODO: Move scale root chooser into scaleRandomizer
 		if (mUseRandomScaleRoot || mCurrKey == null) {
-			mCurrKey = MusicStructure.PITCHES[randGen.nextInt(MusicStructure.NUMPITCHES)];
+			mCurrKey = MusicStructure.PITCHES[getRandomIntUpTo(MusicStructure.NUMPITCHES)];
 		}
 		masterpiece.key = mCurrKey;
 
@@ -190,12 +187,12 @@ public class SongWriter {
 		masterpiece.scaleType = mCurrScaleType;
 
 		if (mUseRandomChordInst || mChordInstrument == null) {
-			mChordInstrument = SongInstruments.chordInstruments[randGen.nextInt(SongInstruments.chordInstruments.length)];
+			mChordInstrument = SongInstruments.chordInstruments[getRandomIntUpTo(SongInstruments.chordInstruments.length)];
 		}
 		masterpiece.chordInstrument = mChordInstrument;
 
 		if (mUseRandomMelodyInst || mMelodyInstrument == null) {
-			mMelodyInstrument = SongInstruments.melodyInstruments[randGen.nextInt(SongInstruments.melodyInstruments.length)];
+			mMelodyInstrument = SongInstruments.melodyInstruments[getRandomIntUpTo(SongInstruments.melodyInstruments.length)];
 		}
 		masterpiece.melodyInstrument = mMelodyInstrument;
 
@@ -208,7 +205,7 @@ public class SongWriter {
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 		// generate based on eighth notes - 1 for verse and 1 for chorus
 		masterpiece.verseChordRhythm = songGenerator.generateRhythm(2);
-		if (randGen.nextDouble() < 0.2)
+		if (getRandomDouble() < 0.2)
 			masterpiece.chorusChordRhythm = masterpiece.verseChordRhythm;
 		else
 			masterpiece.chorusChordRhythm = songGenerator.generateRhythm(2);
