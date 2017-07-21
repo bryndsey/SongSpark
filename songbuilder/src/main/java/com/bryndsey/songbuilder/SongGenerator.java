@@ -7,7 +7,6 @@ import com.bryndsey.songbuilder.songstructure.Note;
 import com.bryndsey.songbuilder.songstructure.Pattern;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDoubleInRange;
@@ -36,8 +35,11 @@ class SongGenerator {
 	private double noteRepeatFactor;
 	private int mTimeSigNumer;
 
+	private CadenceTransformer cadenceTransformer;
+
 	SongGenerator() {
 		randGen = new Random();
+		cadenceTransformer = new CadenceTransformer();
 	}
 
 	public void shuffleProbabilities() {
@@ -54,11 +56,11 @@ class SongGenerator {
 		ChordProgression verseProgression = generateChordProgression();
 		double cadenceChance = randGen.nextDouble();
 		if (cadenceChance < 0.75)
-			applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.HALF);
+			cadenceTransformer.applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.HALF);
 		else if (cadenceChance < 0.8)
-			applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.AUTHENTIC);
+			cadenceTransformer.applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.AUTHENTIC);
 		else if (cadenceChance < 0.9)
-			applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.INTERRUPTED);
+			cadenceTransformer.applyCadence(verseProgression.patterns.get(verseProgression.patterns.size() - 1), Cadence.INTERRUPTED);
 
 		return verseProgression;
 	}
@@ -73,30 +75,8 @@ class SongGenerator {
 			type = Cadence.PLAGAL;
 
 		if (type != null)
-			applyCadence(chorus.patterns.get(chorus.patterns.size() - 1), type);
+			cadenceTransformer.applyCadence(chorus.patterns.get(chorus.patterns.size() - 1), type);
 		return chorus;
-	}
-
-
-	public void applyCadence(Pattern pattern, Cadence type) {
-		if (pattern == null || type == null)
-			return;
-
-		List<Integer> cadenceChords = type.getChords();
-		int numCadenceChords = cadenceChords.size();
-		int numPatternChords = pattern.chords.size();
-
-		// realistically, this shouldn't happen, but try to handle it just in case
-		if (numCadenceChords > numPatternChords)
-			cadenceChords = cadenceChords.subList(numCadenceChords - numPatternChords, numCadenceChords);
-
-		for (int chord = 0; chord < cadenceChords.size(); chord++) {
-			pattern.chords.set(numPatternChords - numCadenceChords + chord, cadenceChords.get(chord));
-		}
-
-		if (type == Cadence.INTERRUPTED) {
-			pattern.chords.set(numPatternChords - 1, Utils.pickNdxByProb(Cadence.INTERRUPTEDCHORDCHANCES) + 1);
-		}
 	}
 
 	// slightly better(?) "algorithm" for generating chord progressions
@@ -137,9 +117,9 @@ class SongGenerator {
 
 		double cadenceChance = randGen.nextDouble();
 		if (cadenceChance < 0.35)
-			applyCadence(partASecond, Cadence.HALF);
+			cadenceTransformer.applyCadence(partASecond, Cadence.HALF);
 		else if (cadenceChance < 0.5)
-			applyCadence(partASecond, Cadence.INTERRUPTED);
+			cadenceTransformer.applyCadence(partASecond, Cadence.INTERRUPTED);
 
 		ChordProgression chordProg = partA.plus(partB);
 
