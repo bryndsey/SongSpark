@@ -44,6 +44,9 @@ public class SongWriter {
 	@Inject
 	ChordProgressionGenerator chordProgressionGenerator;
 
+	@Inject
+	PatternGenerator patternGenerator;
+
 	public SongWriter() {
 
 		SongWriterComponent songWriterComponent = DaggerSongWriterComponent.builder()
@@ -53,8 +56,6 @@ public class SongWriter {
 		ComponentHolder.setSongWriterComponent(songWriterComponent);
 
 		songWriterComponent.inject(this);
-
-
 
 		mCurrKey = null;
 		mCurrScaleType = null;
@@ -179,7 +180,7 @@ public class SongWriter {
 	public Song writeNewSong() {
 		Song masterpiece = new Song();
 
-		chordProgressionGenerator.shuffleProbabilities();
+		patternGenerator.shuffleProbabilities();
 
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 
@@ -188,7 +189,7 @@ public class SongWriter {
 		mTimeSigNumer = masterpiece.timeSigNum = MusicStructure.TIMESIGNUMVALUES[getRandomIntUpTo(numTimeSigNums)];
 		mTimeSigDenom = masterpiece.timeSigDenom = MusicStructure.TIMESIGDENOMVALUES[getRandomIntUpTo(numTimeSigDenoms)];
 
-		chordProgressionGenerator.setTimeSignatureNumerator(mTimeSigNumer);
+		patternGenerator.setTimeSignatureNumerator(mTimeSigNumer);
 
 		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax) {
 			mTempo = bpmValues[getRandomIntUpTo(bpmValues.length)];
@@ -224,13 +225,16 @@ public class SongWriter {
 //		// change factor here for more variation between rhythm and melody
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 		// generate based on eighth notes - 1 for verse and 1 for chorus
-		masterpiece.verseChordRhythm = chordProgressionGenerator.generateRhythm(2);
+
+		// TODO: Rather than generating rhythyms here, do it in the song structure generation
+		// Also, render these into collections of notes rather than just a rhythm
+		masterpiece.verseChordRhythm = patternGenerator.generateRhythm(2);
 		if (getRandomDouble() < 0.2)
 			masterpiece.chorusChordRhythm = masterpiece.verseChordRhythm;
 		else
-			masterpiece.chorusChordRhythm = chordProgressionGenerator.generateRhythm(2);
+			masterpiece.chorusChordRhythm = patternGenerator.generateRhythm(2);
 
-		masterpiece.theme = chordProgressionGenerator.generateTheme();
+		masterpiece.theme = patternGenerator.generateTheme();
 
 		return masterpiece;
 	} // writeNewSong
