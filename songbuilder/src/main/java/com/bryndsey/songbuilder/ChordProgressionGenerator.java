@@ -12,13 +12,16 @@ import javax.inject.Singleton;
 @Singleton
 public class ChordProgressionGenerator {
 	private final Random randGen;
+	private final NoteGenerator noteGenerator;
 
 	private CadenceTransformer cadenceTransformer;
 
 	private PatternGenerator patternGenerator;
 
 	@Inject
-	public ChordProgressionGenerator(PatternGenerator patternGenerator) {
+	public ChordProgressionGenerator(PatternGenerator patternGenerator,
+									 NoteGenerator noteGenerator) {
+		this.noteGenerator = noteGenerator;
 		randGen = new Random();
 		cadenceTransformer = new CadenceTransformer();
 		this.patternGenerator = patternGenerator;
@@ -47,7 +50,7 @@ public class ChordProgressionGenerator {
 		if (randGen.nextDouble() < 0.4) {
 			Pattern nextPart = new Pattern(partAFirst);
 			if (randGen.nextDouble() < 0.7) {
-				patternGenerator.applyMelodyVariation(nextPart);
+				noteGenerator.applyMelodyVariation(nextPart);
 			}
 			partB.patterns.set(0, nextPart);
 		}
@@ -55,7 +58,7 @@ public class ChordProgressionGenerator {
 		if (randGen.nextDouble() < 0.7) {
 			Pattern lastPart = new Pattern(partASecond);
 			if (randGen.nextDouble() < 0.75) {
-				patternGenerator.applyMelodyVariation(lastPart);
+				noteGenerator.applyMelodyVariation(lastPart);
 			}
 			partB.patterns.set(1, lastPart);
 		}
@@ -87,7 +90,7 @@ public class ChordProgressionGenerator {
 		if (randGen.nextDouble() < 0.45) {
 			partB = new Pattern(partA);
 			if (randGen.nextDouble() < 0.7)
-				patternGenerator.applyMelodyVariation(partB);
+				noteGenerator.applyMelodyVariation(partB);
 		} else
 			partB = patternGenerator.generatePattern(numChords);
 
