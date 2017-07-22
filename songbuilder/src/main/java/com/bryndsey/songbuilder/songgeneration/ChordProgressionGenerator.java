@@ -1,6 +1,5 @@
 package com.bryndsey.songbuilder.songgeneration;
 
-import com.bryndsey.songbuilder.CadenceTransformer;
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.Cadence;
 import com.bryndsey.songbuilder.songstructure.Pattern;
