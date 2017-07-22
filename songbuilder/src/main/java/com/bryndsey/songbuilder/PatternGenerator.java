@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.bryndsey.songbuilder.ChordProgressionGenerator.getRhythmFromNotes;
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDouble;
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDoubleInRange;
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDoubleUpTo;
@@ -206,5 +205,17 @@ public class PatternGenerator {
 			notes.add(lastNote);
 		}
 
+	}
+	
+	public ArrayList<Integer> getRhythmFromNotes(ArrayList<Note> notes) {
+		if (notes == null)
+			return null;
+
+		ArrayList<Integer> rhythm = new ArrayList<Integer>();
+		for (Note note : notes) {
+			rhythm.add(note.numBeats);
+		}
+
+		return rhythm;
 	}
 }

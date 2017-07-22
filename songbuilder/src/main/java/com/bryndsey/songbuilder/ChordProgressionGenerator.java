@@ -2,10 +2,8 @@ package com.bryndsey.songbuilder;
 
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.Cadence;
-import com.bryndsey.songbuilder.songstructure.Note;
 import com.bryndsey.songbuilder.songstructure.Pattern;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -97,18 +95,5 @@ public class ChordProgressionGenerator {
 		chordProg.patterns.add(partB);
 
 		return chordProg;
-	}
-
-	// TODO: Maybe move this to a new injected class so it isn't static
-	public static ArrayList<Integer> getRhythmFromNotes(ArrayList<Note> notes) {
-		if (notes == null)
-			return null;
-
-		ArrayList<Integer> rhythm = new ArrayList<Integer>();
-		for (Note note : notes) {
-			rhythm.add(note.numBeats);
-		}
-
-		return rhythm;
 	}
 }
