@@ -26,16 +26,6 @@ public class ChordProgression {
 		return chords;
 	}
 	
-	public ArrayList<ArrayList<Integer>> getMelody()
-	{
-		ArrayList<ArrayList<Integer>> melody = new ArrayList<ArrayList<Integer>>();
-		for (Pattern pattern: patterns)
-		{
-			melody.addAll(pattern.melody);
-		}
-		return melody;
-	}
-	
 	public ArrayList<ArrayList<Note>> getNotes()
 	{
 		ArrayList<ArrayList<Note>> notes = new ArrayList<ArrayList<Note>>();

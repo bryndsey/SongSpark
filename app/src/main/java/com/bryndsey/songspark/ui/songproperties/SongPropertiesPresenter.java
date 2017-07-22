@@ -1,5 +1,6 @@
 package com.bryndsey.songspark.ui.songproperties;
 
+import com.bryndsey.songbuilder.SongInstruments;
 import com.bryndsey.songbuilder.SongWriter;
 import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.Song;
@@ -15,7 +16,6 @@ import easymvp.RxPresenter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-
 public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 	private final MidiSongFactory midiSongFactory;
@@ -24,8 +24,8 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 	private static final List<Integer> TEMPO_LIST = Ints.asList(SongWriter.bpmValues);
 	private static final List<MusicStructure.Pitch> PITCH_LIST = Arrays.asList(MusicStructure.PITCHES);
 	private static final List<MusicStructure.ScaleType> SCALE_TYPE_LIST = Arrays.asList(MusicStructure.ScaleType.values());
-	private static final List<MusicStructure.MidiInstrument> LEAD_INSTRUMENT_LIST = Arrays.asList(SongWriter.melodyInstruments);
-	private static final List<MusicStructure.MidiInstrument> RHYTHM_INSTRUMENT_LIST = Arrays.asList(SongWriter.chordInstruments);
+	private static final List<MusicStructure.MidiInstrument> LEAD_INSTRUMENT_LIST = Arrays.asList(SongInstruments.melodyInstruments);
+	private static final List<MusicStructure.MidiInstrument> RHYTHM_INSTRUMENT_LIST = Arrays.asList(SongInstruments.chordInstruments);
 
 	@Inject
 	SongPropertiesPresenter(MidiSongFactory midiSongFactory) {

@@ -28,10 +28,6 @@ public class Song
 	public ArrayList<Integer> verseChordRhythm;
 	public ArrayList<Integer> chorusChordRhythm;
 	
-	public ArrayList<Integer> theme;
-	
-	//public ArrayList<ArrayList<Integer>> melody;
-	
 	public Song(){		
 		timeSigNum = 0;
 		timeSigDenom = 0;
@@ -52,8 +48,6 @@ public class Song
 		
 		verseChordRhythm = null;
 		chorusChordRhythm = null;
-		
-		theme = null;
 	}
 		
 } //class Song
