@@ -5,11 +5,19 @@ import com.bryndsey.songbuilder.songstructure.MusicStructure.SongPart;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntInRange;
 
+@Singleton
 public class StructureGenerator {
 
 	private static double[] BASE_PARTS_PROBABILITIES = {0.6, 0.3, 0.1};
+
+	@Inject
+	StructureGenerator() {
+	}
 
 	public ArrayList<SongPart> generateStructure() {
 		ArrayList<SongPart> structure = new ArrayList<SongPart>();
