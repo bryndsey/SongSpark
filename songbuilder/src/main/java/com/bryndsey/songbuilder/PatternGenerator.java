@@ -92,15 +92,15 @@ public class PatternGenerator {
 		return pattern;
 	}
 
-	public ArrayList<Integer> generateTheme() {
-		ArrayList<Integer> theme = new ArrayList<Integer>();
-
-		for (int note = 0; note < mTimeSigNumer; note++) {
-			theme.add(Utils.pickNdxByProb(basePitchProbs) + 1);
-		}
-
-		return theme;
-	}
+//	public ArrayList<Integer> generateTheme() {
+//		ArrayList<Integer> theme = new ArrayList<Integer>();
+//
+//		for (int note = 0; note < mTimeSigNumer; note++) {
+//			theme.add(Utils.pickNdxByProb(basePitchProbs) + 1);
+//		}
+//
+//		return theme;
+//	}
 
 	public ArrayList<Note> generateNotes() {
 		// generate a rhythm based on 1/8th notes

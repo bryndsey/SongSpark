@@ -234,8 +234,6 @@ public class SongWriter {
 		else
 			masterpiece.chorusChordRhythm = patternGenerator.generateRhythm(2);
 
-		masterpiece.theme = patternGenerator.generateTheme();
-
 		return masterpiece;
 	} // writeNewSong
 
