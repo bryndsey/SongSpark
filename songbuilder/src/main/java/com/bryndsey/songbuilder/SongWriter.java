@@ -4,6 +4,11 @@ import com.bryndsey.songbuilder.dagger.ComponentHolder;
 import com.bryndsey.songbuilder.dagger.DaggerSongWriterComponent;
 import com.bryndsey.songbuilder.dagger.SongWriterComponent;
 import com.bryndsey.songbuilder.dagger.SongWriterModule;
+import com.bryndsey.songbuilder.songgeneration.ChordProgressionGenerator;
+import com.bryndsey.songbuilder.songgeneration.PatternGenerator;
+import com.bryndsey.songbuilder.songgeneration.RhythmGenerator;
+import com.bryndsey.songbuilder.songgeneration.SongGenerator;
+import com.bryndsey.songbuilder.songgeneration.StructureGenerator;
 import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.MidiInstrument;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.Pitch;
@@ -37,7 +42,9 @@ public class SongWriter {
 	private boolean mUseRandomChordInst;
 	private boolean mUseRandomMelodyInst;
 
-	private SongGenerator songGenerator;
+	@Inject
+	SongGenerator songGenerator;
+
 	private ScaleRandomizer scaleRandomizer;
 	private StructureGenerator structureGenerator;
 
@@ -80,7 +87,6 @@ public class SongWriter {
 		mUseRandomMelodyInst = true;
 
 		// TODO: Inject these
-		songGenerator = new SongGenerator(chordProgressionGenerator);
 		scaleRandomizer = new ScaleRandomizer();
 		structureGenerator = new StructureGenerator();
 	}

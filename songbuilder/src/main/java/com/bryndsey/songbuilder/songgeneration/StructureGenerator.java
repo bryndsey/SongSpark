@@ -1,5 +1,6 @@
-package com.bryndsey.songbuilder;
+package com.bryndsey.songbuilder.songgeneration;
 
+import com.bryndsey.songbuilder.Utils;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.SongPart;
 
 import java.util.ArrayList;
