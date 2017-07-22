@@ -6,8 +6,9 @@ import com.bryndsey.songspark.data.player.MidiPlayer;
 import javax.inject.Inject;
 
 import easymvp.AbstractPresenter;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsView> implements MidiPlayer.PlaybackStateListener {
+public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsView> {
 
 	private MidiSongFactory midiSongFactory;
 	private MidiPlayer midiPlayer;
@@ -22,7 +23,25 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 		this.midiSongFactory = midiSongFactory;
 		this.midiPlayer = midiPlayer;
 
-		this.midiPlayer.setPlaybackStateListener(this);
+		midiPlayer.getLatestPlaybackStateEvent()
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(playbackStateEvent ->
+				{
+					switch (playbackStateEvent) {
+						case NOTREADY:
+							onPlaybackNotReady();
+							break;
+						case READY:
+							onPlaybackReady();
+							break;
+						case STARTED:
+							onPlaybackStarted();
+							break;
+						case COMPLETED:
+							onPlaybackComplete();
+							break;
+					}
+				});
 	}
 
 	@Override
@@ -91,8 +110,7 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 		enterPlayingState();
 	}
 
-	@Override
-	public void onPlaybackReady() {
+	private void onPlaybackReady() {
 		isPlaybackDisabled = false;
 		if (isViewAttached()) {
 			getView().enablePlayback();
@@ -100,21 +118,18 @@ public class PrimaryControlsPresenter extends AbstractPresenter<PrimaryControlsV
 		enterNotPlayingState();
 	}
 
-	@Override
-	public void onPlaybackNotReady() {
+	private void onPlaybackNotReady() {
 		isPlaybackDisabled = true;
 		if (isViewAttached()) {
 			getView().disablePlayback();
 		}
 	}
 
-	@Override
-	public void onPlaybackStarted() {
+	private void onPlaybackStarted() {
 		enterPlayingState();
 	}
 
-	@Override
-	public void onPlaybackComplete() {
+	private void onPlaybackComplete() {
 		enterNotPlayingState();
 	}
 }

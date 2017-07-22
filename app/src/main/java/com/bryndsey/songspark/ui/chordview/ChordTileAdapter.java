@@ -17,20 +17,36 @@ public class ChordTileAdapter extends RecyclerView.Adapter<ChordTileViewHolder> 
 
 	private List<ChordViewModel> chords;
 
-	ChordTileAdapter() {
+	private int highlightPosition;
+
+	private ChordTileClickListener tileClickListener;
+
+	ChordTileAdapter(ChordTileClickListener tileClickListener) {
+		this.tileClickListener = tileClickListener;
 		chords = new ArrayList<>();
+		highlightPosition = 0;
 	}
 
 	@Override
-	public ChordTileViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+	public ChordTileViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
 		View view = Slim.createLayout(viewGroup.getContext(), this, viewGroup);
 		return new ChordTileViewHolder(view);
 	}
 
 	@Override
-	public void onBindViewHolder(ChordTileViewHolder chordTileViewHolder, int i) {
-		ChordViewModel chord = chords.get(i);
+	public void onBindViewHolder(ChordTileViewHolder chordTileViewHolder, int position) {
+		ChordViewModel chord = chords.get(position);
 		chordTileViewHolder.chordName.setText(chord.chordName);
+
+		chordTileViewHolder.itemView.setSelected(shouldBeHighlighted(position));
+
+		chordTileViewHolder.itemView.setOnClickListener(view ->
+			tileClickListener.onChordTileClicked(position)
+		);
+	}
+
+	private boolean shouldBeHighlighted(int position) {
+		return position == highlightPosition;
 	}
 
 	@Override
@@ -41,5 +57,17 @@ public class ChordTileAdapter extends RecyclerView.Adapter<ChordTileViewHolder> 
 	void setChords(List<ChordViewModel> chords) {
 		this.chords = chords;
 		notifyDataSetChanged();
+	}
+
+	void highlightTile(int tilePosition) {
+		int oldHighlightPosition = highlightPosition;
+		highlightPosition = tilePosition;
+
+		notifyItemChanged(oldHighlightPosition);
+		notifyItemChanged(highlightPosition);
+	}
+
+	interface ChordTileClickListener {
+		void onChordTileClicked(int position);
 	}
 }

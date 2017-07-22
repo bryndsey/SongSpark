@@ -9,6 +9,7 @@ import com.bryndsey.songspark.data.MidiSongFactory;
 import com.bryndsey.songspark.data.filesave.MidiFileSaveException;
 import com.bryndsey.songspark.data.filesave.MidiFileSaver;
 import com.bryndsey.songspark.data.model.MidiSong;
+import com.jakewharton.rxrelay2.BehaviorRelay;
 import com.pdrogfer.mididroid.MidiFile;
 
 import java.io.File;
@@ -17,7 +18,8 @@ import java.io.IOException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
@@ -36,19 +38,17 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 	private boolean isPrepared;
 
-	private PlaybackStateListener playbackStateListener;
+	private BehaviorRelay<PlaybackStateEvent> playbackStateEventRelay = BehaviorRelay.create();
 
 	@Inject
 	MidiPlayer(MidiSongFactory midiSongFactory, MidiFileSaver midiFileSaver, Context context) {
 		this.midiFileSaver = midiFileSaver;
 
 		midiSongFactory.latestSong()
-				.subscribe(new Consumer<MidiSong>() {
-					@Override
-					public void accept(MidiSong midiSong) throws Exception {
-						saveSongForPlayback(midiSong);
-						initializePlayer();
-					}
+				.observeOn(Schedulers.computation())
+				.subscribe(midiSong -> {
+					saveSongForPlayback(midiSong);
+					initializePlayer();
 				});
 
 		audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -87,19 +87,16 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 			stopMediaPlayer();
 		}
 		if (isPrepared) {
+			isPrepared = false;
 			mediaPlayer.reset();
 		}
-
-		isPrepared = false;
 	}
 
 	private void setPlayerNotReady() {
 		Log.d(TAG, "Player failed to enter ready state");
 		isPrepared = false;
 
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackNotReady();
-		}
+		playbackStateEventRelay.accept(PlaybackStateEvent.NOTREADY);
 	}
 
 	private void preparePlayer() {
@@ -112,9 +109,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 
 		isPrepared = true;
 
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackReady();
-		}
+		playbackStateEventRelay.accept(PlaybackStateEvent.READY);
 	}
 
 	public void startPlaying() {
@@ -132,9 +127,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		mediaPlayer.setVolume(FULL_VOLUME, FULL_VOLUME);
 		mediaPlayer.start();
 
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackStarted();
-		}
+		playbackStateEventRelay.accept(PlaybackStateEvent.STARTED);
 	}
 
 	public void pause() {
@@ -160,10 +153,6 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		}
 	}
 
-	public void setPlaybackStateListener(PlaybackStateListener playbackStateListener) {
-		this.playbackStateListener = playbackStateListener;
-	}
-
 	@Override
 	public void onCompletion(MediaPlayer mediaPlayer) {
 		finishPlayback();
@@ -176,9 +165,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	}
 
 	private void notifyPlaybackComplete() {
-		if (playbackStateListener != null) {
-			playbackStateListener.onPlaybackComplete();
-		}
+		playbackStateEventRelay.accept(PlaybackStateEvent.COMPLETED);
 	}
 
 	@Override
@@ -194,13 +181,34 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		}
 	}
 
-	public interface PlaybackStateListener {
-		void onPlaybackReady();
+	public double getPlayerProgress() {
+		if (mediaPlayer == null || !isPrepared || mediaPlayer.getDuration() <= 0) {
+			return 0;
+		}
 
-		void onPlaybackNotReady();
+		return (double) mediaPlayer.getCurrentPosition() / (double) mediaPlayer.getDuration();
+	}
 
-		void onPlaybackStarted();
+	public void setPlayerProgress(double progress) {
+		if (mediaPlayer != null && isPrepared && mediaPlayer.getDuration() >= 0) {
+			Double newPosition = Math.ceil((double) mediaPlayer.getDuration() * progress);
+			if (newPosition.intValue() < 0) {
+				newPosition = 0.0;
+			} else if (newPosition > mediaPlayer.getDuration()) {
+				newPosition = (double)mediaPlayer.getDuration();
+			}
+			mediaPlayer.seekTo(newPosition.intValue());
+		}
+	}
 
-		void onPlaybackComplete();
+	public Observable<PlaybackStateEvent> getLatestPlaybackStateEvent() {
+		return playbackStateEventRelay;
+	}
+
+	public enum PlaybackStateEvent {
+		NOTREADY,
+		READY,
+		STARTED,
+		COMPLETED
 	}
 }
