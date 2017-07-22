@@ -45,7 +45,8 @@ public class SongWriter {
 	@Inject
 	SongGenerator songGenerator;
 
-	private ScaleRandomizer scaleRandomizer;
+	@Inject
+	ScaleRandomizer scaleRandomizer;
 
 	@Inject
 	StructureGenerator structureGenerator;
@@ -87,9 +88,6 @@ public class SongWriter {
 		mUseRandomScaleType = true;
 		mUseRandomChordInst = true;
 		mUseRandomMelodyInst = true;
-
-		// TODO: Inject these
-		scaleRandomizer = new ScaleRandomizer();
 	}
 
 	// TODO: Should I do some validation in the setters? Some of these have a set of valid
