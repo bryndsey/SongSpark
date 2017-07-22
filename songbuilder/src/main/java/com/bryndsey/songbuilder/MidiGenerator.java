@@ -99,7 +99,6 @@ public class MidiGenerator {
 	private int renderChords(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
 		int basePitch = song.key.getBaseMidiPitch();
 
-		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
 		ArrayList<Integer> chords = progression.getChords();
 
 		for (int ndx = 0; ndx < chords.size(); ndx++) {
