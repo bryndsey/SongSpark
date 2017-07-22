@@ -59,7 +59,6 @@ public class PatternGenerator {
 
 		int currChord = Utils.pickNdxByProb(CHORDPROBS);
 		pattern.chords.add(currChord + 1);
-		pattern.melody.add(generateTheme());
 		pattern.notes.add(generateNotes());
 
 		for (int chord = 1; chord < numChords; chord++) {
@@ -69,7 +68,6 @@ public class PatternGenerator {
 					getRandomDouble() < chordRepeatChance)) // use probability
 				currChord = Utils.pickNdxByProb(chordChances[currChord]);
 			pattern.chords.add(currChord + 1);
-			pattern.melody.add(generateTheme());
 
 			// chance to repeat a series of notes
 			double repeatNoteChance = getRandomDouble();
@@ -91,16 +89,6 @@ public class PatternGenerator {
 		}
 		return pattern;
 	}
-
-//	public ArrayList<Integer> generateTheme() {
-//		ArrayList<Integer> theme = new ArrayList<Integer>();
-//
-//		for (int note = 0; note < mTimeSigNumer; note++) {
-//			theme.add(Utils.pickNdxByProb(basePitchProbs) + 1);
-//		}
-//
-//		return theme;
-//	}
 
 	public ArrayList<Note> generateNotes() {
 		// generate a rhythm based on 1/8th notes
@@ -191,13 +179,11 @@ public class PatternGenerator {
 		// 10% chance to just make a whole new melody
 		if (variationChance < 0.1) {
 			for (int chord = 0; chord < numMeasures; chord++) {
-				pattern.melody.set(chord, generateTheme());
 				pattern.notes.set(chord, generateNotes());
 			}
 		}
 		// 40% change to regenerate just modify the last measure/chord
 		else if (variationChance < 0.5) {
-			pattern.melody.set(numMeasures - 1, generateTheme());
 			pattern.notes.set(numMeasures - 1, generateNotes());
 		}
 		// 40% chance to modify a a random number of measure so that it has the same rhythm with different pitches
