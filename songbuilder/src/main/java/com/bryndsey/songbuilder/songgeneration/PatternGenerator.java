@@ -16,13 +16,13 @@ import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
 @Singleton
 public class PatternGenerator {
 
-	private static final double[] CHORDPROBS = {8.0, 0.5, 1.0, 4.0, 5.0, 1.0, 0.1};
+	private static final double[] INITIAL_CHORD_PROBABILITIES = {8.0, 0.5, 1.0, 4.0, 5.0, 1.0, 0.1};
 
 	private final SongGenerationProperties songGenerationProperties;
 	private final NoteGenerator noteGenerator;
 	private final RhythmGenerator rhythmGenerator;
 
-	private static final double[][] chordChances = {
+	private static final double[][] CHORD_TRANSITION_PROBABILITY_MATRIX = {
 			{3, 2, 4, 10, 8, 4, 0.25},
 			{5, 1, 2, 5, 8, 2, 0.25},
 			{5, 2, 1, 6, 6, 8, 0.25},
@@ -46,18 +46,12 @@ public class PatternGenerator {
 			return null;
 
 		Pattern pattern = new Pattern();
-
-		int currChord = Utils.pickNdxByProb(CHORDPROBS);
-		pattern.chords.add(currChord + 1);
+		
 		pattern.notes.add(noteGenerator.generateNotes());
 
-		for (int chord = 1; chord < numChords; chord++) {
+		pattern.chords = generateChordProgression(numChords);
 
-			if (!(numChords % 2 == 0 && // have halfWay point of measure
-					chord % (numChords / 2) != 0 && // not at halfway point, so fine to repeat
-					getRandomDouble() < songGenerationProperties.getChordRepeatChance())) // use probability
-				currChord = Utils.pickNdxByProb(chordChances[currChord]);
-			pattern.chords.add(currChord + 1);
+		for (int chord = 1; chord < numChords; chord++) {
 
 			// chance to repeat a series of notes
 			double repeatNoteChance = getRandomDouble();
@@ -78,5 +72,30 @@ public class PatternGenerator {
 				pattern.notes.add(noteGenerator.generateNotes());
 		}
 		return pattern;
+	}
+
+	// TODO: This is weird to be here when I have a ProgressionGenerator class
+	// May need to rename some stuff
+	private ArrayList<Integer> generateChordProgression(int numChords) {
+		ArrayList<Integer> chords = new ArrayList<>(numChords);
+
+		int currChord = Utils.pickNdxByProb(INITIAL_CHORD_PROBABILITIES);
+		// TODO: Figure out better way to deal with this + 1
+		chords.add(currChord + 1);
+
+		for (int chord = 1; chord < numChords; chord++) {
+			if (shouldChangeChord(currChord, numChords)) {
+				currChord = Utils.pickNdxByProb(CHORD_TRANSITION_PROBABILITY_MATRIX[currChord]);
+			}
+			chords.add(currChord + 1);
+		}
+
+		return chords;
+	}
+
+	private boolean shouldChangeChord(int currentChord, int numberOfChords) {
+		return !(numberOfChords % 2 == 0 && // have halfWay point of measure
+				currentChord % (numberOfChords / 2) != 0 && // not at halfway point, so fine to repeat
+				getRandomDouble() < songGenerationProperties.getChordRepeatChance()); // use probability
 	}
 }
