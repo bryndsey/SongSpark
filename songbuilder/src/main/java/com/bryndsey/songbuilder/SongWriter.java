@@ -47,6 +47,12 @@ public class SongWriter {
 	@Inject
 	PatternGenerator patternGenerator;
 
+	@Inject
+	SongGenerationProperties songGenerationProperties;
+
+	@Inject
+	RhythmGenerator rhythmGenerator;
+
 	public SongWriter() {
 
 		SongWriterComponent songWriterComponent = DaggerSongWriterComponent.builder()
@@ -180,7 +186,7 @@ public class SongWriter {
 	public Song writeNewSong() {
 		Song masterpiece = new Song();
 
-		patternGenerator.shuffleProbabilities();
+		songGenerationProperties.shuffleProbabilities();
 
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 
@@ -189,7 +195,7 @@ public class SongWriter {
 		mTimeSigNumer = masterpiece.timeSigNum = MusicStructure.TIMESIGNUMVALUES[getRandomIntUpTo(numTimeSigNums)];
 		mTimeSigDenom = masterpiece.timeSigDenom = MusicStructure.TIMESIGDENOMVALUES[getRandomIntUpTo(numTimeSigDenoms)];
 
-		patternGenerator.setTimeSignatureNumerator(mTimeSigNumer);
+		songGenerationProperties.setTimeSignatureNumerator(mTimeSigNumer);
 
 		if (mUseRandomTempo || mTempo < bpmMin || mTempo > bpmMax) {
 			mTempo = bpmValues[getRandomIntUpTo(bpmValues.length)];
@@ -228,11 +234,11 @@ public class SongWriter {
 
 		// TODO: Rather than generating rhythyms here, do it in the song structure generation
 		// Also, render these into collections of notes rather than just a rhythm
-		masterpiece.verseChordRhythm = patternGenerator.generateRhythm(2);
+		masterpiece.verseChordRhythm = rhythmGenerator.generateRhythm(2);
 		if (getRandomDouble() < 0.2)
 			masterpiece.chorusChordRhythm = masterpiece.verseChordRhythm;
 		else
-			masterpiece.chorusChordRhythm = patternGenerator.generateRhythm(2);
+			masterpiece.chorusChordRhythm = rhythmGenerator.generateRhythm(2);
 
 		return masterpiece;
 	} // writeNewSong

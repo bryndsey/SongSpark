@@ -10,14 +10,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDouble;
-import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDoubleInRange;
-import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDoubleUpTo;
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
 
 @Singleton
 public class PatternGenerator {
 
 	private static final double[] CHORDPROBS = {8.0, 0.5, 1.0, 4.0, 5.0, 1.0, 0.1};
+
+	private final SongGenerationProperties songGenerationProperties;
+	private final RhythmGenerator rhythmGenerator;
 
 	private double[] basePitchProbs = {10, 1, 5, 2, 5, 1, 0.025};
 
@@ -31,23 +32,11 @@ public class PatternGenerator {
 			{10, 1, 1, 3, 4, 1, 0}
 	};
 
-	private double eighthNoteFactor;
-	private double chordRepeatChance;
-	private double noteRepeatFactor;
-	private int mTimeSigNumer;
-
 	@Inject
-	public PatternGenerator() {
-	}
-
-	public void setTimeSignatureNumerator(int timeSigNumerator) {
-		mTimeSigNumer = timeSigNumerator;
-	}
-
-	public void shuffleProbabilities() {
-		eighthNoteFactor = getRandomDoubleInRange(0.2, 3.2);//randGen.nextDouble() * 3.0) + 0.2;
-		chordRepeatChance = getRandomDoubleUpTo(0.75);//randGen.nextDouble() * 0.75;
-		noteRepeatFactor = getRandomDoubleInRange(2, 4);//2 + (randGen.nextDouble() * 2.0);
+	public PatternGenerator(SongGenerationProperties songGenerationProperties,
+							RhythmGenerator rhythmGenerator) {
+		this.songGenerationProperties = songGenerationProperties;
+		this.rhythmGenerator = rhythmGenerator;
 	}
 
 	public Pattern generatePattern(int numChords) {
@@ -64,7 +53,7 @@ public class PatternGenerator {
 
 			if (!(numChords % 2 == 0 && // have halfWay point of measure
 					chord % (numChords / 2) != 0 && // not at halfway point, so fine to repeat
-					getRandomDouble() < chordRepeatChance)) // use probability
+					getRandomDouble() < songGenerationProperties.getChordRepeatChance())) // use probability
 				currChord = Utils.pickNdxByProb(chordChances[currChord]);
 			pattern.chords.add(currChord + 1);
 
@@ -76,7 +65,7 @@ public class PatternGenerator {
 				// just repeat first notes, since that sort of sets the theme
 				if (repeatNoteChance < 0.15) {
 					// grab a previous set of notes, and use the rhythm to create a new set of notes
-					repeatNotes = generateNotes(getRhythmFromNotes(pattern.notes.get(getRandomIntUpTo(chord))));
+					repeatNotes = generateNotes(rhythmGenerator.getRhythmFromNotes(pattern.notes.get(getRandomIntUpTo(chord))));
 				} else if (repeatNoteChance < 0.2)
 					repeatNotes = new ArrayList<Note>(pattern.notes.get(0));
 				else
@@ -91,50 +80,9 @@ public class PatternGenerator {
 
 	public ArrayList<Note> generateNotes() {
 		// generate a rhythm based on 1/8th notes
-		ArrayList<Integer> rhythm = generateRhythm(2);
+		ArrayList<Integer> rhythm = rhythmGenerator.generateRhythm(2);
 		return generateNotes(rhythm);
 
-	}
-
-	public ArrayList<Integer> generateRhythm(int numUnitsPerBeat) {
-		if (numUnitsPerBeat <= 0)
-			return null;
-
-		int numSubbeats = mTimeSigNumer * numUnitsPerBeat;
-		ArrayList<Integer> rhythm = new ArrayList<Integer>();
-
-		int note = 0;
-		while (note < numSubbeats) {
-			// generate even numbered notes with weird distribution
-			double[] probs = new double[numSubbeats - note];
-			for (int prob = 0; prob < probs.length; prob++) {
-				if (prob == 0)
-					probs[prob] = probs.length / eighthNoteFactor;
-				else if (/*prob == 0 ||*/ (prob + 1) % 2 == 0)
-					probs[prob] = (double) (probs.length - prob);
-				else
-					probs[prob] = 0;
-
-				if (note % 4 == 0) {
-					probs[0] = probs[0] / 3.0;
-				}
-			}
-			int numBeats = Utils.pickNdxByProb(probs) + 1;
-			if (numBeats <= 0)
-				continue;
-
-			// small chance to be negative (a rest)
-			double restChance = getRandomDouble();
-			if ((note == 0 && restChance < 0.02) // first note
-					|| (note + numBeats >= numSubbeats && restChance < 0.08) //last note
-					|| restChance < 0.005)
-				numBeats *= -1;
-
-			note += Math.abs(numBeats);
-
-			rhythm.add(numBeats);
-		}
-		return rhythm;
 	}
 
 	public ArrayList<Note> generateNotes(ArrayList<Integer> rhythm) {
@@ -155,7 +103,7 @@ public class PatternGenerator {
 					if (pitchNdx < 0)
 						distancePitchProbs[ndx] = 1;
 					else if (ndx == pitchNdx)
-						distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES, noteRepeatFactor);
+						distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES, songGenerationProperties.getNoteRepeatFactor());
 					else
 						distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES - Math.abs(pitchNdx - ndx), 4);
 
@@ -191,7 +139,7 @@ public class PatternGenerator {
 			// currently has a chance to repeatedly replace the same measure... I'm ok with this for now...
 			for (int measureCount = 0; measureCount < numMeasuresToChange; measureCount++) {
 				int iMeasure = getRandomIntUpTo(numMeasures);
-				ArrayList<Integer> rhythm = getRhythmFromNotes(pattern.notes.get(iMeasure));
+				ArrayList<Integer> rhythm = rhythmGenerator.getRhythmFromNotes(pattern.notes.get(iMeasure));
 				pattern.notes.set(iMeasure, generateNotes(rhythm));
 			}
 		}
@@ -199,23 +147,10 @@ public class PatternGenerator {
 		else {
 			int pitch = Utils.pickNdxByProb(basePitchProbs) + 1;
 			// have to multiply by 2 here since duration is in half beats
-			Note lastNote = new Note(pitch, mTimeSigNumer * 2);
+			Note lastNote = new Note(pitch, songGenerationProperties.getTimeSigNumerator() * 2);
 			ArrayList<Note> notes = pattern.notes.get(numMeasures - 1);
 			notes.clear();
 			notes.add(lastNote);
 		}
-
-	}
-	
-	public ArrayList<Integer> getRhythmFromNotes(ArrayList<Note> notes) {
-		if (notes == null)
-			return null;
-
-		ArrayList<Integer> rhythm = new ArrayList<Integer>();
-		for (Note note : notes) {
-			rhythm.add(note.numBeats);
-		}
-
-		return rhythm;
 	}
 }
