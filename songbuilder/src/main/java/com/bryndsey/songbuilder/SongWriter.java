@@ -17,7 +17,6 @@ import com.bryndsey.songbuilder.songstructure.Song;
 
 import javax.inject.Inject;
 
-import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDouble;
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
 
 public class SongWriter {
@@ -236,14 +235,6 @@ public class SongWriter {
 //		// change factor here for more variation between rhythm and melody
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 		// generate based on eighth notes - 1 for verse and 1 for chorus
-
-		// TODO: Rather than generating rhythms here, do it in the song structure generation
-		// Also, render these into collections of notes rather than just a rhythm
-		masterpiece.verseChordRhythm = rhythmGenerator.generateRhythm(2);
-		if (getRandomDouble() < 0.2)
-			masterpiece.chorusChordRhythm = masterpiece.verseChordRhythm;
-		else
-			masterpiece.chorusChordRhythm = rhythmGenerator.generateRhythm(2);
 
 		return masterpiece;
 	} // writeNewSong

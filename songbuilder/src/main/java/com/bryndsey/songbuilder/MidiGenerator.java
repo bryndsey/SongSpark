@@ -77,12 +77,12 @@ public class MidiGenerator {
 		ProgramChange melodyInstrumentSelect = new ProgramChange(0, melodyChannel, song.melodyInstrument.ordinal());//programNumber());
 		melodyTrack.insertEvent(melodyInstrumentSelect);
 
-		int chordTick = renderChords(0, chordTrack, song.verseProgression, song.verseChordRhythm);
+		int chordTick = renderChords(0, chordTrack, song.verseProgression);
 		int melodyTick = renderMelody(0, melodyTrack, song.verseProgression);
 
 		int nextTick = Math.max(chordTick, melodyTick);
 
-		renderChords(nextTick, chordTrack, song.chorusProgression, song.chorusChordRhythm);
+		renderChords(nextTick, chordTrack, song.chorusProgression);
 		renderMelody(nextTick, melodyTrack, song.chorusProgression);
 
 		// It's best not to manually insert EndOfTrack events; MidiTrack will
@@ -96,9 +96,8 @@ public class MidiGenerator {
 
 		return new MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks);
 	}
-
-	// TODO: Get rid of unneeded parameter
-	private int renderChords(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
+	
+	private int renderChords(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();
 
 		for (Pattern pattern : progression.patterns) {
