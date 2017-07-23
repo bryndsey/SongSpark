@@ -3,29 +3,15 @@ package com.bryndsey.songbuilder.songstructure;
 public class Note {
 
 	public int pitch;
-	public int numBeats;
-	
-	public Note()
-	{
-		pitch = -1;
-		numBeats = 1;
-	}
-	
-	public Note(Note inst)
-	{
-		this.pitch = inst.pitch;
-		this.numBeats = inst.numBeats;
-	}
-	
-	public Note(int pitch, int numBeats)
-	{
+
+	public float startBeatInQuarterNotes;
+	public float lengthInQuarterNotes;
+	public int velocity;
+
+	// TODO: Add velocity
+	public Note(int pitch, float startBeatInQuarterNotes, float lengthInQuarterNotes) {
 		this.pitch = pitch;
-		this.numBeats = numBeats;
-	}
-	
-	@Override
-	public String toString()
-	{
-		return pitch + "x" + numBeats;
+		this.startBeatInQuarterNotes = startBeatInQuarterNotes;
+		this.lengthInQuarterNotes = lengthInQuarterNotes;
 	}
 }

@@ -21,52 +21,72 @@ public class NoteGenerator {
 	private final RhythmGenerator rhythmGenerator;
 
 	@Inject
-	public NoteGenerator(SongGenerationProperties songGenerationProperties,
-						 RhythmGenerator rhythmGenerator) {
+	NoteGenerator(SongGenerationProperties songGenerationProperties,
+				  RhythmGenerator rhythmGenerator) {
 		this.songGenerationProperties = songGenerationProperties;
 		this.rhythmGenerator = rhythmGenerator;
 	}
 
-	public ArrayList<Note> generateNotes() {
+	ArrayList<Note> generateNotes() {
 		// generate a rhythm based on 1/8th notes
 		ArrayList<Integer> rhythm = rhythmGenerator.generateRhythm(2);
-		return generateNotes(rhythm);
+		return generateNotesFromRhythm(rhythm);
 
 	}
 
-	public ArrayList<Note> generateNotes(ArrayList<Integer> rhythm) {
+	private ArrayList<Note> generateNotesFromRhythm(ArrayList<Integer> rhythm) {
 		if (rhythm == null)
 			return null;
 
-		ArrayList<Note> notes = new ArrayList<Note>();
+		ArrayList<Note> notes = new ArrayList<>();
 
 		int pitch = -1;
-		for (Integer item : rhythm) {
+
+		float currentBeat = 0;
+		for (Integer noteLength : rhythm) {
 			// check if it is a rest
-			if (item < 0)
+			if (noteLength < 0)
 				pitch = -1;
 			else {
-				int pitchNdx = pitch - 1;
-				double[] distancePitchProbs = new double[MusicStructure.NUMPITCHES];
-				for (int ndx = 0; ndx < distancePitchProbs.length; ndx++) {
-					if (pitchNdx < 0)
-						distancePitchProbs[ndx] = 1;
-					else if (ndx == pitchNdx)
-						distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES, songGenerationProperties.getNoteRepeatFactor());
-					else
-						distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES - Math.abs(pitchNdx - ndx), 4);
-
-				}
-				double[] pitchProbs = Utils.combineProbs(basePitchProbs, distancePitchProbs, 0.2);
-				pitch = Utils.pickNdxByProb(pitchProbs) + 1;
+				pitch = getNextPitch(pitch);
+				notes.add(new Note(pitch, currentBeat / 2f, (float) noteLength / 2f));
 			}
 
-			notes.add(new Note(pitch, item));
+			currentBeat += Math.abs(noteLength);
 		}
 		return notes;
 	}
 
-	public void applyMelodyVariation(Pattern pattern) {
+	private int getNextPitch(int currentPitch) {
+		int pitchNdx = currentPitch - 1;
+		double[] distancePitchProbs = new double[MusicStructure.NUMPITCHES];
+		for (int ndx = 0; ndx < distancePitchProbs.length; ndx++) {
+			if (pitchNdx < 0) {
+				distancePitchProbs[ndx] = 1;
+			} else if (ndx == pitchNdx) {
+				distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES, songGenerationProperties.getNoteRepeatFactor());
+			} else {
+				distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES - Math.abs(pitchNdx - ndx), 4);
+			}
+
+		}
+		double[] pitchProbs = Utils.combineProbs(basePitchProbs, distancePitchProbs, 0.2);
+		return Utils.pickNdxByProb(pitchProbs) + 1;
+	}
+
+	ArrayList<Note> applyNoteVariation(ArrayList<Note> notes) {
+		ArrayList<Note> newNotes = new ArrayList<>();
+
+		int pitch = -1;
+		for (Note note : notes) {
+			pitch = getNextPitch(pitch);
+			newNotes.add(new Note(pitch, note.startBeatInQuarterNotes, note.lengthInQuarterNotes));
+		}
+
+		return newNotes;
+	}
+
+	void applyMelodyVariation(Pattern pattern) {
 		if (pattern == null)
 			return;
 
@@ -88,15 +108,16 @@ public class NoteGenerator {
 			// currently has a chance to repeatedly replace the same measure... I'm ok with this for now...
 			for (int measureCount = 0; measureCount < numMeasuresToChange; measureCount++) {
 				int iMeasure = getRandomIntUpTo(numMeasures);
-				ArrayList<Integer> rhythm = rhythmGenerator.getRhythmFromNotes(pattern.notes.get(iMeasure));
-				pattern.notes.set(iMeasure, generateNotes(rhythm));
+
+				ArrayList<Note> newNotes = applyNoteVariation(pattern.notes.get(iMeasure));
+				pattern.notes.set(iMeasure, newNotes);
 			}
 		}
 		// 10% chance to just make the last note last the whole measure
 		else {
 			int pitch = Utils.pickNdxByProb(basePitchProbs) + 1;
-			// have to multiply by 2 here since duration is in half beats
-			Note lastNote = new Note(pitch, songGenerationProperties.getTimeSigNumerator() * 2);
+			Note lastNote = new Note(pitch, 0, songGenerationProperties.getTimeSigNumerator());
+
 			ArrayList<Note> notes = pattern.notes.get(numMeasures - 1);
 			notes.clear();
 			notes.add(lastNote);

@@ -8,27 +8,23 @@ public class Pattern {
 	// during a chord progression, so that is why they are broken up
 
 	public ArrayList<Integer> chords;
+	public ArrayList<ArrayList<Note>> chordNotes;
+
 	public ArrayList<ArrayList<Note>> notes;
 
 	public Pattern() {
-		chords = new ArrayList<Integer>();
-		notes = new ArrayList<ArrayList<Note>>();
+		chords = new ArrayList<>();
+		chordNotes = new ArrayList<>();
+		notes = new ArrayList<>();
 	}
 
 	public Pattern(Pattern inst) {
-		chords = new ArrayList<Integer>(inst.chords);
-		notes = new ArrayList<ArrayList<Note>>(inst.notes);
+		chords = new ArrayList<>(inst.chords);
+		chordNotes = new ArrayList<>(inst.chordNotes);
+		notes = new ArrayList<>(inst.notes);
 	}
 
-	public ArrayList<Integer> getChords() {
-		return chords;
-	}
-
-	public ArrayList<ArrayList<Note>> getNotes() {
-		return notes;
-	}
-
-	public Pattern plus(Pattern addend) {
+	public Pattern add(Pattern addend) {
 		Pattern result = new Pattern(this);
 		result.chords.addAll(addend.chords);
 		result.notes.addAll(addend.notes);

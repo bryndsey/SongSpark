@@ -25,9 +25,6 @@ public class Song
 	public ChordProgression chorusProgression;
 	public ChordProgression bridgeProgression;
 	
-	public ArrayList<Integer> verseChordRhythm;
-	public ArrayList<Integer> chorusChordRhythm;
-	
 	public Song(){		
 		timeSigNum = 0;
 		timeSigDenom = 0;
@@ -45,9 +42,6 @@ public class Song
 		verseProgression = null;
 		chorusProgression = null;
 		bridgeProgression = null;
-		
-		verseChordRhythm = null;
-		chorusChordRhythm = null;
 	}
 		
 } //class Song

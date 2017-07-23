@@ -3,6 +3,7 @@ package com.bryndsey.songbuilder;
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.ScaleType;
 import com.bryndsey.songbuilder.songstructure.Note;
+import com.bryndsey.songbuilder.songstructure.Pattern;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.pdrogfer.mididroid.MidiFile;
 import com.pdrogfer.mididroid.MidiTrack;
@@ -13,10 +14,11 @@ import com.pdrogfer.mididroid.event.meta.TimeSignature;
 
 import java.util.ArrayList;
 
+import static com.bryndsey.songbuilder.songstructure.MusicStructure.getNumberOfPitchesInOctave;
+
 public class MidiGenerator {
 
-	private static final int qtrNote = 480; // Still need to figure out why this value works... is it the resolution below?
-	private static final int eigthNote = qtrNote / 2;
+	private static final int TICKS_IN_QUARTER_NOTE = MidiFile.DEFAULT_RESOLUTION;
 
 	private static final int chordChannel = 0;
 	private static final int melodyChannel = 1;
@@ -76,12 +78,12 @@ public class MidiGenerator {
 		ProgramChange melodyInstrumentSelect = new ProgramChange(0, melodyChannel, song.melodyInstrument.ordinal());//programNumber());
 		melodyTrack.insertEvent(melodyInstrumentSelect);
 
-		int chordTick = renderChords(0, chordTrack, song.verseProgression, song.verseChordRhythm);
+		int chordTick = renderChords(0, chordTrack, song.verseProgression);
 		int melodyTick = renderMelody(0, melodyTrack, song.verseProgression);
 
 		int nextTick = Math.max(chordTick, melodyTick);
 
-		renderChords(nextTick, chordTrack, song.chorusProgression, song.chorusChordRhythm);
+		renderChords(nextTick, chordTrack, song.chorusProgression);
 		renderMelody(nextTick, melodyTrack, song.chorusProgression);
 
 		// It's best not to manually insert EndOfTrack events; MidiTrack will
@@ -96,36 +98,27 @@ public class MidiGenerator {
 		return new MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks);
 	}
 
-	private int renderChords(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
+	// TODO: Refactor this and melody method to reuse logic
+	private int renderChords(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();
 
-		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
-		ArrayList<Integer> chords = progression.getChords();
+		for (Pattern pattern : progression.patterns) {
+			for (int chord = 0; chord < pattern.chords.size(); chord++) {
+				int root = pattern.chords.get(chord);
 
-		for (int ndx = 0; ndx < chords.size(); ndx++) {
-			int root = chords.get(ndx);
-			int[] triad = song.scaleType.generateTriad(root);
+				int chordTick = tick;
 
-			int chordTick = tick;
-			for (Integer duration : rhythm) {
-				int noteVelocity = CHORD_VOLUME;
-				if (duration < 0) {
-					noteVelocity = 0;
-					duration *= -1;
+				for (Note note : pattern.chordNotes.get(chord)) {
+					int pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
+					int startTick = (int)(note.startBeatInQuarterNotes * TICKS_IN_QUARTER_NOTE) + chordTick;
+					int length = (int)(note.lengthInQuarterNotes * TICKS_IN_QUARTER_NOTE);
 
+					track.insertNote(chordChannel, pitch - getNumberOfPitchesInOctave(), CHORD_VOLUME, startTick, length);
 				}
-				int length = eigthNote * duration;
-				for (int pitch : triad) {
-					track.insertNote(chordChannel, basePitch + pitch - 12, noteVelocity, chordTick, length);
-				}
-				// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER, AND ESTABLISH CHORD BETTER
-				// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
-				track.insertNote(chordChannel, basePitch + triad[0] - 24, CHORD_VOLUME + 25, chordTick, length);
 
-				chordTick += length;
+				// FIXME: This currently assumes 4 as the denominator
+				tick = chordTick + (TICKS_IN_QUARTER_NOTE * song.timeSigNum);
 			}
-
-			tick = chordTick;
 		}
 
 		return tick;
@@ -134,34 +127,29 @@ public class MidiGenerator {
 	private int renderMelody(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();
 
-		//ArrayList<ArrayList<Note>> melodyNotes = progression.getNotes();
-		ArrayList<Integer> chords = progression.getChords();
+		for (Pattern pattern : progression.patterns) {
+			for (int chord = 0; chord < pattern.chords.size(); chord++) {
+				int root = pattern.chords.get(chord);
 
-		for (int ndx = 0; ndx < chords.size(); ndx++) {
-			int root = chords.get(ndx);
+				int chordTick = tick;
 
-			ArrayList<Note> melodyNotes = progression.getNotes().get(ndx); //song.melody.get(ndx);
-			for (Note note : melodyNotes) {
-				int noteVelocity = MELODY_VOLUME;
-				int numHalfBeats = note.numBeats;
-				if (note.numBeats < 0 || note.pitch < 0) {
-					noteVelocity = 0;
-					numHalfBeats *= -1;
+				for (Note note : pattern.notes.get(chord)) {
+					int pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
+					int startTick = (int)(note.startBeatInQuarterNotes * TICKS_IN_QUARTER_NOTE) + chordTick;
+					int length = (int)(note.lengthInQuarterNotes * TICKS_IN_QUARTER_NOTE);
+
+					track.insertNote(melodyChannel, pitch, MELODY_VOLUME, startTick, length);
 				}
-				// numBeats is actually in halfBeats
-				int duration = numHalfBeats * eigthNote;
-				int pitch;
-				if (note.pitch < 0)
-					pitch = 0;
-				else
-					pitch = basePitch + song.scaleType.getInterval(1, root)
-							+ song.scaleType.getChordInterval(root, note.pitch);
 
-				track.insertNote(melodyChannel, pitch, noteVelocity, tick, duration);
-				tick += duration;
+				// FIXME: This currently assumes 4 as the denominator
+				tick = chordTick + (TICKS_IN_QUARTER_NOTE * song.timeSigNum);
 			}
-
 		}
+
 		return tick;
+	}
+
+	private int getScalePitchFromPitchRelativeToChord(ScaleType scaleType, int chordNumber, int pitchRelativeToChord) {
+		return scaleType.getInterval(1, chordNumber) + scaleType.getChordInterval(chordNumber, pitchRelativeToChord);
 	}
 }

@@ -17,25 +17,36 @@ public class ChordProgressionGenerator {
 	private CadenceTransformer cadenceTransformer;
 
 	private PatternGenerator patternGenerator;
+	private final ChordNoteGenerator chordNoteGenerator;
 
 	@Inject
 	public ChordProgressionGenerator(PatternGenerator patternGenerator,
+									 ChordNoteGenerator chordNoteGenerator,
 									 NoteGenerator noteGenerator) {
+		this.patternGenerator = patternGenerator;
+		this.chordNoteGenerator = chordNoteGenerator;
 		this.noteGenerator = noteGenerator;
+
 		randGen = new Random();
 		cadenceTransformer = new CadenceTransformer();
-		this.patternGenerator = patternGenerator;
 	}
 
 	// slightly better(?) "algorithm" for generating chord progressions
 	// TODO: Keep working on this so it is more robust and
 	// generates more varied songs
 	public ChordProgression generateChordProgression() {
+		ChordProgression progression;
+
 		double typeProb = randGen.nextDouble();
-		if (typeProb < 0.85)
-			return generate4PatternProgression();
-		else //(typeProb < 0.95)
-			return generate2PatternProgression();
+		if (typeProb < 0.85) {
+			progression = generate4PatternProgression();
+		} else {
+			progression = generate2PatternProgression();
+		}
+
+		chordNoteGenerator.generateChordNotes(progression);
+
+		return progression;
 	}
 
 	public ChordProgression generate4PatternProgression() {
@@ -64,12 +75,13 @@ public class ChordProgressionGenerator {
 		}
 
 		double cadenceChance = randGen.nextDouble();
-		if (cadenceChance < 0.35)
+		if (cadenceChance < 0.35) {
 			cadenceTransformer.applyCadence(partASecond, Cadence.HALF);
-		else if (cadenceChance < 0.5)
+		} else if (cadenceChance < 0.5) {
 			cadenceTransformer.applyCadence(partASecond, Cadence.INTERRUPTED);
+		}
 
-		ChordProgression chordProg = partA.plus(partB);
+		ChordProgression chordProg = partA.add(partB);
 
 		return chordProg;
 	}
@@ -89,10 +101,12 @@ public class ChordProgressionGenerator {
 
 		if (randGen.nextDouble() < 0.45) {
 			partB = new Pattern(partA);
-			if (randGen.nextDouble() < 0.7)
+			if (randGen.nextDouble() < 0.7) {
 				noteGenerator.applyMelodyVariation(partB);
-		} else
+			}
+		} else {
 			partB = patternGenerator.generatePattern(numChords);
+		}
 
 		chordProg.patterns.add(partA);
 		chordProg.patterns.add(partB);
