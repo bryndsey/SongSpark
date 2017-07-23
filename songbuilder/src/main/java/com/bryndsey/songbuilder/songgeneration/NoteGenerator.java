@@ -21,20 +21,20 @@ public class NoteGenerator {
 	private final RhythmGenerator rhythmGenerator;
 
 	@Inject
-	public NoteGenerator(SongGenerationProperties songGenerationProperties,
+	NoteGenerator(SongGenerationProperties songGenerationProperties,
 						 RhythmGenerator rhythmGenerator) {
 		this.songGenerationProperties = songGenerationProperties;
 		this.rhythmGenerator = rhythmGenerator;
 	}
 
-	public ArrayList<Note> generateNotes() {
+	ArrayList<Note> generateNotes() {
 		// generate a rhythm based on 1/8th notes
 		ArrayList<Integer> rhythm = rhythmGenerator.generateRhythm(2);
-		return generateNotes(rhythm);
+		return generateNotesFromRhythm(rhythm);
 
 	}
 
-	public ArrayList<Note> generateNotes(ArrayList<Integer> rhythm) {
+	ArrayList<Note> generateNotesFromRhythm(ArrayList<Integer> rhythm) {
 		if (rhythm == null)
 			return null;
 
@@ -70,7 +70,7 @@ public class NoteGenerator {
 		return notes;
 	}
 
-	public ArrayList<Note> applyNoteVariation(ArrayList<Note> notes) {
+	ArrayList<Note> applyNoteVariation(ArrayList<Note> notes) {
 		ArrayList<Note> newNotes = new ArrayList<>();
 
 		int pitch = -1;
@@ -95,7 +95,7 @@ public class NoteGenerator {
 		return newNotes;
 	}
 
-	public void applyMelodyVariation(Pattern pattern) {
+	void applyMelodyVariation(Pattern pattern) {
 		if (pattern == null)
 			return;
 
@@ -125,8 +125,6 @@ public class NoteGenerator {
 		// 10% chance to just make the last note last the whole measure
 		else {
 			int pitch = Utils.pickNdxByProb(basePitchProbs) + 1;
-			// have to multiply by 2 here since duration is in half beats
-
 			Note lastNote = new Note(pitch, 0, songGenerationProperties.getTimeSigNumerator());
 
 			ArrayList<Note> notes = pattern.notes.get(numMeasures - 1);

@@ -20,7 +20,6 @@ public class PatternGenerator {
 
 	private final SongGenerationProperties songGenerationProperties;
 	private final NoteGenerator noteGenerator;
-	private final RhythmGenerator rhythmGenerator;
 
 	private static final double[][] CHORD_TRANSITION_PROBABILITY_MATRIX = {
 			{3, 2, 4, 10, 8, 4, 0.25},
@@ -34,11 +33,9 @@ public class PatternGenerator {
 
 	@Inject
 	public PatternGenerator(SongGenerationProperties songGenerationProperties,
-							NoteGenerator noteGenerator,
-							RhythmGenerator rhythmGenerator) {
+							NoteGenerator noteGenerator) {
 		this.songGenerationProperties = songGenerationProperties;
 		this.noteGenerator = noteGenerator;
-		this.rhythmGenerator = rhythmGenerator;
 	}
 
 	public Pattern generatePattern(int numChords) {
@@ -62,11 +59,10 @@ public class PatternGenerator {
 				if (repeatNoteChance < 0.15) {
 					// grab a previous set of notes, and use the rhythm to create a new set of notes
 					repeatNotes = noteGenerator.applyNoteVariation(pattern.notes.get(getRandomIntUpTo(chord)));
-//					repeatNotes = noteGenerator.generateNotes(rhythmGenerator.getRhythmFromNotes(pattern.notes.get(getRandomIntUpTo(chord))));
 				} else if (repeatNoteChance < 0.2)
-					repeatNotes = new ArrayList<Note>(pattern.notes.get(0));
+					repeatNotes = new ArrayList<>(pattern.notes.get(0));
 				else
-					repeatNotes = new ArrayList<Note>(pattern.notes.get(getRandomIntUpTo(chord)));
+					repeatNotes = new ArrayList<>(pattern.notes.get(getRandomIntUpTo(chord)));
 
 				pattern.notes.add(repeatNotes);
 			} else
