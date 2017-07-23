@@ -237,7 +237,7 @@ public class SongWriter {
 //		eighthNoteFactor = (randGen.nextDouble() * 3.0) + 0.2;
 		// generate based on eighth notes - 1 for verse and 1 for chorus
 
-		// TODO: Rather than generating rhythyms here, do it in the song structure generation
+		// TODO: Rather than generating rhythms here, do it in the song structure generation
 		// Also, render these into collections of notes rather than just a rhythm
 		masterpiece.verseChordRhythm = rhythmGenerator.generateRhythm(2);
 		if (getRandomDouble() < 0.2)
