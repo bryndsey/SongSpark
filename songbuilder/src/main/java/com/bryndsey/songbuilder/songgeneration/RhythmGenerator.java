@@ -2,7 +2,6 @@ package com.bryndsey.songbuilder.songgeneration;
 
 import com.bryndsey.songbuilder.SongGenerationProperties;
 import com.bryndsey.songbuilder.Utils;
-import com.bryndsey.songbuilder.songstructure.Note;
 
 import java.util.ArrayList;
 
@@ -62,15 +61,15 @@ public class RhythmGenerator {
 		return rhythm;
 	}
 
-	public ArrayList<Integer> getRhythmFromNotes(ArrayList<Note> notes) {
-		if (notes == null)
-			return null;
-
-		ArrayList<Integer> rhythm = new ArrayList<Integer>();
-		for (Note note : notes) {
-			rhythm.add(note.numBeats);
-		}
-
-		return rhythm;
-	}
+//	public ArrayList<Integer> getRhythmFromNotes(ArrayList<Note> notes) {
+//		if (notes == null)
+//			return null;
+//
+//		ArrayList<Integer> rhythm = new ArrayList<>();
+//		for (Note note : notes) {
+//			rhythm.add((int)note.lengthInQuarterNotes * 2);
+//		}
+//
+//		return rhythm;
+//	}
 }

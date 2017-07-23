@@ -61,7 +61,8 @@ public class PatternGenerator {
 				// just repeat first notes, since that sort of sets the theme
 				if (repeatNoteChance < 0.15) {
 					// grab a previous set of notes, and use the rhythm to create a new set of notes
-					repeatNotes = noteGenerator.generateNotes(rhythmGenerator.getRhythmFromNotes(pattern.notes.get(getRandomIntUpTo(chord))));
+					repeatNotes = noteGenerator.applyNoteVariation(pattern.notes.get(getRandomIntUpTo(chord)));
+//					repeatNotes = noteGenerator.generateNotes(rhythmGenerator.getRhythmFromNotes(pattern.notes.get(getRandomIntUpTo(chord))));
 				} else if (repeatNoteChance < 0.2)
 					repeatNotes = new ArrayList<Note>(pattern.notes.get(0));
 				else

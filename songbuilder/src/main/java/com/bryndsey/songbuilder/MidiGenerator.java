@@ -127,36 +127,61 @@ public class MidiGenerator {
 	private int renderMelody(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();
 
-		ArrayList<Integer> chords = progression.getChords();
+		for (Pattern pattern : progression.patterns) {
+			for (int chord = 0; chord < pattern.chords.size(); chord++) {
+				int root = pattern.chords.get(chord);
 
-		for (int ndx = 0; ndx < chords.size(); ndx++) {
-			int root = chords.get(ndx);
+				int chordTick = tick;
 
-			ArrayList<Note> melodyNotes = progression.getNotes().get(ndx); //song.melody.get(ndx);
-			for (Note note : melodyNotes) {
-				int noteVelocity = MELODY_VOLUME;
-				int numHalfBeats = note.numBeats;
-				if (note.numBeats < 0 || note.pitch < 0) {
-					noteVelocity = 0;
-					numHalfBeats *= -1;
+				for (Note note : pattern.notes.get(chord)) {
+					int pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
+					int startTick = (int)(note.startBeatInQuarterNotes * TICKS_IN_QUARTER_NOTE) + chordTick;
+					int length = (int)(note.lengthInQuarterNotes * TICKS_IN_QUARTER_NOTE);
+
+					track.insertNote(melodyChannel, pitch - getNumberOfPitchesInOctave(), MELODY_VOLUME, startTick, length);
 				}
-				// numBeats is actually in halfBeats
-				int duration = numHalfBeats * TICKS_IN_EIGHTH_NOTE;
-				int pitch;
-				if (note.pitch < 0)
-					pitch = 0;
-				else
-					pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
-//							song.scaleType.getInterval(1, root)
-//							+ song.scaleType.getChordInterval(root, note.pitch);
 
-				track.insertNote(melodyChannel, pitch, noteVelocity, tick, duration);
-				tick += duration;
+				// FIXME: This currently assumes 4 as the denominator
+				tick = chordTick + (TICKS_IN_QUARTER_NOTE * song.timeSigNum);
 			}
-
 		}
+
 		return tick;
 	}
+
+//	private int renderMelody(int tick, MidiTrack track, ChordProgression progression) {
+//		int basePitch = song.key.getBaseMidiPitch();
+//
+//		ArrayList<Integer> chords = progression.getChords();
+//
+//		for (int ndx = 0; ndx < chords.size(); ndx++) {
+//			int root = chords.get(ndx);
+//
+//			ArrayList<Note> melodyNotes = progression.getNotes().get(ndx); //song.melody.get(ndx);
+//			for (Note note : melodyNotes) {
+//				int noteVelocity = MELODY_VOLUME;
+//				int numHalfBeats = note.numBeats;
+//				if (note.numBeats < 0 || note.pitch < 0) {
+//					noteVelocity = 0;
+//					numHalfBeats *= -1;
+//				}
+//				// numBeats is actually in halfBeats
+//				int duration = numHalfBeats * TICKS_IN_EIGHTH_NOTE;
+//				int pitch;
+//				if (note.pitch < 0)
+//					pitch = 0;
+//				else
+//					pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
+////							song.scaleType.getInterval(1, root)
+////							+ song.scaleType.getChordInterval(root, note.pitch);
+//
+//				track.insertNote(melodyChannel, pitch, noteVelocity, tick, duration);
+//				tick += duration;
+//			}
+//
+//		}
+//		return tick;
+//	}
 
 	private int getScalePitchFromPitchRelativeToChord(ScaleType scaleType, int chordNumber, int pitchRelativeToChord) {
 		return scaleType.getInterval(1, chordNumber) + scaleType.getChordInterval(chordNumber, pitchRelativeToChord);
