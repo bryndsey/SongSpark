@@ -20,7 +20,7 @@ public class Pattern {
 		notes = new ArrayList<>(inst.notes);
 	}
 
-	public Pattern plus(Pattern addend) {
+	public Pattern add(Pattern addend) {
 		Pattern result = new Pattern(this);
 		result.chords.addAll(addend.chords);
 		result.notes.addAll(addend.notes);

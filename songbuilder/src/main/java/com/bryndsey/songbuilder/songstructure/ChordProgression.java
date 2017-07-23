@@ -8,17 +8,17 @@ public class ChordProgression {
 	
 	public ChordProgression()
 	{
-		patterns = new ArrayList<Pattern>();
+		patterns = new ArrayList<>();
 	}
 	
 	public ChordProgression(ChordProgression inst)
 	{
-		patterns = new ArrayList<Pattern>(inst.patterns);
+		patterns = new ArrayList<>(inst.patterns);
 	}
 	
 	public ArrayList<Integer> getChords()
 	{
-		ArrayList<Integer> chords = new ArrayList<Integer>();
+		ArrayList<Integer> chords = new ArrayList<>();
 		for (Pattern pattern: patterns)
 		{
 			chords.addAll(pattern.chords);
@@ -28,7 +28,7 @@ public class ChordProgression {
 	
 	public ArrayList<ArrayList<Note>> getNotes()
 	{
-		ArrayList<ArrayList<Note>> notes = new ArrayList<ArrayList<Note>>();
+		ArrayList<ArrayList<Note>> notes = new ArrayList<>();
 		for (Pattern pattern: patterns)
 		{
 			notes.addAll(pattern.notes);
@@ -36,7 +36,7 @@ public class ChordProgression {
 		return notes;
 	}
 	
-	public ChordProgression plus(ChordProgression addend)
+	public ChordProgression add(ChordProgression addend)
 	{
 		ChordProgression result = new ChordProgression(this);
 		result.patterns.addAll(addend.patterns);

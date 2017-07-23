@@ -69,7 +69,7 @@ public class ChordProgressionGenerator {
 		else if (cadenceChance < 0.5)
 			cadenceTransformer.applyCadence(partASecond, Cadence.INTERRUPTED);
 
-		ChordProgression chordProg = partA.plus(partB);
+		ChordProgression chordProg = partA.add(partB);
 
 		return chordProg;
 	}
