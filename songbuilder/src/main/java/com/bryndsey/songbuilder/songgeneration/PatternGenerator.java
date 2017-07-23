@@ -32,13 +32,13 @@ public class PatternGenerator {
 	};
 
 	@Inject
-	public PatternGenerator(SongGenerationProperties songGenerationProperties,
+	PatternGenerator(SongGenerationProperties songGenerationProperties,
 							NoteGenerator noteGenerator) {
 		this.songGenerationProperties = songGenerationProperties;
 		this.noteGenerator = noteGenerator;
 	}
 
-	public Pattern generatePattern(int numChords) {
+	Pattern generatePattern(int numChords) {
 		if (numChords < 0)
 			return null;
 

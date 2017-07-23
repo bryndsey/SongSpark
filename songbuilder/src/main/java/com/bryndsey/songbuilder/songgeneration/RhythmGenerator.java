@@ -16,7 +16,7 @@ public class RhythmGenerator {
 	private final SongGenerationProperties songGenerationProperties;
 
 	@Inject
-	public RhythmGenerator(SongGenerationProperties songGenerationProperties) {
+	RhythmGenerator(SongGenerationProperties songGenerationProperties) {
 		this.songGenerationProperties = songGenerationProperties;
 	}
 

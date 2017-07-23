@@ -38,7 +38,7 @@ public class NoteGenerator {
 		if (rhythm == null)
 			return null;
 
-		ArrayList<Note> notes = new ArrayList<Note>();
+		ArrayList<Note> notes = new ArrayList<>();
 
 		int pitch = -1;
 
