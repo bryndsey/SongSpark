@@ -31,11 +31,15 @@ public class ChordProgressionGenerator {
 	// TODO: Keep working on this so it is more robust and
 	// generates more varied songs
 	public ChordProgression generateChordProgression() {
+		ChordProgression progression;
+
 		double typeProb = randGen.nextDouble();
-		if (typeProb < 0.85)
-			return generate4PatternProgression();
-		else //(typeProb < 0.95)
-			return generate2PatternProgression();
+		if (typeProb < 0.85) {
+			progression = generate4PatternProgression();
+		} else {
+			progression = generate2PatternProgression();
+		}
+		return progression;
 	}
 
 	public ChordProgression generate4PatternProgression() {
