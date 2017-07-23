@@ -139,7 +139,7 @@ public class MidiGenerator {
 					int startTick = (int)(note.startBeatInQuarterNotes * TICKS_IN_QUARTER_NOTE) + chordTick;
 					int length = (int)(note.lengthInQuarterNotes * TICKS_IN_QUARTER_NOTE);
 
-					track.insertNote(melodyChannel, pitch - getNumberOfPitchesInOctave(), MELODY_VOLUME, startTick, length);
+					track.insertNote(melodyChannel, pitch, MELODY_VOLUME, startTick, length);
 				}
 
 				// FIXME: This currently assumes 4 as the denominator
