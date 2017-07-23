@@ -60,16 +60,4 @@ public class RhythmGenerator {
 		}
 		return rhythm;
 	}
-
-//	public ArrayList<Integer> getRhythmFromNotes(ArrayList<Note> notes) {
-//		if (notes == null)
-//			return null;
-//
-//		ArrayList<Integer> rhythm = new ArrayList<>();
-//		for (Note note : notes) {
-//			rhythm.add((int)note.lengthInQuarterNotes * 2);
-//		}
-//
-//		return rhythm;
-//	}
 }

@@ -98,7 +98,8 @@ public class MidiGenerator {
 
 		return new MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks);
 	}
-	
+
+	// TODO: Refactor this and melody method to reuse logic
 	private int renderChords(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();
 
@@ -148,40 +149,6 @@ public class MidiGenerator {
 
 		return tick;
 	}
-
-//	private int renderMelody(int tick, MidiTrack track, ChordProgression progression) {
-//		int basePitch = song.key.getBaseMidiPitch();
-//
-//		ArrayList<Integer> chords = progression.getChords();
-//
-//		for (int ndx = 0; ndx < chords.size(); ndx++) {
-//			int root = chords.get(ndx);
-//
-//			ArrayList<Note> melodyNotes = progression.getNotes().get(ndx); //song.melody.get(ndx);
-//			for (Note note : melodyNotes) {
-//				int noteVelocity = MELODY_VOLUME;
-//				int numHalfBeats = note.numBeats;
-//				if (note.numBeats < 0 || note.pitch < 0) {
-//					noteVelocity = 0;
-//					numHalfBeats *= -1;
-//				}
-//				// numBeats is actually in halfBeats
-//				int duration = numHalfBeats * TICKS_IN_EIGHTH_NOTE;
-//				int pitch;
-//				if (note.pitch < 0)
-//					pitch = 0;
-//				else
-//					pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
-////							song.scaleType.getInterval(1, root)
-////							+ song.scaleType.getChordInterval(root, note.pitch);
-//
-//				track.insertNote(melodyChannel, pitch, noteVelocity, tick, duration);
-//				tick += duration;
-//			}
-//
-//		}
-//		return tick;
-//	}
 
 	private int getScalePitchFromPitchRelativeToChord(ScaleType scaleType, int chordNumber, int pitchRelativeToChord) {
 		return scaleType.getInterval(1, chordNumber) + scaleType.getChordInterval(chordNumber, pitchRelativeToChord);
