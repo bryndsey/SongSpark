@@ -64,10 +64,11 @@ public class ChordProgressionGenerator {
 		}
 
 		double cadenceChance = randGen.nextDouble();
-		if (cadenceChance < 0.35)
+		if (cadenceChance < 0.35) {
 			cadenceTransformer.applyCadence(partASecond, Cadence.HALF);
-		else if (cadenceChance < 0.5)
+		} else if (cadenceChance < 0.5) {
 			cadenceTransformer.applyCadence(partASecond, Cadence.INTERRUPTED);
+		}
 
 		ChordProgression chordProg = partA.add(partB);
 
@@ -89,10 +90,12 @@ public class ChordProgressionGenerator {
 
 		if (randGen.nextDouble() < 0.45) {
 			partB = new Pattern(partA);
-			if (randGen.nextDouble() < 0.7)
+			if (randGen.nextDouble() < 0.7) {
 				noteGenerator.applyMelodyVariation(partB);
-		} else
+			}
+		} else {
 			partB = patternGenerator.generatePattern(numChords);
+		}
 
 		chordProg.patterns.add(partA);
 		chordProg.patterns.add(partB);
