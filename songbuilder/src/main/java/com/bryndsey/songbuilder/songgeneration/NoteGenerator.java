@@ -34,7 +34,7 @@ public class NoteGenerator {
 
 	}
 
-	ArrayList<Note> generateNotesFromRhythm(ArrayList<Integer> rhythm) {
+	private ArrayList<Note> generateNotesFromRhythm(ArrayList<Integer> rhythm) {
 		if (rhythm == null)
 			return null;
 
