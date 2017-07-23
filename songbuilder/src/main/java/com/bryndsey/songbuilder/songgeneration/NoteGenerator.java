@@ -61,6 +61,7 @@ public class NoteGenerator {
 				pitch = Utils.pickNdxByProb(pitchProbs) + 1;
 			}
 
+			//TODO: Use note length and start times
 			notes.add(new Note(pitch, item));
 		}
 		return notes;
