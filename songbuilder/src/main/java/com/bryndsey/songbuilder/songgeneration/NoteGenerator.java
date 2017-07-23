@@ -22,7 +22,7 @@ public class NoteGenerator {
 
 	@Inject
 	NoteGenerator(SongGenerationProperties songGenerationProperties,
-						 RhythmGenerator rhythmGenerator) {
+				  RhythmGenerator rhythmGenerator) {
 		this.songGenerationProperties = songGenerationProperties;
 		this.rhythmGenerator = rhythmGenerator;
 	}
@@ -48,20 +48,7 @@ public class NoteGenerator {
 			if (noteLength < 0)
 				pitch = -1;
 			else {
-				int pitchNdx = pitch - 1;
-				double[] distancePitchProbs = new double[MusicStructure.NUMPITCHES];
-				for (int ndx = 0; ndx < distancePitchProbs.length; ndx++) {
-					if (pitchNdx < 0)
-						distancePitchProbs[ndx] = 1;
-					else if (ndx == pitchNdx)
-						distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES, songGenerationProperties.getNoteRepeatFactor());
-					else
-						distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES - Math.abs(pitchNdx - ndx), 4);
-
-				}
-				double[] pitchProbs = Utils.combineProbs(basePitchProbs, distancePitchProbs, 0.2);
-				pitch = Utils.pickNdxByProb(pitchProbs) + 1;
-
+				pitch = getNextPitch(pitch);
 				notes.add(new Note(pitch, currentBeat / 2f, (float) noteLength / 2f));
 			}
 
@@ -70,25 +57,29 @@ public class NoteGenerator {
 		return notes;
 	}
 
+	private int getNextPitch(int currentPitch) {
+		int pitchNdx = currentPitch - 1;
+		double[] distancePitchProbs = new double[MusicStructure.NUMPITCHES];
+		for (int ndx = 0; ndx < distancePitchProbs.length; ndx++) {
+			if (pitchNdx < 0) {
+				distancePitchProbs[ndx] = 1;
+			} else if (ndx == pitchNdx) {
+				distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES, songGenerationProperties.getNoteRepeatFactor());
+			} else {
+				distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES - Math.abs(pitchNdx - ndx), 4);
+			}
+
+		}
+		double[] pitchProbs = Utils.combineProbs(basePitchProbs, distancePitchProbs, 0.2);
+		return Utils.pickNdxByProb(pitchProbs) + 1;
+	}
+
 	ArrayList<Note> applyNoteVariation(ArrayList<Note> notes) {
 		ArrayList<Note> newNotes = new ArrayList<>();
 
 		int pitch = -1;
 		for (Note note : notes) {
-			int pitchNdx = pitch - 1;
-			double[] distancePitchProbs = new double[MusicStructure.NUMPITCHES];
-			for (int ndx = 0; ndx < distancePitchProbs.length; ndx++) {
-				if (pitchNdx < 0)
-					distancePitchProbs[ndx] = 1;
-				else if (ndx == pitchNdx)
-					distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES, songGenerationProperties.getNoteRepeatFactor());
-				else
-					distancePitchProbs[ndx] = Math.pow(MusicStructure.NUMPITCHES - Math.abs(pitchNdx - ndx), 4);
-
-			}
-			double[] pitchProbs = Utils.combineProbs(basePitchProbs, distancePitchProbs, 0.2);
-			pitch = Utils.pickNdxByProb(pitchProbs) + 1;
-
+			pitch = getNextPitch(pitch);
 			newNotes.add(new Note(pitch, note.startBeatInQuarterNotes, note.lengthInQuarterNotes));
 		}
 
