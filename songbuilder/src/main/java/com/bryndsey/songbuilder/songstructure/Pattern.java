@@ -11,21 +11,13 @@ public class Pattern {
 	public ArrayList<ArrayList<Note>> notes;
 
 	public Pattern() {
-		chords = new ArrayList<Integer>();
-		notes = new ArrayList<ArrayList<Note>>();
+		chords = new ArrayList<>();
+		notes = new ArrayList<>();
 	}
 
 	public Pattern(Pattern inst) {
-		chords = new ArrayList<Integer>(inst.chords);
-		notes = new ArrayList<ArrayList<Note>>(inst.notes);
-	}
-
-	public ArrayList<Integer> getChords() {
-		return chords;
-	}
-
-	public ArrayList<ArrayList<Note>> getNotes() {
-		return notes;
+		chords = new ArrayList<>(inst.chords);
+		notes = new ArrayList<>(inst.notes);
 	}
 
 	public Pattern plus(Pattern addend) {
