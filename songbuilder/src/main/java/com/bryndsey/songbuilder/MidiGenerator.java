@@ -121,34 +121,6 @@ public class MidiGenerator {
 			}
 		}
 
-//		ArrayList<Integer> chords = progression.getChords();
-//
-//		for (int ndx = 0; ndx < chords.size(); ndx++) {
-//			int root = chords.get(ndx);
-//			int[] triad = song.scaleType.generateTriad(root);
-//
-//			int chordTick = tick;
-//			for (Integer duration : rhythm) {
-//				int noteVelocity = CHORD_VOLUME;
-//				if (duration < 0) {
-//					noteVelocity = 0;
-//					duration *= -1;
-//
-//				}
-//				int length = TICKS_IN_EIGHTH_NOTE * duration;
-//				for (int pitch : triad) {
-//					track.insertNote(chordChannel, basePitch + pitch - 12, noteVelocity, chordTick, length);
-//				}
-//				// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER, AND ESTABLISH CHORD BETTER
-//				// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
-//				track.insertNote(chordChannel, basePitch + triad[0] - 24, CHORD_VOLUME + 25, chordTick, length);
-//
-//				chordTick += length;
-//			}
-//
-//			tick = chordTick;
-//		}
-
 		return tick;
 	}
 
