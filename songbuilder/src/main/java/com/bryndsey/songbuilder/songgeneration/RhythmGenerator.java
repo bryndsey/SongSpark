@@ -20,6 +20,7 @@ public class RhythmGenerator {
 		this.songGenerationProperties = songGenerationProperties;
 	}
 
+	// TODO: Have this return a list of Notes that use start beats and lengths
 	public ArrayList<Integer> generateRhythm(int numUnitsPerBeat) {
 		if (numUnitsPerBeat <= 0)
 			return null;
