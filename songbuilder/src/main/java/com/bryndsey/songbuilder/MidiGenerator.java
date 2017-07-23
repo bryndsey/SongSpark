@@ -3,6 +3,7 @@ package com.bryndsey.songbuilder;
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.ScaleType;
 import com.bryndsey.songbuilder.songstructure.Note;
+import com.bryndsey.songbuilder.songstructure.Pattern;
 import com.bryndsey.songbuilder.songstructure.Song;
 import com.pdrogfer.mididroid.MidiFile;
 import com.pdrogfer.mididroid.MidiTrack;
@@ -96,36 +97,57 @@ public class MidiGenerator {
 		return new MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks);
 	}
 
+	// TODO: Get rid of unneeded parameter
 	private int renderChords(int tick, MidiTrack track, ChordProgression progression, ArrayList<Integer> rhythm) {
 		int basePitch = song.key.getBaseMidiPitch();
 
-		ArrayList<Integer> chords = progression.getChords();
+		for (Pattern pattern : progression.patterns) {
+			for (int chord = 0; chord < pattern.chords.size(); chord++) {
+				int root = pattern.chords.get(chord);
 
-		for (int ndx = 0; ndx < chords.size(); ndx++) {
-			int root = chords.get(ndx);
-			int[] triad = song.scaleType.generateTriad(root);
+				int chordTick = tick;
 
-			int chordTick = tick;
-			for (Integer duration : rhythm) {
-				int noteVelocity = CHORD_VOLUME;
-				if (duration < 0) {
-					noteVelocity = 0;
-					duration *= -1;
+				for (Note note : pattern.chordNotes.get(chord)) {
+					int pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
+					int startTick = (int)(note.startBeatInQuarterNotes * qtrNote) + chordTick;
+					int length = (int)(note.lengthInQuarterNotes * qtrNote);
 
+					// TODO: Extract magic number
+					track.insertNote(chordChannel, pitch - 12, CHORD_VOLUME, startTick, length);
 				}
-				int length = eigthNote * duration;
-				for (int pitch : triad) {
-					track.insertNote(chordChannel, basePitch + pitch - 12, noteVelocity, chordTick, length);
-				}
-				// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER, AND ESTABLISH CHORD BETTER
-				// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
-				track.insertNote(chordChannel, basePitch + triad[0] - 24, CHORD_VOLUME + 25, chordTick, length);
 
-				chordTick += length;
+				// FIXME: This currently assumes 4 as the denominator
+				tick = chordTick + (qtrNote * song.timeSigNum);
 			}
-
-			tick = chordTick;
 		}
+
+//		ArrayList<Integer> chords = progression.getChords();
+//
+//		for (int ndx = 0; ndx < chords.size(); ndx++) {
+//			int root = chords.get(ndx);
+//			int[] triad = song.scaleType.generateTriad(root);
+//
+//			int chordTick = tick;
+//			for (Integer duration : rhythm) {
+//				int noteVelocity = CHORD_VOLUME;
+//				if (duration < 0) {
+//					noteVelocity = 0;
+//					duration *= -1;
+//
+//				}
+//				int length = eigthNote * duration;
+//				for (int pitch : triad) {
+//					track.insertNote(chordChannel, basePitch + pitch - 12, noteVelocity, chordTick, length);
+//				}
+//				// TODO: JUST DOING THIS FOR RIGHT NOW TO MAYBE MAKE SONGS SONGS SOUND A LITTLE RICHER, AND ESTABLISH CHORD BETTER
+//				// REALLY SHOULD IMPOROVE CHORD GENERATION TO HELP
+//				track.insertNote(chordChannel, basePitch + triad[0] - 24, CHORD_VOLUME + 25, chordTick, length);
+//
+//				chordTick += length;
+//			}
+//
+//			tick = chordTick;
+//		}
 
 		return tick;
 	}
@@ -152,8 +174,9 @@ public class MidiGenerator {
 				if (note.pitch < 0)
 					pitch = 0;
 				else
-					pitch = basePitch + song.scaleType.getInterval(1, root)
-							+ song.scaleType.getChordInterval(root, note.pitch);
+					pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
+//							song.scaleType.getInterval(1, root)
+//							+ song.scaleType.getChordInterval(root, note.pitch);
 
 				track.insertNote(melodyChannel, pitch, noteVelocity, tick, duration);
 				tick += duration;
@@ -161,5 +184,9 @@ public class MidiGenerator {
 
 		}
 		return tick;
+	}
+
+	private int getScalePitchFromPitchRelativeToChord(ScaleType scaleType, int chordNumber, int pitchRelativeToChord) {
+		return scaleType.getInterval(1, chordNumber) + scaleType.getChordInterval(chordNumber, pitchRelativeToChord);
 	}
 }

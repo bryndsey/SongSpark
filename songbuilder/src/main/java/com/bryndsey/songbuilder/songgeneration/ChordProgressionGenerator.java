@@ -2,8 +2,10 @@ package com.bryndsey.songbuilder.songgeneration;
 
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.Cadence;
+import com.bryndsey.songbuilder.songstructure.Note;
 import com.bryndsey.songbuilder.songstructure.Pattern;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -12,6 +14,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ChordProgressionGenerator {
 	private final Random randGen;
+	private final RhythmGenerator rhythmGenerator;
 	private final NoteGenerator noteGenerator;
 
 	private CadenceTransformer cadenceTransformer;
@@ -20,11 +23,14 @@ public class ChordProgressionGenerator {
 
 	@Inject
 	public ChordProgressionGenerator(PatternGenerator patternGenerator,
+									 RhythmGenerator rhythmGenerator,
 									 NoteGenerator noteGenerator) {
+		this.patternGenerator = patternGenerator;
+		this.rhythmGenerator = rhythmGenerator;
 		this.noteGenerator = noteGenerator;
+
 		randGen = new Random();
 		cadenceTransformer = new CadenceTransformer();
-		this.patternGenerator = patternGenerator;
 	}
 
 	// slightly better(?) "algorithm" for generating chord progressions
@@ -39,6 +45,9 @@ public class ChordProgressionGenerator {
 		} else {
 			progression = generate2PatternProgression();
 		}
+
+		generateChordNotes(progression);
+
 		return progression;
 	}
 
@@ -105,5 +114,37 @@ public class ChordProgressionGenerator {
 		chordProg.patterns.add(partB);
 
 		return chordProg;
+	}
+
+	// TODO: Clean this up
+	private void generateChordNotes(ChordProgression progression) {
+		int numberOfSubbeats = 2;
+		ArrayList<Integer> progressionRhythm = rhythmGenerator.generateRhythm(numberOfSubbeats);
+
+		for (Pattern pattern : progression.patterns) {
+			ArrayList<ArrayList<Note>> chordNotes = new ArrayList<>();
+			for (int chord = 0; chord < pattern.chords.size(); chord++) {
+				float currentBeat = 0;
+				ArrayList<Note> notes = new ArrayList<>();
+				for (Integer duration : progressionRhythm) {
+
+					float length = (float) duration / (float) numberOfSubbeats;
+
+					if (length < 0) {
+						length *= -1;
+					} else {
+						notes.add(new Note(3, currentBeat, length));
+						notes.add(new Note(5, currentBeat, length));
+					}
+
+					notes.add(new Note(1, currentBeat, length));
+
+
+					currentBeat += length;
+				}
+				chordNotes.add(notes);
+			}
+			pattern.chordNotes = chordNotes;
+		}
 	}
 }
