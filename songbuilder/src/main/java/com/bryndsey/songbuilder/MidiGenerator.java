@@ -14,6 +14,8 @@ import com.pdrogfer.mididroid.event.meta.TimeSignature;
 
 import java.util.ArrayList;
 
+import static com.bryndsey.songbuilder.songstructure.MusicStructure.getNumberOfPitchesInOctave;
+
 public class MidiGenerator {
 
 	private static final int qtrNote = 480; // Still need to figure out why this value works... is it the resolution below?
@@ -111,8 +113,7 @@ public class MidiGenerator {
 					int startTick = (int)(note.startBeatInQuarterNotes * qtrNote) + chordTick;
 					int length = (int)(note.lengthInQuarterNotes * qtrNote);
 
-					// TODO: Extract magic number
-					track.insertNote(chordChannel, pitch - 12, CHORD_VOLUME, startTick, length);
+					track.insertNote(chordChannel, pitch - getNumberOfPitchesInOctave(), CHORD_VOLUME, startTick, length);
 				}
 
 				// FIXME: This currently assumes 4 as the denominator

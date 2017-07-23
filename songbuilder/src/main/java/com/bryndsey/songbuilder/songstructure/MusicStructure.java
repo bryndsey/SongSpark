@@ -192,6 +192,10 @@ public class MusicStructure {
 		}
 	}
 
+	public static int getNumberOfPitchesInOctave() {
+		return Pitch.values().length;
+	}
+
 	public enum ChordType {
 		MAJOR(""),
 		MINOR("m"),
