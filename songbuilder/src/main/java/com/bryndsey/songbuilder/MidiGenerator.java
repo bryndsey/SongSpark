@@ -18,8 +18,8 @@ import static com.bryndsey.songbuilder.songstructure.MusicStructure.getNumberOfP
 
 public class MidiGenerator {
 
-	private static final int qtrNote = 480; // Still need to figure out why this value works... is it the resolution below?
-	private static final int eigthNote = qtrNote / 2;
+	private static final int TICKS_IN_QUARTER_NOTE = 480; // Still need to figure out why this value works... is it the resolution below?
+	private static final int TICKS_IN_EIGHTH_NOTE = TICKS_IN_QUARTER_NOTE / 2;
 
 	private static final int chordChannel = 0;
 	private static final int melodyChannel = 1;
@@ -110,14 +110,14 @@ public class MidiGenerator {
 
 				for (Note note : pattern.chordNotes.get(chord)) {
 					int pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
-					int startTick = (int)(note.startBeatInQuarterNotes * qtrNote) + chordTick;
-					int length = (int)(note.lengthInQuarterNotes * qtrNote);
+					int startTick = (int)(note.startBeatInQuarterNotes * TICKS_IN_QUARTER_NOTE) + chordTick;
+					int length = (int)(note.lengthInQuarterNotes * TICKS_IN_QUARTER_NOTE);
 
 					track.insertNote(chordChannel, pitch - getNumberOfPitchesInOctave(), CHORD_VOLUME, startTick, length);
 				}
 
 				// FIXME: This currently assumes 4 as the denominator
-				tick = chordTick + (qtrNote * song.timeSigNum);
+				tick = chordTick + (TICKS_IN_QUARTER_NOTE * song.timeSigNum);
 			}
 		}
 
@@ -135,7 +135,7 @@ public class MidiGenerator {
 //					duration *= -1;
 //
 //				}
-//				int length = eigthNote * duration;
+//				int length = TICKS_IN_EIGHTH_NOTE * duration;
 //				for (int pitch : triad) {
 //					track.insertNote(chordChannel, basePitch + pitch - 12, noteVelocity, chordTick, length);
 //				}
@@ -169,7 +169,7 @@ public class MidiGenerator {
 					numHalfBeats *= -1;
 				}
 				// numBeats is actually in halfBeats
-				int duration = numHalfBeats * eigthNote;
+				int duration = numHalfBeats * TICKS_IN_EIGHTH_NOTE;
 				int pitch;
 				if (note.pitch < 0)
 					pitch = 0;
