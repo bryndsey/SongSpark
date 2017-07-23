@@ -18,8 +18,7 @@ import static com.bryndsey.songbuilder.songstructure.MusicStructure.getNumberOfP
 
 public class MidiGenerator {
 
-	private static final int TICKS_IN_QUARTER_NOTE = 480; // Still need to figure out why this value works... is it the resolution below?
-	private static final int TICKS_IN_EIGHTH_NOTE = TICKS_IN_QUARTER_NOTE / 2;
+	private static final int TICKS_IN_QUARTER_NOTE = MidiFile.DEFAULT_RESOLUTION;
 
 	private static final int chordChannel = 0;
 	private static final int melodyChannel = 1;
