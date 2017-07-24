@@ -39,18 +39,23 @@ public class ArpeggioGenerator {
 	}
 
 	ArrayList<Note> generateArpeggio() {
-		ArrayList<Note> noteList = new ArrayList<>();
-
-		int numberOfBeats = songGenerationProperties.getTimeSigNumerator();
-
-		List<Integer> pitchList = new ArrayList<>(numberOfBeats);
-
 		int numberOfArpeggiosPerChord;
 		if (getRandomDouble() < 0.6) {
 			numberOfArpeggiosPerChord = 2;
 		} else {
 			numberOfArpeggiosPerChord = 1;
 		}
+
+		return generateArpeggio(numberOfArpeggiosPerChord);
+	}
+
+	private ArrayList<Note> generateArpeggio(int numberOfArpeggiosPerChord) {
+
+		ArrayList<Note> noteList = new ArrayList<>();
+
+		int numberOfBeats = songGenerationProperties.getTimeSigNumerator();
+
+		List<Integer> pitchList = new ArrayList<>(numberOfBeats);
 
 		for (int repetitions = 0; repetitions < numberOfArpeggiosPerChord; repetitions++) {
 			if (numberOfBeats == 2) {
@@ -62,7 +67,6 @@ public class ArpeggioGenerator {
 				pitchList.addAll(get4BeatArpeggioPitches());
 			}
 		}
-
 
 		for (int beat = 0; beat < pitchList.size(); beat++) {
 			int pitch = pitchList.get(beat);
