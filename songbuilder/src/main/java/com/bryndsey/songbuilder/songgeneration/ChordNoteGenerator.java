@@ -42,9 +42,9 @@ public class ChordNoteGenerator {
 	private ArrayList<Note> chooseChordNotes() {
 		ArrayList<Note> value;
 		double generationTypeSelection = getRandomDouble();
-		if (generationTypeSelection < 0.6) {
+		if (generationTypeSelection < 0.65) {
 			value = generateTriadChordNotes();
-		} else if (generationTypeSelection < 0.95){
+		} else if (generationTypeSelection < 0.9){
 			value = generateRhythmArpeggioChordNotes();
 		} else {
 			value = generateArpeggioChordNotes();

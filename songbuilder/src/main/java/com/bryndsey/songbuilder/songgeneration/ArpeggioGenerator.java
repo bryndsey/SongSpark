@@ -46,7 +46,7 @@ public class ArpeggioGenerator {
 		List<Integer> pitchList = new ArrayList<>(numberOfBeats);
 
 		int numberOfArpeggiosPerChord;
-		if (getRandomDouble() < 0.75) {
+		if (getRandomDouble() < 0.6) {
 			numberOfArpeggiosPerChord = 2;
 		} else {
 			numberOfArpeggiosPerChord = 1;
