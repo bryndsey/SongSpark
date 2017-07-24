@@ -16,11 +16,19 @@ import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
 @Singleton
 public class ArpeggioGenerator {
 
+	private static final Integer[][] THREE_PART_ARPEGGIO_PITCHES = {
+			{1, 3, 5},
+			{1, 5, 3},
+			{1, 5, 1},
+			{5, 3, 1}
+	};
+
 	private static final Integer[][] FOUR_PART_ARPEGGIO_PITCHES = {
 			{1, 3, 5, 3},
 			{1, 5, 3, 5},
 			{1, 5, 3, 1},
-			{1, 3, 1, 5}
+			{1, 3, 1, 5},
+			{5, 3, 1, 3}
 	};
 
 	private final SongGenerationProperties songGenerationProperties;
@@ -37,26 +45,27 @@ public class ArpeggioGenerator {
 
 		List<Integer> pitchList = new ArrayList<>(numberOfBeats);
 
-		if (numberOfBeats == 2) {
-			pitchList.add(1);
-			pitchList.add(5);
-		} else if (numberOfBeats == 3) {
-			pitchList.add(1);
-			pitchList.add(3);
-			pitchList.add(5);
-		} else if (numberOfBeats == 4) {
-			pitchList = get4BeatArpeggioPitches();
-		}
-
 		int numberOfArpeggiosPerChord;
-		if (getRandomDouble() < 0.8) {
+		if (getRandomDouble() < 0.75) {
 			numberOfArpeggiosPerChord = 2;
 		} else {
 			numberOfArpeggiosPerChord = 1;
 		}
 
-		for (int beat = 0; beat < pitchList.size() * numberOfArpeggiosPerChord; beat++) {
-			int pitch = pitchList.get(beat % pitchList.size());
+		for (int repetitions = 0; repetitions < numberOfArpeggiosPerChord; repetitions++) {
+			if (numberOfBeats == 2) {
+				pitchList.add(1);
+				pitchList.add(5);
+			} else if (numberOfBeats == 3) {
+				pitchList.addAll(get3BeatArpeggioPitches());
+			} else if (numberOfBeats == 4) {
+				pitchList.addAll(get4BeatArpeggioPitches());
+			}
+		}
+
+
+		for (int beat = 0; beat < pitchList.size(); beat++) {
+			int pitch = pitchList.get(beat);
 			float startBeat = (float) beat / (float) numberOfArpeggiosPerChord;
 			float length = 1f / numberOfArpeggiosPerChord;
 
@@ -66,6 +75,12 @@ public class ArpeggioGenerator {
 		}
 
 		return noteList;
+	}
+
+	private List<Integer> get3BeatArpeggioPitches() {
+		Integer[] arpeggioPitches = THREE_PART_ARPEGGIO_PITCHES[getRandomIntUpTo(THREE_PART_ARPEGGIO_PITCHES.length)];
+
+		return Arrays.asList(arpeggioPitches);
 	}
 
 	private List<Integer> get4BeatArpeggioPitches() {
