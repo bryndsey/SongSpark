@@ -83,6 +83,7 @@ public class ChordNoteGenerator {
 		return arpeggioGenerator.generateArpeggio();
 	}
 
+	// TODO: Maybe move this to ArpeggioGenerator?
 	private ArrayList<Note> generateRhythmArpeggioChordNotes() {
 		ArrayList<Note> noteList = new ArrayList<>();
 

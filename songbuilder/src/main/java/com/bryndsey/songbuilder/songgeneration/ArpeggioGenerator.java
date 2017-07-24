@@ -4,15 +4,24 @@ import com.bryndsey.songbuilder.SongGenerationProperties;
 import com.bryndsey.songbuilder.songstructure.Note;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomDouble;
+import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
 
 @Singleton
 public class ArpeggioGenerator {
+
+	private static final Integer[][] FOUR_PART_ARPEGGIO_PITCHES = {
+			{1, 3, 5, 3},
+			{1, 5, 3, 5},
+			{1, 5, 3, 1},
+			{1, 3, 1, 5}
+	};
 
 	private final SongGenerationProperties songGenerationProperties;
 
@@ -36,10 +45,7 @@ public class ArpeggioGenerator {
 			pitchList.add(3);
 			pitchList.add(5);
 		} else if (numberOfBeats == 4) {
-			pitchList.add(1);
-			pitchList.add(3);
-			pitchList.add(5);
-			pitchList.add(3);
+			pitchList = get4BeatArpeggioPitches();
 		}
 
 		int numberOfArpeggiosPerChord;
@@ -60,5 +66,11 @@ public class ArpeggioGenerator {
 		}
 
 		return noteList;
+	}
+
+	private List<Integer> get4BeatArpeggioPitches() {
+		Integer[] arpeggioPitches = FOUR_PART_ARPEGGIO_PITCHES[getRandomIntUpTo(FOUR_PART_ARPEGGIO_PITCHES.length)];
+
+		return Arrays.asList(arpeggioPitches);
 	}
 }
