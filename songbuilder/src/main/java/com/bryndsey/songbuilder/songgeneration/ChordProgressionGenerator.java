@@ -34,7 +34,7 @@ public class ChordProgressionGenerator {
 	// slightly better(?) "algorithm" for generating chord progressions
 	// TODO: Keep working on this so it is more robust and
 	// generates more varied songs
-	public ChordProgression generateChordProgression() {
+	ChordProgression generateChordProgression() {
 		ChordProgression progression;
 
 		double typeProb = randGen.nextDouble();
@@ -49,7 +49,7 @@ public class ChordProgressionGenerator {
 		return progression;
 	}
 
-	public ChordProgression generate4PatternProgression() {
+	private ChordProgression generate4PatternProgression() {
 		ChordProgression partA, partB;
 
 		partA = generate2PatternProgression();
@@ -81,13 +81,11 @@ public class ChordProgressionGenerator {
 			cadenceTransformer.applyCadence(partASecond, Cadence.INTERRUPTED);
 		}
 
-		ChordProgression chordProg = partA.add(partB);
-
-		return chordProg;
+		return partA.add(partB);
 	}
 
 
-	public ChordProgression generate2PatternProgression() {
+	private ChordProgression generate2PatternProgression() {
 		ChordProgression chordProg = new ChordProgression();
 
 		int numChords = 4;
