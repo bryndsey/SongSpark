@@ -1,7 +1,6 @@
 package com.bryndsey.songbuilder.songgeneration;
 
 
-import com.bryndsey.songbuilder.Utils;
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
 import com.bryndsey.songbuilder.songstructure.Note;
 import com.bryndsey.songbuilder.songstructure.Pattern;
@@ -44,10 +43,8 @@ public class ChordNoteGenerator {
 		double generationTypeSelection = getRandomDouble();
 		if (generationTypeSelection < 0.65) {
 			value = generateTriadChordNotes();
-		} else if (generationTypeSelection < 0.9){
-			value = generateRhythmArpeggioChordNotes();
 		} else {
-			value = generateArpeggioChordNotes();
+			value = arpeggioGenerator.generateArpeggio();
 		}
 
 		return value;
@@ -72,45 +69,6 @@ public class ChordNoteGenerator {
 			}
 
 			noteList.add(new Note(1, currentBeat, length));
-
-			currentBeat += length;
-		}
-
-		return noteList;
-	}
-
-	private ArrayList<Note> generateArpeggioChordNotes() {
-		return arpeggioGenerator.generateArpeggio();
-	}
-
-	// TODO: Maybe move this to ArpeggioGenerator?
-	private ArrayList<Note> generateRhythmArpeggioChordNotes() {
-		ArrayList<Note> noteList = new ArrayList<>();
-
-		int numberOfSubbeats = 2;
-		ArrayList<Integer> progressionRhythm = rhythmGenerator.generateRhythm(numberOfSubbeats);
-
-		boolean needToAddChordRoot = true;
-		float currentBeat = 0;
-		for (Integer duration : progressionRhythm) {
-
-			float length = (float) duration / (float) numberOfSubbeats;
-
-			if (length < 0) {
-				length *= -1;
-			} else {
-				int pitch;
-				if (needToAddChordRoot) {
-					pitch = 1;
-					needToAddChordRoot = false;
-				} else {
-					int[] triadPitches = {1, 3, 5};
-					double[] triadPitchProbs = {0.25, 0.35, 0.4};
-					int pitchIndex = Utils.pickNdxByProb(triadPitchProbs);
-					pitch = triadPitches[pitchIndex];
-				}
-				noteList.add(new Note(pitch, currentBeat, length));
-			}
 
 			currentBeat += length;
 		}

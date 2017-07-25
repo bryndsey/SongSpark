@@ -1,6 +1,7 @@
 package com.bryndsey.songbuilder.songgeneration;
 
 import com.bryndsey.songbuilder.SongGenerationProperties;
+import com.bryndsey.songbuilder.Utils;
 import com.bryndsey.songbuilder.songstructure.Note;
 
 import java.util.ArrayList;
@@ -32,13 +33,29 @@ public class ArpeggioGenerator {
 	};
 
 	private final SongGenerationProperties songGenerationProperties;
+	private final RhythmGenerator rhythmGenerator;
 
 	@Inject
-	ArpeggioGenerator(SongGenerationProperties songGenerationProperties) {
+	ArpeggioGenerator(SongGenerationProperties songGenerationProperties,
+					  RhythmGenerator rhythmGenerator) {
 		this.songGenerationProperties = songGenerationProperties;
+		this.rhythmGenerator = rhythmGenerator;
 	}
 
 	ArrayList<Note> generateArpeggio() {
+		ArrayList<Note> value;
+
+		double arpeggioTypeSelection = getRandomDouble();
+		if (arpeggioTypeSelection < 0.65){
+			value = generateRhythmArpeggio();
+		} else {
+			value = generateRegularArpeggio();
+		}
+
+		return value;
+	}
+
+	ArrayList<Note> generateRegularArpeggio() {
 		int numberOfArpeggiosPerChord;
 		if (getRandomDouble() < 0.6) {
 			numberOfArpeggiosPerChord = 2;
@@ -46,10 +63,10 @@ public class ArpeggioGenerator {
 			numberOfArpeggiosPerChord = 1;
 		}
 
-		return generateArpeggio(numberOfArpeggiosPerChord);
+		return generateRegularArpeggio(numberOfArpeggiosPerChord);
 	}
 
-	private ArrayList<Note> generateArpeggio(int numberOfArpeggiosPerChord) {
+	private ArrayList<Note> generateRegularArpeggio(int numberOfArpeggiosPerChord) {
 
 		ArrayList<Note> noteList = new ArrayList<>();
 
@@ -91,5 +108,39 @@ public class ArpeggioGenerator {
 		Integer[] arpeggioPitches = FOUR_PART_ARPEGGIO_PITCHES[getRandomIntUpTo(FOUR_PART_ARPEGGIO_PITCHES.length)];
 
 		return Arrays.asList(arpeggioPitches);
+	}
+
+	ArrayList<Note> generateRhythmArpeggio() {
+		ArrayList<Note> noteList = new ArrayList<>();
+
+		int numberOfSubbeats = 2;
+		ArrayList<Integer> progressionRhythm = rhythmGenerator.generateRhythm(numberOfSubbeats);
+
+		boolean needToAddChordRoot = true;
+		float currentBeat = 0;
+		for (Integer duration : progressionRhythm) {
+
+			float length = (float) duration / (float) numberOfSubbeats;
+
+			if (length < 0) {
+				length *= -1;
+			} else {
+				int pitch;
+				if (needToAddChordRoot) {
+					pitch = 1;
+					needToAddChordRoot = false;
+				} else {
+					int[] triadPitches = {1, 3, 5};
+					double[] triadPitchProbs = {0.25, 0.35, 0.4};
+					int pitchIndex = Utils.pickNdxByProb(triadPitchProbs);
+					pitch = triadPitches[pitchIndex];
+				}
+				noteList.add(new Note(pitch, currentBeat, length));
+			}
+
+			currentBeat += length;
+		}
+
+		return noteList;
 	}
 }
