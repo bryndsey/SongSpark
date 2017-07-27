@@ -29,12 +29,21 @@ public class ChordNoteGenerator {
 
 		ArrayList<Note> chordPattern = chooseChordNotes();
 
+		ArrayList<Note> bassPattern = arpeggioGenerator.generateRhythmArpeggio();
+
 		for (Pattern pattern : progression.patterns) {
 			ArrayList<ArrayList<Note>> chordNotes = new ArrayList<>();
+
+			ArrayList<ArrayList<Note>> bassNotes = new ArrayList<>();
+
 			for (int chord = 0; chord < pattern.chords.size(); chord++) {
 				chordNotes.add(chordPattern);
+
+				bassNotes.add(bassPattern);
 			}
 			pattern.chordNotes = chordNotes;
+
+			pattern.bassNotes = bassNotes;
 		}
 	}
 
