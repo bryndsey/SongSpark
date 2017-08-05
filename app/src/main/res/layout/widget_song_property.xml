@@ -7,6 +7,7 @@
         android:id="@+id/property_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
         tools:text="Property Name" />
 
     <LinearLayout
@@ -15,21 +16,11 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/property_image"
-            android:layout_width="@dimen/song_property_widget_height"
-            android:layout_height="@dimen/song_property_widget_height"
-            android:alpha="0.6"
-            android:contentDescription="PROPERTY IMAGE"
-            android:scaleType="fitCenter" />
-
         <Spinner
             android:id="@+id/property_spinner"
             style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:spinnerMode="dialog" />
 
@@ -37,7 +28,7 @@
             android:id="@+id/property_randomize_toggle"
             android:layout_width="@dimen/song_property_widget_height"
             android:layout_height="@dimen/song_property_widget_height"
-            android:layout_marginEnd="12dp"
+            android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             app:si_animation_duration="200"
             app:si_tint_color="@color/colorAccent"
