@@ -151,7 +151,6 @@ public class SongInstruments {
 			MidiInstrument.CONTRABASS,
 			MidiInstrument.TREMOLO_STRINGS,
 			MidiInstrument.PIZZICATO_STRINGS,
-			MidiInstrument.ORCHESTRAL_HARP,
 			MidiInstrument.TIMPANI,
 			MidiInstrument.STRING_ENSEMBLE_1,
 			MidiInstrument.STRING_ENSEMBLE_2,
