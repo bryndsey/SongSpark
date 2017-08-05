@@ -32,10 +32,12 @@ public class ChordNoteGenerator {
 	}
 
 	private void applyChordNotesToProgression(ChordProgression progression) {
-		ArrayList<Note> chordPattern = chooseChordNotes();
+		ArrayList<Note> normalChordNotes = chooseChordNotes();
+		ArrayList<Note> patternEndChordNotes = chooseChordNotes();
+		ArrayList<Note> progressionEndChordNotes = chooseChordNotes();
 
-//		boolean replaceProgressionFinalBassNotes = getRandomDouble() < 0.65;
-//		boolean replacePatternFinalBassNotes = getRandomDouble() < 0.8;
+		boolean replaceProgressionFinalChordNotes = getRandomDouble() < 0.9;
+		boolean replacePatternFinalChordNotes = getRandomDouble() < 0.4;
 
 		int numberOfPatterns = progression.patterns.size();
 		for (int patternIndex = 0; patternIndex < numberOfPatterns; patternIndex++) {
@@ -45,19 +47,18 @@ public class ChordNoteGenerator {
 
 			int numberOfChords = pattern.chords.size();
 			for (int chord = 0; chord < numberOfChords; chord++) {
-				chordNotes.add(chordPattern);
 
-//				if (chord == numberOfChords - 1) {
-//					if (patternIndex == numberOfPatterns - 1 && replaceProgressionFinalBassNotes) {
-//						bassNotes.add(progressionEndBassNotes);
-//					} else if (replacePatternFinalBassNotes) {
-//						bassNotes.add(patternEndBassNotes);
-//					} else {
-//						bassNotes.add(normalBassNotes);
-//					}
-//				} else {
-//					bassNotes.add(normalBassNotes);
-//				}
+				if (chord == numberOfChords - 1) {
+					if (patternIndex == numberOfPatterns - 1 && replaceProgressionFinalChordNotes) {
+						chordNotes.add(progressionEndChordNotes);
+					} else if (replacePatternFinalChordNotes) {
+						chordNotes.add(patternEndChordNotes);
+					} else {
+						chordNotes.add(normalChordNotes);
+					}
+				} else {
+					chordNotes.add(normalChordNotes);
+				}
 			}
 			pattern.chordNotes = chordNotes;
 
