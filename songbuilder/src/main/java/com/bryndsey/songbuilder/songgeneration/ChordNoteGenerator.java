@@ -29,17 +29,36 @@ public class ChordNoteGenerator {
 
 		ArrayList<Note> chordPattern = chooseChordNotes();
 
-		ArrayList<Note> bassPattern = arpeggioGenerator.generateRhythmArpeggio();
+		ArrayList<Note> normalBassNotes = arpeggioGenerator.generateRhythmArpeggio();
+		ArrayList<Note> patternEndBassNotes = arpeggioGenerator.generateRhythmArpeggio();
+		ArrayList<Note> progressionEndBassNotes = arpeggioGenerator.generateRhythmArpeggio();
 
-		for (Pattern pattern : progression.patterns) {
+		boolean replaceProgressionFinalBassNotes = getRandomDouble() < 0.65;
+		boolean replacePatternFinalBassNotes = getRandomDouble() < 0.8;
+
+		int numberOfPatterns = progression.patterns.size();
+		for (int patternIndex = 0; patternIndex < numberOfPatterns; patternIndex++) {
+
+			Pattern pattern = progression.patterns.get(patternIndex);
 			ArrayList<ArrayList<Note>> chordNotes = new ArrayList<>();
 
 			ArrayList<ArrayList<Note>> bassNotes = new ArrayList<>();
 
-			for (int chord = 0; chord < pattern.chords.size(); chord++) {
+			int numberOfChords = pattern.chords.size();
+			for (int chord = 0; chord < numberOfChords; chord++) {
 				chordNotes.add(chordPattern);
 
-				bassNotes.add(bassPattern);
+				if (chord == numberOfChords - 1) {
+					if (patternIndex == numberOfPatterns - 1 && replaceProgressionFinalBassNotes) {
+						bassNotes.add(progressionEndBassNotes);
+					} else if (replacePatternFinalBassNotes) {
+						bassNotes.add(patternEndBassNotes);
+					} else {
+						bassNotes.add(normalBassNotes);
+					}
+				} else {
+					bassNotes.add(normalBassNotes);
+				}
 			}
 			pattern.chordNotes = chordNotes;
 
