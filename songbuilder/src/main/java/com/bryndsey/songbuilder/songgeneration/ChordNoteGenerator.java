@@ -69,8 +69,8 @@ public class ChordNoteGenerator {
 		ArrayList<Note> patternEndBassNotes = arpeggioGenerator.generateRhythmArpeggio();
 		ArrayList<Note> progressionEndBassNotes = arpeggioGenerator.generateRhythmArpeggio();
 
-		boolean replaceProgressionFinalBassNotes = getRandomDouble() < 0.65;
-		boolean replacePatternFinalBassNotes = getRandomDouble() < 0.8;
+		boolean replacePatternFinalBassNotes = getRandomDouble() < 0.7;
+		boolean replaceProgressionFinalBassNotes = getRandomDouble() < 0.85;
 
 		int numberOfPatterns = progression.patterns.size();
 		for (int patternIndex = 0; patternIndex < numberOfPatterns; patternIndex++) {
