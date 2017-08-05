@@ -240,7 +240,10 @@ public class SongWriter {
 		masterpiece.melodyInstrument = mMelodyInstrument;
 
 		// TODO: Make this randomizable
-		masterpiece.bassInstrument = MidiInstrument.ACOUSTIC_BASS;
+		if (useRandomBassInstrument || bassInstrument == null) {
+			bassInstrument = SongInstruments.BASS_INSTRUMENT[getRandomIntUpTo(SongInstruments.BASS_INSTRUMENT.length)];
+		}
+		masterpiece.bassInstrument = bassInstrument;
 
 		masterpiece.structure = structureGenerator.generateStructure();
 		masterpiece.verseProgression = songGenerator.generateVerseProgression();
