@@ -26,6 +26,7 @@ public class MidiGenerator {
 
 	private static final int CHORD_VOLUME = 70;
 	private static final int MELODY_VOLUME = 105;
+	private static final int BASS_VOLUME = 85;
 
 //	private static final int drumChannel = 9;
 
@@ -125,7 +126,7 @@ public class MidiGenerator {
 					int startTick = (int)(note.startBeatInQuarterNotes * TICKS_IN_QUARTER_NOTE) + chordTick;
 					int length = (int)(note.lengthInQuarterNotes * TICKS_IN_QUARTER_NOTE);
 
-					track.insertNote(bassChannel, pitch - 2 * getNumberOfPitchesInOctave(), CHORD_VOLUME, startTick, length);
+					track.insertNote(bassChannel, pitch - 2 * getNumberOfPitchesInOctave(), BASS_VOLUME, startTick, length);
 				}
 
 				// FIXME: This currently assumes 4 as the denominator
