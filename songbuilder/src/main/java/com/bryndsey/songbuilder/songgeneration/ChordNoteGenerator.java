@@ -27,8 +27,44 @@ public class ChordNoteGenerator {
 
 	void generateChordNotes(ChordProgression progression) {
 
+		applyChordNotesToProgression(progression);
+		applyBassNotesToProgression(progression);
+	}
+
+	private void applyChordNotesToProgression(ChordProgression progression) {
 		ArrayList<Note> chordPattern = chooseChordNotes();
 
+//		boolean replaceProgressionFinalBassNotes = getRandomDouble() < 0.65;
+//		boolean replacePatternFinalBassNotes = getRandomDouble() < 0.8;
+
+		int numberOfPatterns = progression.patterns.size();
+		for (int patternIndex = 0; patternIndex < numberOfPatterns; patternIndex++) {
+
+			Pattern pattern = progression.patterns.get(patternIndex);
+			ArrayList<ArrayList<Note>> chordNotes = new ArrayList<>();
+
+			int numberOfChords = pattern.chords.size();
+			for (int chord = 0; chord < numberOfChords; chord++) {
+				chordNotes.add(chordPattern);
+
+//				if (chord == numberOfChords - 1) {
+//					if (patternIndex == numberOfPatterns - 1 && replaceProgressionFinalBassNotes) {
+//						bassNotes.add(progressionEndBassNotes);
+//					} else if (replacePatternFinalBassNotes) {
+//						bassNotes.add(patternEndBassNotes);
+//					} else {
+//						bassNotes.add(normalBassNotes);
+//					}
+//				} else {
+//					bassNotes.add(normalBassNotes);
+//				}
+			}
+			pattern.chordNotes = chordNotes;
+
+		}
+	}
+
+	private void applyBassNotesToProgression(ChordProgression progression) {
 		ArrayList<Note> normalBassNotes = arpeggioGenerator.generateRhythmArpeggio();
 		ArrayList<Note> patternEndBassNotes = arpeggioGenerator.generateRhythmArpeggio();
 		ArrayList<Note> progressionEndBassNotes = arpeggioGenerator.generateRhythmArpeggio();
@@ -40,13 +76,11 @@ public class ChordNoteGenerator {
 		for (int patternIndex = 0; patternIndex < numberOfPatterns; patternIndex++) {
 
 			Pattern pattern = progression.patterns.get(patternIndex);
-			ArrayList<ArrayList<Note>> chordNotes = new ArrayList<>();
 
 			ArrayList<ArrayList<Note>> bassNotes = new ArrayList<>();
 
 			int numberOfChords = pattern.chords.size();
 			for (int chord = 0; chord < numberOfChords; chord++) {
-				chordNotes.add(chordPattern);
 
 				if (chord == numberOfChords - 1) {
 					if (patternIndex == numberOfPatterns - 1 && replaceProgressionFinalBassNotes) {
@@ -60,7 +94,6 @@ public class ChordNoteGenerator {
 					bassNotes.add(normalBassNotes);
 				}
 			}
-			pattern.chordNotes = chordNotes;
 
 			pattern.bassNotes = bassNotes;
 		}
