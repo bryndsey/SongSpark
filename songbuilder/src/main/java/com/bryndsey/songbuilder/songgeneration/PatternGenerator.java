@@ -16,19 +16,19 @@ import static com.bryndsey.songbuilder.RandomNumberGenerator.getRandomIntUpTo;
 @Singleton
 public class PatternGenerator {
 
-	private static final double[] INITIAL_CHORD_PROBABILITIES = {8.0, 0.5, 1.0, 4.0, 5.0, 1.0, 0.1};
+	private static final double[] INITIAL_CHORD_PROBABILITIES = {10.0, 0.5, 1.0, 5.0, 4.0, 1.0, 0.1};
 
 	private final SongGenerationProperties songGenerationProperties;
 	private final NoteGenerator noteGenerator;
 
 	private static final double[][] CHORD_TRANSITION_PROBABILITY_MATRIX = {
-			{3, 2, 4, 10, 8, 4, 0.25},
-			{5, 1, 2, 5, 8, 2, 0.25},
-			{5, 2, 1, 6, 6, 8, 0.25},
-			{7, 2, 4, 2, 11, 4, 0.25},
+			{4, 3, 4, 10, 8, 4, 0.25},
+			{6, 1, 3, 5, 8, 2, 0.25},
+			{5, 3, 1, 7, 6, 8, 0.25},
+			{7, 2, 5, 3, 11, 4, 0.25},
 			{10, 2, 3, 6, 2, 6, 0.25},
-			{5, 4, 5, 5, 5, 1, 0.25},
-			{10, 1, 1, 3, 4, 1, 0}
+			{5, 4, 5, 5, 6, 2, 0.25},
+			{10, 1, 1, 3, 4, 1.5, 0}
 	};
 
 	@Inject
