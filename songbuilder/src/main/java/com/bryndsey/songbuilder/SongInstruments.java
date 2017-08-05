@@ -57,7 +57,6 @@ public class SongInstruments {
 			MidiInstrument.SYNTH_STRINGS_1,
 			MidiInstrument.SYNTH_STRINGS_2,
 			MidiInstrument.TANGO_ACCORDION,
-			MidiInstrument.TIMPANI,
 			MidiInstrument.TREMOLO_STRINGS,
 			MidiInstrument.TROMBONE,
 			MidiInstrument.VOICE_OOHS,
