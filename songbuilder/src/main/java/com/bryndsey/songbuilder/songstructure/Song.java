@@ -18,6 +18,7 @@ public class Song
 	
 	public MidiInstrument chordInstrument;
 	public MidiInstrument melodyInstrument;
+	public MidiInstrument bassInstrument;
 	
 	public ArrayList<SongPart> structure;
 	
@@ -36,6 +37,7 @@ public class Song
 		
 		chordInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
 		melodyInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
+		bassInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
 		
 		structure = null;
 		

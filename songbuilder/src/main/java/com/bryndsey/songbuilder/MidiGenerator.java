@@ -1,7 +1,6 @@
 package com.bryndsey.songbuilder;
 
 import com.bryndsey.songbuilder.songstructure.ChordProgression;
-import com.bryndsey.songbuilder.songstructure.MusicStructure;
 import com.bryndsey.songbuilder.songstructure.MusicStructure.ScaleType;
 import com.bryndsey.songbuilder.songstructure.Note;
 import com.bryndsey.songbuilder.songstructure.Pattern;
@@ -82,7 +81,7 @@ public class MidiGenerator {
 		ProgramChange melodyInstrumentSelect = new ProgramChange(0, melodyChannel, song.melodyInstrument.ordinal());//programNumber());
 		melodyTrack.insertEvent(melodyInstrumentSelect);
 
-		ProgramChange bassInstrumentSelect = new ProgramChange(0, bassChannel, MusicStructure.MidiInstrument.ELECTRIC_BASS_FINGER.ordinal());//programNumber());
+		ProgramChange bassInstrumentSelect = new ProgramChange(0, bassChannel, song.bassInstrument.ordinal());//programNumber());
 		bassTrack.insertEvent(bassInstrumentSelect);
 
 		int chordTick = renderChords(0, chordTrack, song.verseProgression);
