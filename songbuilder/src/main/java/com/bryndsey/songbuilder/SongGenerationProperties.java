@@ -24,9 +24,9 @@ public class SongGenerationProperties {
 	}
 
 	public void shuffleProbabilities() {
-		eighthNoteFactor = getRandomDoubleInRange(0.2, 3.2);//randGen.nextDouble() * 3.0) + 0.2;
-		chordRepeatChance = getRandomDoubleUpTo(0.75);//randGen.nextDouble() * 0.75;
-		noteRepeatFactor = getRandomDoubleInRange(2, 4);//2 + (randGen.nextDouble() * 2.0);
+		eighthNoteFactor = getRandomDoubleInRange(0.2, 3.2);
+		chordRepeatChance = getRandomDoubleUpTo(0.75);
+		noteRepeatFactor = getRandomDoubleInRange(1, 4);
 	}
 
 	public double getEighthNoteFactor() {
