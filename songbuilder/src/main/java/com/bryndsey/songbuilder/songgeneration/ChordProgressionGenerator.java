@@ -93,9 +93,6 @@ public class ChordProgressionGenerator {
 		Pattern partA, partB;
 
 		partA = patternGenerator.generatePattern(numChords);
-		// always start with root chord
-		//double[] startChords = {5.0, 0.0, 0.0, 3.0, 0.5, 1.0, 0.0};
-		//partA.chords.set(0, Utils.pickNdxByProb(startChords) + 1);
 
 		if (randGen.nextDouble() < 0.45) {
 			partB = new Pattern(partA);

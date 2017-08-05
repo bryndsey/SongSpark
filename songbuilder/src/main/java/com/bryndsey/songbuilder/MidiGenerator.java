@@ -22,9 +22,11 @@ public class MidiGenerator {
 
 	private static final int chordChannel = 0;
 	private static final int melodyChannel = 1;
+	private static final int bassChannel = 2;
 
 	private static final int CHORD_VOLUME = 70;
 	private static final int MELODY_VOLUME = 105;
+	private static final int BASS_VOLUME = 85;
 
 //	private static final int drumChannel = 9;
 
@@ -46,6 +48,8 @@ public class MidiGenerator {
 		MidiTrack tempoTrack = new MidiTrack();
 		MidiTrack melodyTrack = new MidiTrack();
 		MidiTrack chordTrack = new MidiTrack();
+
+		MidiTrack bassTrack = new MidiTrack();
 
 		// 2. Add events to the tracks
 		// 2a. Track 0 is typically the tempo map
@@ -78,13 +82,20 @@ public class MidiGenerator {
 		ProgramChange melodyInstrumentSelect = new ProgramChange(0, melodyChannel, song.melodyInstrument.ordinal());//programNumber());
 		melodyTrack.insertEvent(melodyInstrumentSelect);
 
+		ProgramChange bassInstrumentSelect = new ProgramChange(0, bassChannel, song.bassInstrument.ordinal());//programNumber());
+		bassTrack.insertEvent(bassInstrumentSelect);
+
 		int chordTick = renderChords(0, chordTrack, song.verseProgression);
 		int melodyTick = renderMelody(0, melodyTrack, song.verseProgression);
+
+		int bassTick = renderBassNotes(0, bassTrack, song.verseProgression);
 
 		int nextTick = Math.max(chordTick, melodyTick);
 
 		renderChords(nextTick, chordTrack, song.chorusProgression);
 		renderMelody(nextTick, melodyTrack, song.chorusProgression);
+
+		renderBassNotes(nextTick, bassTrack, song.chorusProgression);
 
 		// It's best not to manually insert EndOfTrack events; MidiTrack will
 		// call closeTrack() on itself before writing itself to a file
@@ -95,9 +106,36 @@ public class MidiGenerator {
 		tracks.add(melodyTrack);
 		tracks.add(chordTrack);
 
+		tracks.add(bassTrack);
+
 		return new MidiFile(MidiFile.DEFAULT_RESOLUTION, tracks);
 	}
 
+	// TODO: Refactor this and melody method to reuse logic
+	private int renderBassNotes(int tick, MidiTrack track, ChordProgression progression) {
+		int basePitch = song.key.getBaseMidiPitch();
+
+		for (Pattern pattern : progression.patterns) {
+			for (int chord = 0; chord < pattern.chords.size(); chord++) {
+				int root = pattern.chords.get(chord);
+
+				int chordTick = tick;
+
+				for (Note note : pattern.bassNotes.get(chord)) {
+					int pitch = basePitch + getScalePitchFromPitchRelativeToChord(song.scaleType, root, note.pitch);
+					int startTick = (int)(note.startBeatInQuarterNotes * TICKS_IN_QUARTER_NOTE) + chordTick;
+					int length = (int)(note.lengthInQuarterNotes * TICKS_IN_QUARTER_NOTE);
+
+					track.insertNote(bassChannel, pitch - 2 * getNumberOfPitchesInOctave(), BASS_VOLUME, startTick, length);
+				}
+
+				// FIXME: This currently assumes 4 as the denominator
+				tick = chordTick + (TICKS_IN_QUARTER_NOTE * song.timeSigNum);
+			}
+		}
+
+		return tick;
+	}
 	// TODO: Refactor this and melody method to reuse logic
 	private int renderChords(int tick, MidiTrack track, ChordProgression progression) {
 		int basePitch = song.key.getBaseMidiPitch();

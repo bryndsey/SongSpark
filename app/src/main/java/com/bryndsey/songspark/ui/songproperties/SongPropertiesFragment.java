@@ -37,6 +37,9 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	@BindView(R.id.rhythm_instrument)
 	SongPropertyWidget rhythmInstrumentChooser;
 
+	@BindView(R.id.bass_instrument)
+	SongPropertyWidget bassInstrumentChooser;
+
 	@Inject
 	@Presenter
 	SongPropertiesPresenter presenter;
@@ -104,6 +107,18 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 				presenter.updateRhythmInstrumentRandomization(value);
 			}
 		});
+
+		bassInstrumentChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
+			@Override
+			public void onSelectionChanged(int position) {
+				presenter.updateBassInstrument(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateBassInstrumentRandomization(value);
+			}
+		});
 	}
 
 	@Override
@@ -160,5 +175,15 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 	@Override
 	public void setRhythmInstrumentSelection(int positionInList) {
 		rhythmInstrumentChooser.setPropertySelection(positionInList);
+	}
+
+	@Override
+	public void setBassInstrumentList(List instrumentList) {
+		bassInstrumentChooser.setPropertyItems(instrumentList);
+	}
+
+	@Override
+	public void setBassInstrumentSelection(int positionInList) {
+		bassInstrumentChooser.setPropertySelection(positionInList);
 	}
 }

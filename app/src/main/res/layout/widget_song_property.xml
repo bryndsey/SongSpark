@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/property_image"
-        android:layout_width="@dimen/song_property_widget_height"
-        android:layout_height="@dimen/song_property_widget_height"
-        android:alpha="0.6"
-        android:contentDescription="PROPERTY IMAGE"
-        android:scaleType="fitCenter" />
-
-    <Spinner
-        android:id="@+id/property_spinner"
-        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/property_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_weight="1"
-        android:spinnerMode="dialog" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+        tools:text="Property Name" />
 
-    <com.github.zagum.switchicon.SwitchIconView
-        android:id="@+id/property_randomize_toggle"
-        android:layout_width="@dimen/song_property_widget_height"
-        android:layout_height="@dimen/song_property_widget_height"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        app:si_animation_duration="200"
-        app:si_tint_color="@color/colorAccent"
-        app:srcCompat="@drawable/generate_icon" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/property_spinner"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:spinnerMode="dialog" />
+
+        <com.github.zagum.switchicon.SwitchIconView
+            android:id="@+id/property_randomize_toggle"
+            android:layout_width="@dimen/song_property_widget_height"
+            android:layout_height="@dimen/song_property_widget_height"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            app:si_animation_duration="200"
+            app:si_tint_color="@color/colorAccent"
+            app:srcCompat="@drawable/generate_icon" />
+    </LinearLayout>
 
 </merge>

@@ -23,4 +23,8 @@ interface SongPropertiesView {
 	void setRhythmInstrumentList(List instrumentList);
 
 	void setRhythmInstrumentSelection(int positionInList);
+
+	void setBassInstrumentList(List instrumentList);
+
+	void setBassInstrumentSelection(int positionInList);
 }

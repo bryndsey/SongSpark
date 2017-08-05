@@ -12,8 +12,7 @@
         android:paddingTop="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingBottom="@dimen/primary_control_spacing"
-        >
+        android:paddingBottom="@dimen/primary_control_spacing">
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
             android:id="@+id/tempo"
@@ -21,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             app:maxWidth="@dimen/song_property_max_width"
+            app:propertyName="Tempo"
             app:propertySrc="@drawable/icon_metronome" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -30,6 +30,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             app:maxWidth="@dimen/song_property_max_width"
+            app:propertyName="Scale Pitch"
             app:propertySrc="@drawable/icon_key_signature" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -39,6 +40,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             app:maxWidth="@dimen/song_property_max_width"
+            app:propertyName="Scale Type"
             app:propertySrc="@drawable/icon_key_signature" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -48,6 +50,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             app:maxWidth="@dimen/song_property_max_width"
+            app:propertyName="Lead Instrument"
             app:propertySrc="@drawable/icon_treble_clef" />
 
         <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
@@ -57,6 +60,17 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             app:maxWidth="@dimen/song_property_max_width"
+            app:propertyName="Rhythm Instrument"
+            app:propertySrc="@drawable/icon_bass_clef" />
+
+        <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
+            android:id="@+id/bass_instrument"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            app:maxWidth="@dimen/song_property_max_width"
+            app:propertyName="Bass Instrument"
             app:propertySrc="@drawable/icon_bass_clef" />
     </LinearLayout>
 </ScrollView>

@@ -34,12 +34,14 @@ public class SongWriter {
 
 	private MidiInstrument mMelodyInstrument;
 	private MidiInstrument mChordInstrument;
+	private MidiInstrument bassInstrument;
 
 	private boolean mUseRandomTempo;
 	private boolean mUseRandomScaleRoot;
 	private boolean mUseRandomScaleType;
 	private boolean mUseRandomChordInst;
 	private boolean mUseRandomMelodyInst;
+	private boolean useRandomBassInstrument;
 
 	@Inject
 	SongGenerator songGenerator;
@@ -81,12 +83,14 @@ public class SongWriter {
 
 		mMelodyInstrument = null;
 		mChordInstrument = null;
+		bassInstrument = null;
 
 		mUseRandomTempo = true;
 		mUseRandomScaleRoot = true;
 		mUseRandomScaleType = true;
 		mUseRandomChordInst = true;
 		mUseRandomMelodyInst = true;
+		useRandomBassInstrument = true;
 	}
 
 	// TODO: Should I do some validation in the setters? Some of these have a set of valid
@@ -147,6 +151,10 @@ public class SongWriter {
 		mChordInstrument = instr;
 	}
 
+	public void setBassInstrument(MidiInstrument instrument) {
+		bassInstrument = instrument;
+	}
+
 	public boolean getUseRandomTempo() {
 		return mUseRandomTempo;
 	}
@@ -185,6 +193,14 @@ public class SongWriter {
 
 	public void setUseRandomMelodyInst(boolean useRandomMelodyInst) {
 		mUseRandomMelodyInst = useRandomMelodyInst;
+	}
+
+	public boolean getUseRandomBassInstrument() {
+		return useRandomBassInstrument;
+	}
+
+	public void setUseRandomBassInstrument(boolean useRandomBassInstrument) {
+		this.useRandomBassInstrument = useRandomBassInstrument;
 	}
 
 	public Song writeNewSong() {
@@ -226,6 +242,12 @@ public class SongWriter {
 			mMelodyInstrument = SongInstruments.melodyInstruments[getRandomIntUpTo(SongInstruments.melodyInstruments.length)];
 		}
 		masterpiece.melodyInstrument = mMelodyInstrument;
+
+		// TODO: Make this randomizable
+		if (useRandomBassInstrument || bassInstrument == null) {
+			bassInstrument = SongInstruments.BASS_INSTRUMENT[getRandomIntUpTo(SongInstruments.BASS_INSTRUMENT.length)];
+		}
+		masterpiece.bassInstrument = bassInstrument;
 
 		masterpiece.structure = structureGenerator.generateStructure();
 		masterpiece.verseProgression = songGenerator.generateVerseProgression();
