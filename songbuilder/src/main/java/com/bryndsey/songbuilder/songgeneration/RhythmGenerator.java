@@ -52,9 +52,9 @@ public class RhythmGenerator {
 
 			// small chance to be negative (a rest)
 			double restChance = getRandomDouble();
-			if ((note == 0 && restChance < 0.02) // first note
-					|| (note + numBeats >= numSubbeats && restChance < 0.08) //last note
-					|| restChance < 0.005) {
+			if ((note == 0 && restChance < 0.05) // first note
+					|| (note + numBeats >= numSubbeats && restChance < 0.15) //last note
+					|| restChance < 0.01) {
 				numBeats *= -1;
 			}
 
