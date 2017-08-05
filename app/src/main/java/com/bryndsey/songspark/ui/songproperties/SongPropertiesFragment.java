@@ -107,6 +107,18 @@ public class SongPropertiesFragment extends BaseFragment implements SongProperti
 				presenter.updateRhythmInstrumentRandomization(value);
 			}
 		});
+
+		bassInstrumentChooser.setSongPropertyInteractionListener(new SongPropertyWidget.SongPropertyInteractionListener() {
+			@Override
+			public void onSelectionChanged(int position) {
+				presenter.updateBassInstrument(position);
+			}
+
+			@Override
+			public void onRandomizeToggleChanged(boolean value) {
+				presenter.updateBassInstrumentRandomization(value);
+			}
+		});
 	}
 
 	@Override

@@ -151,6 +151,10 @@ public class SongWriter {
 		mChordInstrument = instr;
 	}
 
+	public void setBassInstrument(MidiInstrument instrument) {
+		bassInstrument = instrument;
+	}
+
 	public boolean getUseRandomTempo() {
 		return mUseRandomTempo;
 	}
@@ -195,7 +199,7 @@ public class SongWriter {
 		return useRandomBassInstrument;
 	}
 
-	public void setUseRandoBassInstrument(boolean useRandomBassInstrument) {
+	public void setUseRandomBassInstrument(boolean useRandomBassInstrument) {
 		this.useRandomBassInstrument = useRandomBassInstrument;
 	}
 

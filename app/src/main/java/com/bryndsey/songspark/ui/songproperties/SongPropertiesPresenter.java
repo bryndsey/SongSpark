@@ -123,6 +123,15 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 		}
 	}
 
+	void updateBassInstrument(int bassInstrumentPosition) {
+		MusicStructure.MidiInstrument selectedInstrument = BASS_INSTRUMENT_LIST.get(bassInstrumentPosition);
+		if (song.bassInstrument != selectedInstrument) {
+			song.bassInstrument = selectedInstrument;
+			midiSongFactory.setBassInstrument(selectedInstrument);
+			midiSongFactory.makeMidiSongFrom(song);
+		}
+	}
+
 	void updateTempoRandomization(boolean isRandom) {
 		midiSongFactory.setTempoRandomization(isRandom);
 	}
@@ -141,5 +150,9 @@ public class SongPropertiesPresenter extends RxPresenter<SongPropertiesView> {
 
 	void updateRhythmInstrumentRandomization(boolean isRandom) {
 		midiSongFactory.setRhythmInstrumentRandomization(isRandom);
+	}
+
+	void updateBassInstrumentRandomization(boolean isRandom) {
+		midiSongFactory.setBassInstrumentRandomization(isRandom);
 	}
 }
