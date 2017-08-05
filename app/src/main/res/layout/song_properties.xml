@@ -62,5 +62,15 @@
             app:maxWidth="@dimen/song_property_max_width"
             app:propertyName="Rhythm Instrument"
             app:propertySrc="@drawable/icon_bass_clef" />
+
+        <com.bryndsey.songspark.ui.songproperties.widget.SongPropertyWidget
+            android:id="@+id/bass_instrument"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            app:maxWidth="@dimen/song_property_max_width"
+            app:propertyName="Bass Instrument"
+            app:propertySrc="@drawable/icon_bass_clef" />
     </LinearLayout>
 </ScrollView>
