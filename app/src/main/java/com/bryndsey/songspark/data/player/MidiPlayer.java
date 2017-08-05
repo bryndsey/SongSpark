@@ -73,7 +73,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 		if (currentSongFile != null) {
 			try {
 				mediaPlayer.setDataSource(currentSongFile.getPath());
-			} catch (IOException e) {
+			} catch (IOException | IllegalStateException e) {
 				setPlayerNotReady();
 				return;
 			}
