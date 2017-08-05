@@ -29,7 +29,7 @@
             android:layout_width="@dimen/song_property_widget_height"
             android:layout_height="@dimen/song_property_widget_height"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginStart="12dp"
             app:si_animation_duration="200"
             app:si_tint_color="@color/colorAccent"
             app:srcCompat="@drawable/generate_icon" />
