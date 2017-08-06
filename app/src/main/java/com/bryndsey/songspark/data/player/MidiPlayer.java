@@ -102,7 +102,7 @@ public class MidiPlayer implements MediaPlayer.OnCompletionListener, AudioManage
 	private void preparePlayer() {
 		try {
 			mediaPlayer.prepare();
-		} catch (IOException e) {
+		} catch (IOException | IllegalStateException e) {
 			setPlayerNotReady();
 			return;
 		}
