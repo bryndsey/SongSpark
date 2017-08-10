@@ -16,5 +16,4 @@
     <string name="attributions">Attributions</string>
     <string name="apache_libraries">MidiDroid, Guava, ButterKnife, Slim, Dagger 2, RxJava, RxAndroid, RxRelay, SmartTabLayout, Android-SwitchIcon, and LicenseDialog are used under the Apache 2.0 License</string>
     <string name="mit_libraries">Material Dialogs is used under the MIT License</string>
-    <string name="metronomeIconAttribution">Metronome Icon created by Philip Hogeboom from the Noun Project</string>
 </resources>
