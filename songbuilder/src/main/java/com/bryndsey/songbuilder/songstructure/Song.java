@@ -18,19 +18,13 @@ public class Song
 	
 	public MidiInstrument chordInstrument;
 	public MidiInstrument melodyInstrument;
+	public MidiInstrument bassInstrument;
 	
 	public ArrayList<SongPart> structure;
 	
 	public ChordProgression verseProgression;
 	public ChordProgression chorusProgression;
 	public ChordProgression bridgeProgression;
-	
-	public ArrayList<Integer> verseChordRhythm;
-	public ArrayList<Integer> chorusChordRhythm;
-	
-	public ArrayList<Integer> theme;
-	
-	//public ArrayList<ArrayList<Integer>> melody;
 	
 	public Song(){		
 		timeSigNum = 0;
@@ -43,17 +37,13 @@ public class Song
 		
 		chordInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
 		melodyInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
+		bassInstrument = MidiInstrument.ACOUSTIC_GRAND_PIANO;
 		
 		structure = null;
 		
 		verseProgression = null;
 		chorusProgression = null;
 		bridgeProgression = null;
-		
-		verseChordRhythm = null;
-		chorusChordRhythm = null;
-		
-		theme = null;
 	}
 		
 } //class Song

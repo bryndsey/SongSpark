@@ -2,16 +2,14 @@ package com.bryndsey.songspark.ui.songproperties.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bryndsey.songspark.R;
 import com.github.zagum.switchicon.SwitchIconView;
@@ -26,8 +24,8 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 
 	private Integer maximumWidth;
 
-	@BindView(R.id.property_image)
-	ImageView propertyImage;
+	@BindView(R.id.property_name)
+	TextView propertyName;
 
 	@BindView(R.id.property_spinner)
 	Spinner propertySpinner;
@@ -51,8 +49,7 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 			TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.SongPropertyWidget);
 
 			if (attributes != null) {
-				Drawable image = attributes.getDrawable(R.styleable.SongPropertyWidget_propertySrc);
-				propertyImage.setImageDrawable(image);
+				propertyName.setText(attributes.getText(R.styleable.SongPropertyWidget_propertyName));
 
 				int maxWidth = attributes.getDimensionPixelSize(R.styleable.SongPropertyWidget_maxWidth, 0);
 				if (maxWidth > 0) {
@@ -65,8 +62,7 @@ public class SongPropertyWidget extends LinearLayout implements AdapterView.OnIt
 
 		propertySpinner.setOnItemSelectedListener(this);
 
-		setOrientation(HORIZONTAL);
-		setGravity(Gravity.CENTER_VERTICAL);
+		setOrientation(VERTICAL);
 	}
 
 	@Override

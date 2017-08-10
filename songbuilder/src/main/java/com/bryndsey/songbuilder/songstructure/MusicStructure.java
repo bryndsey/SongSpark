@@ -7,70 +7,68 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MusicStructure {
-	
+
+	//TODO: Break this into individual classes all grouped under a MusicStructure package
 	public enum ScaleType {
-		MAJOR("Major", new int[]{2, 2, 1, 2, 2, 2, 1}), 
-		NATURALMINOR("Minor", new int[]{2, 1, 2, 2, 1, 2, 2}), 
-		HARMONICMINOR("Harmonic minor", new int[]{2, 1, 2, 2, 1, 3, 1}), 
-		MIXOLYDIAN("Mixolydian", new int[]{2, 2, 1, 2, 2, 1, 2}), 
+		MAJOR("Major", new int[]{2, 2, 1, 2, 2, 2, 1}),
+		NATURALMINOR("Minor", new int[]{2, 1, 2, 2, 1, 2, 2}),
+		HARMONICMINOR("Harmonic minor", new int[]{2, 1, 2, 2, 1, 3, 1}),
+		MIXOLYDIAN("Mixolydian", new int[]{2, 2, 1, 2, 2, 1, 2}),
 		DORIAN("Dorian", new int[]{2, 1, 2, 2, 2, 1, 2}),
 		PHRYGIAN("Phrygian", new int[]{1, 2, 2, 2, 1, 2, 2}),
 		LYDIAN("Lydian", new int[]{2, 2, 2, 1, 2, 2, 1}),
 		LOCRIAN("Locrian", new int[]{1, 2, 2, 1, 2, 2, 2})/*,
-		DOUBLEHARMONIC("Double Harmonic", new int[]{1, 3, 1, 2, 1, 3, 1})*/; 
+		DOUBLEHARMONIC("Double Harmonic", new int[]{1, 3, 1, 2, 1, 3, 1})*/;
 
 		private String friendlyName;
 		private int[] relativeIntervals;
 		private int[] absoluteIntervals;
 
-	    private ScaleType(String friendlyName, int[] relativeIntervals)
-	    {
-	        this.friendlyName = friendlyName;
-	        this.relativeIntervals = relativeIntervals;
-	        this.absoluteIntervals = calculateAbsIntervals(relativeIntervals);
-	    }
-	    
-	    private int[] calculateAbsIntervals(int[] relIntervals)
-	    {
-	    	int[] absIntervals = new int[relIntervals.length + 1];
-	    	absIntervals[0] = 0;
-	    	for (int ndx = 0; ndx < relIntervals.length; ndx++)
-	    	{
-	    		absIntervals[ndx + 1] = absIntervals[ndx] + relIntervals[ndx];
-	    	}
-	    	return absIntervals;
-	    }
-	    
-	    public int[] getAbsIntervals() { return absoluteIntervals; }
-	    public int[] getRelIntervals() { return relativeIntervals; }
-	    
-	    public ChordType getTriadChordType(int chordDegree)
-	    {
-	    	// calculate interval between root of chord and third of chord
-	    	int thirdInterval = getChordInterval(chordDegree, 3);
-	    	//calculate interval between root of chord and fifth of chord
-	    	int fifthInterval = getChordInterval(chordDegree, 5);
-	    	
-	    	if (thirdInterval == 4)
-	    	{
-	    		if (fifthInterval == 7)
-	    			return ChordType.MAJOR;
-	    		else if (fifthInterval == 8)
-	    			return ChordType.AUGMENTED;
-	    	}
-	    	else if (thirdInterval == 3)
-	    	{
-	    		if (fifthInterval == 6)
-	    			return ChordType.DIMINISHED;
-	    		else if (fifthInterval == 7)
-	    			return ChordType.MINOR;
-	    	}
-	    	
-	    	return ChordType.UNKNOWN;
-	    }
-	    
-		public int[] generateTriad(int root)
-		{
+		ScaleType(String friendlyName, int[] relativeIntervals) {
+			this.friendlyName = friendlyName;
+			this.relativeIntervals = relativeIntervals;
+			this.absoluteIntervals = calculateAbsIntervals(relativeIntervals);
+		}
+
+		private int[] calculateAbsIntervals(int[] relIntervals) {
+			int[] absIntervals = new int[relIntervals.length + 1];
+			absIntervals[0] = 0;
+			for (int ndx = 0; ndx < relIntervals.length; ndx++) {
+				absIntervals[ndx + 1] = absIntervals[ndx] + relIntervals[ndx];
+			}
+			return absIntervals;
+		}
+
+		public int[] getAbsIntervals() {
+			return absoluteIntervals;
+		}
+
+		public int[] getRelIntervals() {
+			return relativeIntervals;
+		}
+
+		public ChordType getTriadChordType(int chordDegree) {
+			// calculate interval between root of chord and third of chord
+			int thirdInterval = getChordInterval(chordDegree, 3);
+			//calculate interval between root of chord and fifth of chord
+			int fifthInterval = getChordInterval(chordDegree, 5);
+
+			if (thirdInterval == 4) {
+				if (fifthInterval == 7)
+					return ChordType.MAJOR;
+				else if (fifthInterval == 8)
+					return ChordType.AUGMENTED;
+			} else if (thirdInterval == 3) {
+				if (fifthInterval == 6)
+					return ChordType.DIMINISHED;
+				else if (fifthInterval == 7)
+					return ChordType.MINOR;
+			}
+
+			return ChordType.UNKNOWN;
+		}
+
+		public int[] generateTriad(int root) {
 			//int[] scaleIntervals = getScaleIntervals(scaleType);
 			int[] triad = new int[3];
 			/*
@@ -81,172 +79,173 @@ public class MusicStructure {
 			triad[0] = getInterval(1, root) + getChordInterval(root, 1);
 			triad[1] = getInterval(1, root) + getChordInterval(root, 3);
 			triad[2] = getInterval(1, root) + getChordInterval(root, 5);
-			
+
 			return triad;
 		}
-		
+
 		/*
 		 * Returns the interval in semitones from scale degree degree1 to 
 		 *  scale degree degree2 in scale
 		 */
-		public int getInterval(int degree1, int degree2)
-		{
+		public int getInterval(int degree1, int degree2) {
 			return Utils.sumSubArray(getRelIntervals(), degree1 - 1, degree2 - 1);
 		}
-		
+
 		/*
 		 * Returns the interval in semitones from scale degree chordRoot to 
 		 *  scale degree degree2 in scale
 		 */
-		public int getChordInterval(int chordRoot, int chordDegree)
-		{
+		public int getChordInterval(int chordRoot, int chordDegree) {
 			return getInterval(chordRoot, (chordRoot - 1 + chordDegree - 1) % 7 + 1);
 		}
-	    
-	    @Override public String toString()
-	    {
-	    	return friendlyName;
-    	};
+
+		@Override
+		public String toString() {
+			return friendlyName;
+		}
+
+		;
 	}
-	
+
 	public enum TimeSignature {
-		FOUR_FOUR(4,4),
-		THREE_FOUR(3,4),
-		TWO_FOUR(2,4);
-		
+		FOUR_FOUR(4, 4),
+		THREE_FOUR(3, 4),
+		TWO_FOUR(2, 4);
+
 		private int numerator;
 		private int denominator;
-		
-		private TimeSignature(int numerator, int denominator)
-		{
+
+		TimeSignature(int numerator, int denominator) {
 			this.numerator = numerator;
 			this.denominator = denominator;
 		}
-		
-		public int getNumerator() { return numerator; }
-		public int getDenominator() { return denominator; }
-		
-		public String toString()
-		{
+
+		public int getNumerator() {
+			return numerator;
+		}
+
+		public int getDenominator() {
+			return denominator;
+		}
+
+		public String toString() {
 			return numerator + "/" + denominator;
 		}
 	}
-	
+
 	// TODO: Replace all instances of code based around this to use enum instead
 	public static final int[] TIMESIGNUMVALUES = {2, 3, 4};//, 6};
 	public static final int[] TIMESIGDENOMVALUES = {4}; // just 4 for now... may expand later
-	
+
 	// Define the pitches present in the "Western" system
 	// (forgive my ignorance on naming conventions)
 	public enum Pitch {
 		C("C"),
 		D_FLAT("C♯/D♭"),
-		D("D"), 
-		E_FLAT("D♯/E♭"), 
-		E("E"), 
-		F("F"), 
-		G_FLAT("F♯/G♭"), 
-		G("G"), 
-		A_FLAT("G♯/A♭"), 
-		A("A"), 
-		B_FLAT("A♯/B♭"), 
+		D("D"),
+		E_FLAT("D♯/E♭"),
+		E("E"),
+		F("F"),
+		G_FLAT("F♯/G♭"),
+		G("G"),
+		A_FLAT("G♯/A♭"),
+		A("A"),
+		B_FLAT("A♯/B♭"),
 		B("B");
-		
-		public int getBaseMidiPitch(){
+
+		public int getBaseMidiPitch() {
 			return this.ordinal() + 60;
 		}
-		
+
 		// TODO: Implement MIDI key signature so importing into other software shows correct key signature
 		// cof = Circle of Fifths: used to determine key signature
 		protected int[] cofMajor = {0, -5, 2, -3, 4, -1, -6, 1, -4, 3, -2, 5};
-		
-		public int getMIDIKeyNumMajor()
-		{
+
+		public int getMIDIKeyNumMajor() {
 			return cofMajor[this.ordinal()];
 		}
-		
-		public int getMIDIKeyNumMinor()
-		{
+
+		public int getMIDIKeyNumMinor() {
 			// TODO: I THINK THIS STILL NEEDS WORK!!!!
 			return getRelativeMajor().getMIDIKeyNumMajor();
 		}
-		
+
 		// TODO: I think these intervals are dependent on the scale...
 		// maybe need to move this into the scale enum
-		public Pitch getRelativeMinor()
-		{
+		public Pitch getRelativeMinor() {
 			return values()[(this.ordinal() + 9) % NUMPITCHES];
 		}
-		
-		public Pitch getRelativeMajor()
-		{
+
+		public Pitch getRelativeMajor() {
 			return values()[(this.ordinal() + 3) % NUMPITCHES];
 		}
-		
+
 		private String friendlyName;
 
-	    private Pitch(String friendlyName)
-	    {
-	        this.friendlyName = friendlyName;
-	    }
+		Pitch(String friendlyName) {
+			this.friendlyName = friendlyName;
+		}
 
-	    @Override public String toString()
-	    {
-	    	return friendlyName;
-    	}
+		@Override
+		public String toString() {
+			return friendlyName;
+		}
 	}
-	
+
+	public static int getNumberOfPitchesInOctave() {
+		return Pitch.values().length;
+	}
+
 	public enum ChordType {
 		MAJOR(""),
 		MINOR("m"),
 		DIMINISHED("°"),
 		AUGMENTED("+"),
 		UNKNOWN("?");
-		
+
 		private String friendlyName;
-		
-		private ChordType(String friendlyName)
-		{
+
+		ChordType(String friendlyName) {
 			this.friendlyName = friendlyName;
 		}
-		
+
 		@Override
-		public String toString()
-		{
+		public String toString() {
 			return friendlyName;
 		}
-		
+
 	}
-	
+
 	public static Pitch[] PITCHES = Pitch.values();
 	public static final int NUMPITCHES = 12, OCTAVE = NUMPITCHES;
-	
-	public enum SongPart { VERSE, CHORUS, BRIDGE };
-	
-	public enum Cadence{ AUTHENTIC, HALF, PLAGAL, INTERRUPTED;
-		public List<Integer> getChords()
-		{
-			switch(this)
-			{
-			case AUTHENTIC:
-				return Arrays.asList(5, 1);
-			case HALF:
-				return Arrays.asList(5);
-			case PLAGAL:
-				return Arrays.asList(4, 1);
-			case INTERRUPTED:
-				return Arrays.asList(5, -1);
-			default:
-				return new ArrayList<Integer>();
+
+	public enum SongPart {VERSE, CHORUS, BRIDGE}
+
+	;
+
+	public enum Cadence {
+		AUTHENTIC, HALF, PLAGAL, INTERRUPTED;
+
+		public List<Integer> getChords() {
+			switch (this) {
+				case AUTHENTIC:
+					return Arrays.asList(5, 1);
+				case HALF:
+					return Arrays.asList(5);
+				case PLAGAL:
+					return Arrays.asList(4, 1);
+				case INTERRUPTED:
+					return Arrays.asList(5, -1);
+				default:
+					return new ArrayList<Integer>();
 			}
 		}
-		
+
 		public static final double[] INTERRUPTEDCHORDCHANCES = {0.0, 3.0, 1.0, 2.0, 0.0, 4.0, 0.1};
-	
+
 	}
-	
-	public enum MidiInstrument
-    {
+
+	public enum MidiInstrument {
 		ACOUSTIC_GRAND_PIANO("Acoustic Grand Piano"),
 		BRIGHT_ACOUSTIC_PIANO("Bright Acoustic Piano"),
 		ELECTRIC_GRAND_PIANO("Electric Grand Piano"),
@@ -374,44 +373,42 @@ public class MusicStructure {
 		TELEPHONE_RING("Telephone Ring"),
 		HELICOPTER("Helicopter"),
 		APPLAUSE("Applause"),
-		GUNSHOT("Gunshot"); 
-				
+		GUNSHOT("Gunshot");
+
 		private String friendlyName;
-		
-		private MidiInstrument(String friendlyName)
-		{
+
+		MidiInstrument(String friendlyName) {
 			this.friendlyName = friendlyName;
 		}
-		
-		public String toString() { return friendlyName; }
-		
-        public int programNumber()
-        {
-            return this.ordinal() + 1;
-        }
-    }
-	
+
+		public String toString() {
+			return friendlyName;
+		}
+
+		public int programNumber() {
+			return this.ordinal() + 1;
+		}
+	}
+
 	////////////////////////////////////////////////////
 	//This is a playground for testing at the moment:
-	
-	
+
+
 	/*
 	 * Translates degree, which is the interval from the root of the chord, 
 	 * represented by chordRoot, to the interval relative to the scale tonic
 	 */
-	public int chordToScaleInterval(int chordRoot, int degree)
-	{
+	public int chordToScaleInterval(int chordRoot, int degree) {
 		return (chordRoot + degree) % 7;
 	}
-	
+
 	/*
 	 * Translates degree, which is the interval from the tonic of the scale 
 	 *  to the interval relative to the chord root, represented by chordRoot
 	 */
-	public int scaleToChordInterval(int chordRoot, int degree)
-	{
+	public int scaleToChordInterval(int chordRoot, int degree) {
 		return (degree - chordRoot) % 7;
 	}
-	
-	
+
+
 }
